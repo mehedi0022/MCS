@@ -1,0 +1,524 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.962 0.012 222);
+  --foreground: oklch(0.172 0.042 248);
+
+  --card: oklch(0.982 0.008 218);
+  --card-foreground: oklch(0.172 0.042 248);
+  --popover: oklch(0.988 0.006 215);
+  --popover-foreground: oklch(0.172 0.042 248);
+  --primary: oklch(0.348 0.118 252);
+  --primary-foreground: oklch(0.97 0.008 215);
+  --secondary: oklch(0.912 0.022 225);
+  --secondary-foreground: oklch(0.22 0.05 248);
+  --muted: oklch(0.928 0.016 222);
+  --muted-foreground: oklch(0.49 0.042 235);
+  --accent: oklch(0.875 0.048 208);
+  --accent-foreground: oklch(0.2 0.048 245);
+  --destructive: oklch(0.565 0.215 26);
+  --border: oklch(0.858 0.026 222);
+  --input: oklch(0.858 0.026 222);
+  --ring: oklch(0.49 0.132 252);
+  --radius: 0.75rem;
+  --chart-1: oklch(0.348 0.118 252);
+  --chart-2: oklch(0.488 0.118 228);
+  --chart-3: oklch(0.598 0.098 212);
+  --chart-4: oklch(0.718 0.072 198);
+  --chart-5: oklch(0.762 0.088 78);
+
+  --sidebar: oklch(0.942 0.018 222);
+  --sidebar-foreground: oklch(0.172 0.042 248);
+  --sidebar-primary: oklch(0.348 0.118 252);
+  --sidebar-primary-foreground: oklch(0.97 0.008 215);
+  --sidebar-accent: oklch(0.898 0.03 218);
+  --sidebar-accent-foreground: oklch(0.22 0.05 248);
+  --sidebar-border: oklch(0.858 0.026 222);
+  --sidebar-ring: oklch(0.49 0.132 252);
+
+  --glass-bg: oklch(0.988 0.006 215 / 62%);
+  --glass-bg-strong: oklch(0.982 0.008 218 / 80%);
+  --glass-border: oklch(0.858 0.026 222 / 55%);
+  --glass-border-strong: oklch(0.82 0.032 222 / 70%);
+  --glass-blur: 12px;
+  --glass-blur-strong: 20px;
+  --glass-shadow:
+    0 4px 24px oklch(0.172 0.042 248 / 7%),
+    0 1px 4px oklch(0.172 0.042 248 / 5%);
+  --glass-shadow-strong:
+    0 8px 40px oklch(0.172 0.042 248 / 12%),
+    0 2px 8px oklch(0.172 0.042 248 / 8%);
+
+  --maritime-abyss: oklch(0.148 0.055 252);
+  --maritime-deep: oklch(0.24 0.08 250);
+  --maritime-navy: oklch(0.348 0.118 252);
+  --maritime-ocean: oklch(0.468 0.108 232);
+  --maritime-sea: oklch(0.578 0.095 215);
+  --maritime-teal: oklch(0.618 0.088 205);
+  --maritime-foam: oklch(0.82 0.048 200);
+  --maritime-horizon: oklch(0.875 0.028 210);
+  --maritime-brass: oklch(0.762 0.098 78);
+  --maritime-copper: oklch(0.648 0.112 54);
+}
+
+.dark {
+  --background: oklch(0.178 0.048 250);
+  --foreground: oklch(0.938 0.012 218);
+
+  --card: oklch(0.218 0.044 248);
+  --card-foreground: oklch(0.938 0.012 218);
+  --popover: oklch(0.228 0.042 246);
+  --popover-foreground: oklch(0.938 0.012 218);
+  --primary: oklch(0.628 0.115 248);
+  --primary-foreground: oklch(0.148 0.048 252);
+
+  --secondary: oklch(0.262 0.042 248);
+  --secondary-foreground: oklch(0.92 0.012 218);
+
+  --muted: oklch(0.262 0.042 248);
+  --muted-foreground: oklch(0.638 0.032 232);
+  --accent: oklch(0.285 0.058 232);
+  --accent-foreground: oklch(0.92 0.012 218);
+  --destructive: oklch(0.628 0.188 20);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 11%);
+  --ring: oklch(0.628 0.115 248);
+  --chart-1: oklch(0.628 0.115 248);
+  --chart-2: oklch(0.568 0.105 218);
+  --chart-3: oklch(0.688 0.088 205);
+  --chart-4: oklch(0.738 0.072 195);
+  --chart-5: oklch(0.778 0.102 78);
+  --sidebar: oklch(0.205 0.046 249);
+  --sidebar-foreground: oklch(0.938 0.012 218);
+  --sidebar-primary: oklch(0.628 0.115 248);
+  --sidebar-primary-foreground: oklch(0.148 0.048 252);
+  --sidebar-accent: oklch(0.262 0.042 248);
+  --sidebar-accent-foreground: oklch(0.92 0.012 218);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.628 0.115 248);
+
+  --glass-bg: oklch(0.218 0.044 248 / 48%);
+  --glass-bg-strong: oklch(0.218 0.044 248 / 70%);
+  --glass-border: oklch(1 0 0 / 10%);
+  --glass-border-strong: oklch(1 0 0 / 16%);
+  --glass-blur: 18px;
+  --glass-blur-strong: 32px;
+  --glass-shadow: 0 4px 24px oklch(0 0 0 / 30%), 0 1px 4px oklch(0 0 0 / 24%);
+  --glass-shadow-strong:
+    0 8px 48px oklch(0 0 0 / 48%), 0 2px 12px oklch(0 0 0 / 36%),
+    inset 0 1px 0 oklch(1 0 0 / 6%);
+  --maritime-abyss: oklch(0.108 0.04 255);
+  --maritime-deep: oklch(0.178 0.048 250);
+  --maritime-navy: oklch(0.262 0.065 248);
+  --maritime-ocean: oklch(0.398 0.092 238);
+  --maritime-sea: oklch(0.528 0.1 222);
+  --maritime-teal: oklch(0.598 0.092 210);
+  --maritime-foam: oklch(0.748 0.055 205);
+  --maritime-horizon: oklch(0.808 0.035 215);
+  --maritime-brass: oklch(0.778 0.108 78);
+  --maritime-copper: oklch(0.668 0.118 54);
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-maritime-abyss: var(--maritime-abyss);
+  --color-maritime-deep: var(--maritime-deep);
+  --color-maritime-navy: var(--maritime-navy);
+  --color-maritime-ocean: var(--maritime-ocean);
+  --color-maritime-sea: var(--maritime-sea);
+  --color-maritime-teal: var(--maritime-teal);
+  --color-maritime-foam: var(--maritime-foam);
+  --color-maritime-horizon: var(--maritime-horizon);
+  --color-maritime-brass: var(--maritime-brass);
+  --color-maritime-copper: var(--maritime-copper);
+
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-bg-strong: var(--glass-bg-strong);
+  --color-glass-border: var(--glass-border);
+  --color-glass-border-strong: var(--glass-border-strong);
+
+  --radius-xs: calc(var(--radius) * 0.375);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.875);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3.25);
+  --radius-full: 9999px;
+}
+
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-strong {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.6)
+      brightness(1.02);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.6)
+      brightness(1.02);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: var(--glass-shadow-strong);
+  }
+
+  .glass-nav {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.8);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.8);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow:
+      0 1px 0 var(--glass-border),
+      0 4px 20px oklch(0.172 0.042 248 / 5%);
+  }
+
+  .glass-modal {
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.5);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.5);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow:
+      var(--glass-shadow-strong),
+      inset 0 1px 0 oklch(1 0 0 / 8%);
+  }
+
+  .glass-sheen {
+    position: relative;
+  }
+
+  .glass-sheen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 8%) 0%,
+      oklch(1 0 0 / 0%) 50%
+    );
+    pointer-events: none;
+  }
+
+  .bg-maritime-hero {
+    background: linear-gradient(
+      160deg,
+      var(--maritime-abyss) 0%,
+      var(--maritime-deep) 35%,
+      var(--maritime-navy) 65%,
+      var(--maritime-ocean) 100%
+    );
+  }
+
+  .bg-maritime-sweep {
+    background: linear-gradient(
+      105deg,
+      var(--maritime-deep) 0%,
+      var(--maritime-ocean) 50%,
+      var(--maritime-sea) 100%
+    );
+  }
+
+  .bg-maritime-surface {
+    background: linear-gradient(
+      180deg,
+      var(--background) 0%,
+      oklch(0.945 0.018 222) 100%
+    );
+  }
+
+  .bg-maritime-glow {
+    background:
+      radial-gradient(
+        ellipse 80% 60% at 50% 0%,
+        var(--maritime-ocean) 0%,
+        transparent 70%
+      ),
+      var(--background);
+  }
+
+  .bg-maritime-horizon-strip {
+    background: linear-gradient(
+      90deg,
+      var(--maritime-teal) 0%,
+      var(--maritime-foam) 50%,
+      var(--maritime-brass) 100%
+    );
+  }
+
+  .text-maritime-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--maritime-navy) 0%,
+      var(--maritime-ocean) 60%,
+      var(--maritime-teal) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-maritime-gold-gradient {
+    background: linear-gradient(
+      120deg,
+      var(--maritime-copper) 0%,
+      var(--maritime-brass) 50%,
+      var(--maritime-copper) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-maritime-light-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--maritime-foam) 0%,
+      var(--maritime-horizon) 50%,
+      oklch(1 0 0 / 90%) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-maritime-iridescent {
+    border-image: linear-gradient(
+        90deg,
+        var(--maritime-teal),
+        var(--maritime-foam),
+        var(--maritime-brass),
+        var(--maritime-teal)
+      )
+      1;
+  }
+  .border-maritime {
+    border-color: var(--maritime-navy);
+  }
+
+  .shadow-maritime-sm {
+    box-shadow:
+      0 2px 8px oklch(0.172 0.042 248 / 8%),
+      0 1px 2px oklch(0.172 0.042 248 / 5%);
+  }
+
+  .shadow-maritime {
+    box-shadow:
+      0 4px 20px oklch(0.172 0.042 248 / 12%),
+      0 2px 6px oklch(0.172 0.042 248 / 8%);
+  }
+
+  .shadow-maritime-lg {
+    box-shadow:
+      0 8px 40px oklch(0.172 0.042 248 / 18%),
+      0 4px 12px oklch(0.172 0.042 248 / 10%);
+  }
+
+  .shadow-maritime-xl {
+    box-shadow:
+      0 16px 64px oklch(0.172 0.042 248 / 22%),
+      0 6px 20px oklch(0.172 0.042 248 / 14%);
+  }
+
+  .texture-maritime-noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1,
+      "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  :root,
+  .dark {
+    color-scheme: light dark;
+  }
+  main,
+  header,
+  footer,
+  aside,
+  section,
+  nav,
+  article {
+    transition:
+      background-color 280ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 280ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    transition:
+      background-color 140ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 140ms cubic-bezier(0.4, 0, 0.2, 1),
+      color 90ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 140ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 120ms ease;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--maritime-ocean);
+    border-radius: var(--radius-full);
+    opacity: 0.6;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--maritime-navy);
+  }
+  ::selection {
+    background: oklch(from var(--primary) l c h / 22%);
+    color: var(--foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading, var(--font-sans));
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--foreground);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-weight: 700;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    font-weight: 650;
+  }
+  h3 {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: 600;
+  }
+  a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--maritime-ocean);
+  }
+  a:active {
+    color: var(--maritime-navy);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-block: 1.5rem;
+  }
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.875em;
+    border-radius: var(--radius-sm);
+  }
+
+  code:not(pre code) {
+    background: var(--muted);
+    padding: 0.1em 0.35em;
+    color: var(--maritime-sea);
+  }
+}
+
+.dark .bg-maritime-surface {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    var(--maritime-abyss) 100%
+  );
+}
