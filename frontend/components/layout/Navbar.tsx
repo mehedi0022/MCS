@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
-  { name: "About", href: "/about" },
+  { name: "About", href: "/about-us" },
   { name: "Projects", href: "/projects" },
   { name: "Contact", href: "/contact" },
 ]
@@ -30,19 +30,24 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300 ease-in-out",
-        isScrolled ? "glass-nav py-3" : "bg-transparent py-5"
+        "fixed top-0 z-50 w-full border-b border-border backdrop-blur-sm transition-all duration-300 ease-in-out",
+        isScrolled ? "glass-nav py-4" : "bg-transparent py-5"
       )}
     >
       <nav className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2">
-          <div className="rounded-lg bg-primary p-1.5 transition-transform group-hover:rotate-12">
+          <div className="rounded-lg bg-primary p-1.5 transition-transform">
             <Anchor className="h-6 w-6 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-maritime-navy dark:text-maritime-horizon">
-            MARITIME<span className="font-light">SOLUTIONS</span>
-          </span>
+          <div className="flex-col">
+            <span className="text-xl font-bold tracking-tight text-maritime-navy uppercase dark:text-maritime-horizon">
+              Maritime <span className="font-light">Consulting</span>
+            </span>
+            <p className="text-sm text-muted-foreground">
+              Solutions & Engineering
+            </p>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
