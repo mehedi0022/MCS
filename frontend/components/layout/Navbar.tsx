@@ -21,14 +21,13 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  // Handle Scroll listener
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // BLOCK SCROLLING when mobile menu is open
+  // Lock scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden"
@@ -41,28 +40,35 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out",
-        isScrolled ? "glass-nav py-3" : "bg-transparent py-6"
+        // Scrolled state: Substantial glass effect with a subtle border and shadow
+        isScrolled
+          ? "backdrop-blur-2xl border-b border-border/50 bg-background/60 py-3 shadow-sm"
+          : "border-b border-border/50 bg-background/60 backdrop-blur-3xl py-4"
       )}
     >
       <nav className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2">
-          <div className="rounded-lg bg-primary p-1.5 transition-transform group-hover:rotate-12">
+          <div className="rounded-lg bg-primary p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-6">
             <Anchor className="h-6 w-6 text-primary-foreground" />
           </div>
           <div className="flex flex-col leading-none">
             <span
               className={cn(
-                "text-base font-bold tracking-tighter transition-colors duration-300 md:text-lg",
-                isScrolled ? "text-foreground" : "text-white"
+                "text-base md:text-lg font-bold tracking-tighter uppercase transition-colors duration-300",
+                isScrolled
+                  ? "text-foreground"
+                  : "text-maritime-navy dark:text-white"
               )}
             >
-              MARITIME <span className="font-light"> CONSULTING</span>
+              Maritime <span className="font-light">Consulting</span>
             </span>
             <span
               className={cn(
                 "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors duration-300",
-                isScrolled ? "text-muted-foreground" : "text-white/70"
+                isScrolled
+                  ? "text-muted-foreground"
+                  : "text-maritime-navy/70 dark:text-white/70"
               )}
             >
               Solutions & Engineering
@@ -79,24 +85,20 @@ export function Navbar() {
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  "relative text-sm font-bold tracking-wide transition-all duration-300",
+                  "relative text-sm font-bold tracking-wide transition-all duration-300 hover:text-primary",
+                  // Ensure visibility on both transparent and scrolled states
                   isScrolled
                     ? isActive
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
                     : isActive
-                      ? "text-white"
-                      : "text-white/70 hover:text-white"
+                      ? "text-primary"
+                      : "text-maritime-navy/80 hover:text-maritime-navy dark:text-white/80 dark:hover:text-white"
                 )}
               >
                 {link.name}
                 {isActive && (
-                  <span
-                    className={cn(
-                      "absolute -bottom-1.5 left-0 h-0.5 w-full rounded-full transition-colors",
-                      isScrolled ? "bg-primary" : "bg-white"
-                    )}
-                  />
+                  <span className="absolute -bottom-1.5 left-0 h-0.5 w-full animate-in rounded-full bg-primary fade-in slide-in-from-left-2" />
                 )}
               </Link>
             )
@@ -107,8 +109,10 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <div
             className={cn(
-              "rounded-full border transition-colors duration-300 focus:ring-2 focus:ring-primary/50 focus:outline-none",
-              isScrolled ? "text-foreground" : "text-white"
+              "cursor-pointer rounded-full border border-border transition-colors duration-300",
+              isScrolled
+                ? "cursor-pointer text-foreground"
+                : "cursor-pointer text-maritime-navy dark:text-white"
             )}
           >
             <ThemeToggle />
@@ -116,41 +120,41 @@ export function Navbar() {
 
           <Button
             className={cn(
-              "hidden rounded-full px-6 font-bold transition-all duration-300 md:flex",
+              "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 md:flex",
               isScrolled
-                ? "shadow-maritime bg-primary text-primary-foreground"
-                : "border-none bg-white text-primary hover:bg-white/90"
+                ? "bg-primary text-primary-foreground"
+                : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
             )}
           >
             GET CONSULTATION
           </Button>
 
-          {/* Mobile Toggle - Improved Hitbox */}
+          {/* Mobile Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={cn(
-              "rounded-full p-2 transition-colors focus:ring-2 focus:ring-primary/50 focus:outline-none md:hidden",
-              isScrolled ? "text-foreground" : "text-white"
+              "p-2 transition-colors md:hidden",
+              isScrolled
+                ? "text-foreground"
+                : "text-maritime-navy dark:text-white"
             )}
             aria-label="Toggle Menu"
           >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu - Fixed Transparency & Added Scroll Lock */}
+      {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 h-screen w-full bg-background transition-all duration-500 ease-in-out md:hidden dark:bg-maritime-abyss",
+          "fixed inset-0 z-40 h-screen w-full transition-all duration-500 ease-in-out md:hidden",
+          "bg-background/98 backdrop-blur-md", // More opaque for readability
           mobileMenuOpen
             ? "visible translate-x-0 opacity-100"
             : "invisible translate-x-full opacity-0"
         )}
       >
-        {/* Decorative Grid Overlay for premium feel */}
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] bg-[size:24px_24px] opacity-20" />
-
         <div className="relative z-10 flex h-full flex-col p-8 pt-24">
           <div className="flex flex-col gap-6">
             {navLinks.map((link, i) => {
@@ -162,7 +166,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ transitionDelay: `${i * 50}ms` }}
                   className={cn(
-                    "flex items-center justify-between border-b border-border/40 pb-5 text-2xl font-bold tracking-tight transition-all duration-300",
+                    "flex items-center justify-between border-b border-border/50 pb-5 text-2xl font-bold tracking-tight transition-all duration-300",
                     isActive
                       ? "translate-x-2 text-primary"
                       : "text-foreground hover:translate-x-2",
@@ -191,15 +195,9 @@ export function Navbar() {
                 : "translate-y-8 opacity-0"
             )}
           >
-            <div className="space-y-2">
-              <p className="text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
-                Ready to chart a new course?
-              </p>
-              <Button className="shadow-maritime-lg h-16 w-full rounded-2xl text-lg font-bold">
-                GET CONSULTATION
-              </Button>
-            </div>
-
+            <Button className="shadow-maritime-lg h-14 w-full rounded-2xl text-lg font-bold">
+              GET CONSULTATION
+            </Button>
             <p className="text-center text-sm text-muted-foreground italic">
               Consult@Maritime-Solutions.com
             </p>

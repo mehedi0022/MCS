@@ -1,35 +1,62 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Anchor } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden py-32">
-      {/* Dynamic Background utilizing your global CSS utility */}
-      <div className="bg-maritime-sweep absolute inset-0 dark:opacity-80" />
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1494459940152-1e911caa8ea0?q=80&w=2787&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+    <section className="relative h-[550px] w-full overflow-hidden border-y border-border/50">
+      {/* 1. Parallax Image Layer */}
+      <div
+        className={cn(
+          "absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524522173746-f628baad3644?q=80&w=2832&auto=format&fit=crop')]",
+          "bg-cover bg-fixed bg-center transition-transform duration-700 ease-out",
+          "brightness-[0.4] dark:brightness-[0.25]"
+        )}
+        aria-hidden="true"
+      />
 
-      <div className="relative z-10 container mx-auto px-6">
-        <div className="glass-modal shadow-maritime-xl mx-auto max-w-4xl rounded-3xl p-10 text-center sm:p-16">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl dark:text-white">
-            Ready to chart a new course?
+      {/* 3. Content Layout */}
+      <div className="relative z-10 container mx-auto flex h-full items-center justify-center px-6">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center text-center">
+          {/* Subtle Floating Icon */}
+          <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-md dark:bg-white/5">
+            <Anchor className="h-8 w-8 animate-pulse text-white" />
+          </div>
+
+          <h2 className="animate-in text-4xl font-bold tracking-tight text-white drop-shadow-xl duration-1000 fade-in slide-in-from-bottom-6 sm:text-6xl">
+            Ready to chart a{" "}
+            <span className="text-maritime-teal">new course?</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground dark:text-white/80">
+
+          <p className="mx-auto mt-8 max-w-2xl animate-in text-lg leading-relaxed text-white/90 drop-shadow-md delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-xl md:text-2xl">
             Connect with our lead consultants today. Discover how our targeted
             maritime strategies can elevate your operational efficiency and
             compliance.
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+
+          {/* Action Buttons */}
+          <div className="mt-12 flex animate-in flex-col items-center justify-center gap-5 delay-300 duration-1000 slide-in-from-bottom-10 fade-in sm:flex-row">
             <Link
               href="/contact"
-              className="group shadow-maritime hover:shadow-maritime-lg inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-8 font-medium text-primary-foreground transition-all hover:bg-primary/90"
+              className={cn(
+                "group relative h-14 items-center justify-center gap-2 rounded-full bg-white px-10 text-base font-bold text-primary transition-all",
+                "hover:shadow-maritime-xl hover:-translate-y-1 hover:bg-white/95 active:scale-[0.98]",
+                "flex"
+              )}
             >
               Start Your Project
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
+
             <Link
               href="/about"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-border/50 bg-background/50 px-8 font-medium text-foreground backdrop-blur-md transition-all hover:bg-background/80 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+              className={cn(
+                "inline-flex h-14 items-center justify-center rounded-full border border-white/40 bg-white/5 px-10 text-base font-bold text-white backdrop-blur-md transition-all",
+                "hover:border-white/60 hover:bg-white/10 active:scale-[0.98]"
+              )}
             >
               Learn More About Us
             </Link>

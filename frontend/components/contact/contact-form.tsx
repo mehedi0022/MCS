@@ -1,86 +1,224 @@
 "use client"
 
-import React from "react"
-import { Send, Anchor } from "lucide-react"
+import React, { useState } from "react"
+import {
+  Send,
+  Anchor,
+  Loader2,
+  CheckCircle2,
+  Building2,
+  Phone,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export function ContactForm() {
-  async function handleSubmit(e: React.FormEvent) {
+  const [isPending, setIsPending] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    companyName: "",
+    phoneNumber: "",
+    service: "",
+    message: "",
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle submission logic here
+    setIsPending(true)
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setIsPending(false)
+    setIsSuccess(true)
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="glass-strong shadow-maritime-xl relative flex min-h-[600px] animate-in flex-col items-center justify-center overflow-hidden rounded-[2.5rem] p-8 text-center duration-500 zoom-in-95 fade-in dark:bg-white/5">
+        <div className="mb-6 rounded-full bg-emerald-500/10 p-4 dark:bg-emerald-500/20">
+          <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+        </div>
+        <h3 className="text-3xl font-bold text-foreground">Inquiry Received</h3>
+        <p className="mt-4 max-w-xs text-muted-foreground">
+          We have successfully logged your project brief. A senior consultant
+          will reach out shortly.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => setIsSuccess(false)}
+          className="mt-8 rounded-full border-primary/20 hover:bg-primary/5"
+        >
+          New Inquiry
+        </Button>
+      </div>
+    )
   }
 
   return (
     <div className="glass-strong shadow-maritime-xl relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12 dark:bg-white/5">
-      {/* Decorative Anchor background icon */}
-      <Anchor className="absolute -top-12 -right-12 h-64 w-64 rotate-12 text-primary/5 dark:text-white/5" />
+      <Anchor className="pointer-events-none absolute -top-12 -right-12 h-64 w-64 rotate-12 text-primary/5 dark:text-white/5" />
 
-      <form onSubmit={handleSubmit} className="relative z-10 space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+      <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Full Name */}
+          <div className="space-y-3">
+            <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
               Full Name
             </label>
-            <input
-              type="text"
-              placeholder="John Doe"
-              className="h-12 w-full rounded-2xl border border-border/50 bg-background/50 px-4 text-sm transition-all outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+            <Input
+              required
+              placeholder="Full Name"
+              value={formData.fullName}
+              onChange={(e) =>
+                setFormData({ ...formData, fullName: e.target.value })
+              }
+              className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
             />
           </div>
-          <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">
-              Work Email
+
+          {/* Email Address */}
+          <div className="space-y-3">
+            <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+              Email Address
             </label>
-            <input
+            <Input
+              required
               type="email"
-              placeholder="john@company.com"
-              className="h-12 w-full rounded-2xl border border-border/50 bg-background/50 px-4 text-sm transition-all outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
             />
           </div>
+
+          {/* Company Name */}
+          <div className="space-y-3">
+            <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+              Company Name
+            </label>
+            <div className="relative">
+              <Input
+                required
+                placeholder="Company Name"
+                value={formData.companyName}
+                onChange={(e) =>
+                  setFormData({ ...formData, companyName: e.target.value })
+                }
+                className="h-14 w-full rounded-2xl border-border/50 bg-background/50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+              />
+              <Building2 className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
+            </div>
+          </div>
+
+          {/* Phone Number */}
+          <div className="space-y-3">
+            <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+              Phone Number
+            </label>
+            <div className="relative">
+              <Input
+                required
+                type="tel"
+                placeholder="Phone Number"
+                value={formData.phoneNumber}
+                onChange={(e) =>
+                  setFormData({ ...formData, phoneNumber: e.target.value })
+                }
+                className="h-14 w-full rounded-2xl border-border/50 bg-background/50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+              />
+              <Phone className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
+            </div>
+          </div>
+        </div>
+        {/* Service of Interest */}
+        <div className="space-y-3">
+          <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+            Service of Interest
+          </label>
+          <Select
+            required
+            value={formData.service}
+            onValueChange={(value) =>
+              setFormData({ ...formData, service: value || "" })
+            }
+          >
+            <SelectTrigger className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-left text-sm transition-all focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal">
+              <SelectValue placeholder="Select a maritime service" />
+            </SelectTrigger>
+            <SelectContent className="glass-modal rounded-2xl border-border/50 bg-background/95 shadow-2xl dark:bg-maritime-abyss/98">
+              <SelectItem
+                value="Port Development & Logistics"
+                className="cursor-pointer rounded-xl py-3"
+              >
+                Port Development & Logistics
+              </SelectItem>
+              <SelectItem
+                value="Offshore Engineering"
+                className="cursor-pointer rounded-xl py-3"
+              >
+                Offshore Engineering
+              </SelectItem>
+              <SelectItem
+                value="Fleet Tech Integration"
+                className="cursor-pointer rounded-xl py-3"
+              >
+                Fleet Tech Integration
+              </SelectItem>
+              <SelectItem
+                value="Environmental Compliance"
+                className="cursor-pointer rounded-xl py-3"
+              >
+                Environmental Compliance
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="space-y-2">
-          <label className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">
-            Subject
+        {/* Message */}
+        <div className="space-y-3">
+          <label className="ml-1 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+            Brief Message
           </label>
-          <select className="h-12 w-full rounded-2xl border border-border/50 bg-background/50 px-4 text-sm transition-all outline-none focus:border-primary dark:border-white/10 dark:bg-white/5 dark:text-maritime-horizon">
-            <option>Port Development Inquiry</option>
-            <option>Offshore Strategy</option>
-            <option>Sustainability Consulting</option>
-            <option>Fleet Technology</option>
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase">
-            Message
-          </label>
-          <textarea
-            rows={5}
-            placeholder="Tell us about your project requirements..."
-            className="w-full rounded-2xl border border-border/50 bg-background/50 p-4 text-sm transition-all outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+          <Textarea
+            required
+            placeholder="Describe your requirements..."
+            value={formData.message}
+            onChange={(e) =>
+              setFormData({ ...formData, message: e.target.value })
+            }
+            className="min-h-[120px] w-full rounded-[1.5rem] border-border/50 bg-background/50 p-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
           />
         </div>
 
+        {/* Submit Button */}
         <Button
           type="submit"
-          className="group shadow-maritime hover:shadow-maritime-lg h-14 w-full rounded-2xl bg-primary text-base font-bold text-primary-foreground transition-all hover:-translate-y-1 active:scale-[0.98]"
+          disabled={isPending}
+          className="group shadow-maritime hover:shadow-maritime-lg h-16 w-full rounded-2xl bg-primary text-base font-bold text-primary-foreground transition-all hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70"
         >
-          Send Message
-          <Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          {isPending ? (
+            <div className="flex items-center gap-3">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span>TRANSMITTING...</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <span>SEND ENQUIRY</span>
+              <Send className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            </div>
+          )}
         </Button>
-
-        <p className="text-center text-xs text-muted-foreground">
-          By submitting, you agree to our{" "}
-          <a href="/privacy" className="underline hover:text-primary">
-            Privacy Policy
-          </a>{" "}
-          and{" "}
-          <a href="/terms" className="underline hover:text-primary">
-            Terms of Service
-          </a>
-          .
-        </p>
       </form>
     </div>
   )

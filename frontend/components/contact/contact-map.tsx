@@ -5,8 +5,7 @@ import { MapPin } from "lucide-react"
 
 export function ContactMap() {
   // Replace this with your actual location coordinates or address
-  const mapLocation = "123+Harbour+Way,+Maritime+District,+Singapore"
-  const mapEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${mapLocation}`
+  const mapEmbedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d767.3119461092216!2d90.36434752691758!3d23.819619476946706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c1b2acf17469%3A0x6969523f05113da9!2sSAILOR%20MIRPUR%20PUROBI!5e0!3m2!1sen!2sbd!4v1777839603439!5m2!1sen!2sbd`
 
   return (
     <section className="mt-20">
@@ -17,7 +16,7 @@ export function ContactMap() {
             <MapPin className="h-4 w-4 text-primary dark:text-maritime-teal" />
           </div>
           <span className="text-sm font-bold tracking-tight text-foreground">
-            Global Headquarters — Singapore
+            Mirpur-11 — Dhaka, Bangladesh
           </span>
         </div>
 
@@ -25,7 +24,7 @@ export function ContactMap() {
         <div className="relative aspect-[21/9] min-h-[400px] w-full">
           <iframe
             title="Maritime Solutions Headquarters"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.81991!2d103.8475!3d1.2761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da190d6!2sMarina+Bay+Financial+Centre!5e0!3m2!1sen!2ssg!4v1700000000000!5m2!1sen!2ssg"
+            src={mapEmbedUrl}
             width="100%"
             height="100%"
             style={{ border: 0 }}

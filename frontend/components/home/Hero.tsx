@@ -63,24 +63,13 @@ export function Hero() {
               <div className="mx-auto flex max-w-5xl flex-col items-center justify-center text-center">
                 {/* Premium badge */}
                 <div className="mb-8 inline-flex animate-in items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-maritime-foam backdrop-blur-md duration-1000 fade-in slide-in-from-top-4">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  <Sparkles className="h-3.5 w-3.5" />
                   LEADING THE HORIZON
                 </div>
 
                 {/* Headline with drop-shadow for clarity */}
                 <h1 className="animate-in font-heading text-5xl font-bold tracking-tight text-white drop-shadow-2xl delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-7xl lg:text-8xl">
-                  {slide.title.split(" ").map((word, i) =>
-                    word === "Maritime" || word === "Engineering" ? (
-                      <span
-                        key={i}
-                        className="text-primary dark:text-maritime-teal"
-                      >
-                        {word}{" "}
-                      </span>
-                    ) : (
-                      word + " "
-                    )
-                  )}
+                  {slide.title}
                 </h1>
 
                 {/* Subtitle */}
