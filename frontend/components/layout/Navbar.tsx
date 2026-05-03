@@ -53,7 +53,7 @@ export function Navbar() {
           <div className="flex flex-col leading-none">
             <span
               className={cn(
-                "text-lg font-bold tracking-tighter transition-colors duration-300",
+                "text-base font-bold tracking-tighter transition-colors duration-300 md:text-lg",
                 isScrolled ? "text-foreground" : "text-white"
               )}
             >
