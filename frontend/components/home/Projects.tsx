@@ -1,86 +1,98 @@
-import React from "react"
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-
-const projects = [
-  {
-    title: "Project Borealis",
-    category: "Autonomous Navigation",
-    image:
-      "https://images.unsplash.com/photo-1505299341142-8888fc657cae?q=80&w=2880&auto=format&fit=crop",
-    desc: "Implemented AI-driven routing systems for a fleet of 40+ Panamax vessels.",
-  },
-  {
-    title: "Port of Singapore Optimization",
-    category: "Infrastructure Analytics",
-    image:
-      "https://images.unsplash.com/photo-1554522965-dbaf4c01726a?q=80&w=2940&auto=format&fit=crop",
-    desc: "Reduced terminal turnaround time by 18% using digital twin simulations.",
-  },
-  {
-    title: "Eco-Retrofit Initiative",
-    category: "Sustainability",
-    image:
-      "https://images.unsplash.com/photo-1605333036665-d069da5c06fc?q=80&w=2940&auto=format&fit=crop",
-    desc: "Designed hybrid propulsion retrofits to meet incoming IMO 2030 standards.",
-  },
-]
+import { ArrowRight, Ship, Anchor, Globe } from "lucide-react"
+import { projects } from "@/data/projects"
 
 export function Projects() {
   return (
-    <section className="bg-background py-24">
-      <div className="container mx-auto px-6">
-        <div className="mb-16 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Proven Results at Sea
+    <section className="relative overflow-hidden bg-background py-24 lg:py-32">
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+
+      <div className="relative z-10 container mx-auto px-6">
+        {/* Section Header */}
+        <div className="mb-16 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
+          <div className="max-w-2xl space-y-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+              <Anchor className="h-3 w-3" />
+              Strategic Portfolio
+            </div>
+            <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Proven Results{" "}
+              <span className="text-muted-foreground">at Sea.</span>
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Discover how our strategic interventions have transformed
-              operations for leading global maritime corporations.
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              Discover how our strategic interventions and geospatial insights
+              have transformed operations for global maritime agencies and
+              developers.
             </p>
           </div>
           <Link
             href="/projects"
-            className="group inline-flex items-center gap-2 font-medium text-primary hover:text-maritime-ocean"
+            className="group inline-flex items-center gap-2 font-bold tracking-tight text-primary transition-colors hover:text-maritime-ocean"
           >
-            View All Projects
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            Explore Full Portfolio
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-all group-hover:bg-primary group-hover:text-white">
+              <ArrowRight className="h-5 w-5" />
+            </div>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {projects.map((project, index) => (
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
             <div
-              key={index}
-              className="group hover:shadow-maritime-lg relative flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-card transition-all"
+              key={project.id}
+              className="group hover:shadow-maritime-xl relative flex flex-col overflow-hidden rounded-[2rem] border border-border/50 bg-card transition-all hover:border-primary/30"
             >
+              {/* Image Container with Dynamic Label */}
               <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src={project.image}
+                  src={project.cover}
                   alt={project.title}
                   fill
-                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                {/* Visual Scrim */}
+                <div className="absolute inset-0 bg-gradient-to-t from-maritime-abyss/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-90" />
+
+                {/* Floating Tag */}
+                <div className="absolute top-6 left-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-xl transition-all group-hover:bg-primary group-hover:ring-primary">
+                  <Ship className="h-5 w-5" />
+                </div>
               </div>
-              <div className="flex flex-1 flex-col justify-between p-6">
-                <div>
-                  <span className="mb-2 block text-xs font-medium tracking-wider text-primary uppercase dark:text-maritime-teal">
+
+              {/* Content Section */}
+              <div className="flex flex-1 flex-col p-8">
+                <div className="mb-4 flex items-center justify-between">
+                  <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
                     {project.category}
                   </span>
-                  <h4 className="mb-3 text-xl font-bold text-card-foreground">
-                    {project.title}
-                  </h4>
-                  <p className="text-muted-foreground">{project.desc}</p>
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
+                    <Globe className="h-3 w-3" />
+                    Global Reach
+                  </div>
                 </div>
-                <div className="mt-6 border-t border-border/50 pt-6">
+
+                <h4 className="mb-4 font-heading text-2xl font-bold text-card-foreground transition-colors group-hover:text-primary">
+                  {project.title}
+                </h4>
+
+                <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                  {project.description}
+                </p>
+
+                {/* Footer / CTA */}
+                <div className="mt-auto pt-8">
                   <Link
-                    href={`/projects`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-primary"
+                    href={`/projects/${project.slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-bold tracking-tight text-foreground transition-all hover:gap-3 hover:text-primary"
                   >
-                    Read Case Study <ArrowRight className="h-4 w-4" />
+                    View Case Study
+                    <ArrowRight className="h-4 w-4 text-primary" />
                   </Link>
                 </div>
               </div>

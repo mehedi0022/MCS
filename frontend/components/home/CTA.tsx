@@ -27,38 +27,22 @@ export function CTA() {
           </div>
 
           <h2 className="animate-in text-4xl font-bold tracking-tight text-white drop-shadow-xl duration-1000 fade-in slide-in-from-bottom-6 sm:text-6xl">
-            Ready to chart a{" "}
-            <span className="text-maritime-teal">new course?</span>
+            Let’s Work <span className="text-maritime-teal">Together</span>
           </h2>
 
-          <p className="mx-auto mt-8 max-w-2xl animate-in text-lg leading-relaxed text-white/90 drop-shadow-md delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-xl md:text-2xl">
-            Connect with our lead consultants today. Discover how our targeted
-            maritime strategies can elevate your operational efficiency and
-            compliance.
+          <p className="mx-auto mt-8 max-w-3xl animate-in text-lg leading-relaxed text-white/90 drop-shadow-md delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-xl md:text-2xl">
+            Whether you are planning a project, assessing feasibility, or
+            seeking technical expertise— MCS is ready to support you.
           </p>
 
           {/* Action Buttons */}
           <div className="mt-12 flex animate-in flex-col items-center justify-center gap-5 delay-300 duration-1000 slide-in-from-bottom-10 fade-in sm:flex-row">
             <Link
               href="/contact"
-              className={cn(
-                "group relative h-14 items-center justify-center gap-2 rounded-full bg-white px-10 text-base font-bold text-primary transition-all",
-                "hover:shadow-maritime-xl hover:-translate-y-1 hover:bg-white/95 active:scale-[0.98]",
-                "flex"
-              )}
+              className="group shadow-maritime hover:shadow-maritime-lg inline-flex h-14 items-center justify-center rounded-full bg-primary px-10 text-base font-bold text-primary-foreground transition-all hover:-translate-y-1 active:scale-95"
             >
-              Start Your Project
+              Get in Touch
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-
-            <Link
-              href="/about"
-              className={cn(
-                "inline-flex h-14 items-center justify-center rounded-full border border-white/40 bg-white/5 px-10 text-base font-bold text-white backdrop-blur-md transition-all",
-                "hover:border-white/60 hover:bg-white/10 active:scale-[0.98]"
-              )}
-            >
-              Learn More About Us
             </Link>
           </div>
         </div>

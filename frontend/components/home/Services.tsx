@@ -1,37 +1,4 @@
-import { Ship, ShieldCheck, Route, BarChart3, Wrench, Leaf } from "lucide-react"
-
-const services = [
-  {
-    icon: Ship,
-    title: "Port Development",
-    desc: "Comprehensive port planning, design, and optimization services for modern maritime facilities.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Offshore Engineering",
-    desc: "Navigate complex international maritime laws and safety regulations with ease.",
-  },
-  {
-    icon: Route,
-    title: "Coastal & Marine",
-    desc: "End-to-end supply chain optimization for maximum efficiency and reduced overhead.",
-  },
-  {
-    icon: Leaf,
-    title: "Infrastructure Design",
-    desc: "Implement green technologies to reduce emissions and achieve ESG goals.",
-  },
-  {
-    icon: Wrench,
-    title: "Vessel Inspection",
-    desc: "Comprehensive structural and mechanical audits by certified oceanic engineers.",
-  },
-  {
-    icon: BarChart3,
-    title: "Market Analytics",
-    desc: "Actionable intelligence and forecasting for global shipping trends.",
-  },
-]
+import { services } from "@/data/services"
 
 export function Services() {
   return (
@@ -42,19 +9,18 @@ export function Services() {
             Core Competencies
           </h2>
           <h3 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-            Architecting the{" "}
+            What We{" "}
             <span className="text-maritime-gradient dark:text-maritime-light-gradient">
-              future of shipping.
+              Do
             </span>
           </h3>
           <p className="mt-4 text-lg text-muted-foreground">
-            We provide specialized consulting across the entire maritime value
-            chain, blending deep industry expertise with modern technological
-            frameworks.
+            We provide a comprehensive range of services tailored to the needs
+            of Bangladesh’s marine and inland water sectors
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {services.map((Service, index) => (
             <div
               key={index}
@@ -70,7 +36,7 @@ export function Services() {
                 {Service.title}
               </h4>
               <p className="leading-relaxed text-muted-foreground">
-                {Service.desc}
+                {Service.description}
               </p>
             </div>
           ))}

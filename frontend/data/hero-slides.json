@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "badgeText": "Leading The Horizon",
+    "title": "Marine & Geospatial Solutions for Bangladesh’s Waterways",
+    "subtitle": "Delivering accurate data, practical insights, and sustainable solutions for ports, rivers, and coastal development. Empowering growth, safety, and environmental stewardship.",
+    "image": "/hero1.png",
+    "primaryButton": {
+      "text": "Explore Our Solutions",
+      "link": "/solutions"
+    },
+    "secondaryButton": {
+      "text": "Learn More",
+      "link": "/about"
+    }
+  },
+  {
+    "id": 2,
+    "badgeText": "Innovative Marine Solutions",
+    "title": "Transforming Bangladesh’s Waterways with Cutting-Edge Technology",
+    "subtitle": "Empowering sustainable development and efficient management of ports, rivers, and coastal areas. Harnessing advanced technology and local expertise to drive growth, safety, and environmental stewardship.",
+    "image": "/hero2.png",
+    "primaryButton": {
+      "text": "Discover Our Services",
+      "link": "/services"
+    },
+    "secondaryButton": {
+      "text": "Contact Us",
+      "link": "/contact"
+    }
+  }
+]

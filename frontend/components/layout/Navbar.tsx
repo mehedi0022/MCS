@@ -42,8 +42,8 @@ export function Navbar() {
         "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out",
         // Scrolled state: Substantial glass effect with a subtle border and shadow
         isScrolled
-          ? "backdrop-blur-2xl border-b border-border/50 bg-background/60 py-3 shadow-sm"
-          : "border-b border-border/50 bg-background/60 backdrop-blur-3xl py-4"
+          ? "border-b border-border/50 bg-background/60 py-3 shadow-sm backdrop-blur-2xl"
+          : "border-b border-border/50 bg-background/80 py-4 backdrop-blur-3xl"
       )}
     >
       <nav className="container mx-auto flex items-center justify-between px-6">
@@ -55,7 +55,7 @@ export function Navbar() {
           <div className="flex flex-col leading-none">
             <span
               className={cn(
-                "text-base md:text-lg font-bold tracking-tighter uppercase transition-colors duration-300",
+                "text-base font-bold tracking-tighter uppercase transition-colors duration-300 md:text-lg",
                 isScrolled
                   ? "text-foreground"
                   : "text-maritime-navy dark:text-white"
