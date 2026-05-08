@@ -14,7 +14,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-// Define the available modal types
 export type ModalType = "success" | "error" | "warning" | "info" | "loading"
 
 interface DynamicModalProps {

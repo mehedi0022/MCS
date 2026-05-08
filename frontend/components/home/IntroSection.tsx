@@ -31,14 +31,19 @@ export function IntroSection() {
           {/* Left Column: Mission & Narrative */}
           <div className="lg:col-span-7">
             <div className="space-y-8">
-              <div className="flex flex-col gap-3">
-                <span className="text-[10px] font-bold tracking-[0.4em] text-primary uppercase dark:text-maritime-teal">
+              <div className="mb-16 max-w-2xl space-y-4">
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+                  <Anchor className="h-3 w-3" />
                   Specialist Engineering Consultancy
-                </span>
-                <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                </div>
+                <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                   Navigating the complex waters of{" "}
                   <span className="text-muted-foreground">Bangladesh.</span>
                 </h2>
+                <p className="text-lg leading-relaxed text-muted-foreground">
+                  We provide a comprehensive range of services tailored to the
+                  needs of Bangladesh’s marine and inland water sectors
+                </p>
               </div>
 
               <div className="space-y-6 text-lg leading-relaxed text-muted-foreground md:text-xl">

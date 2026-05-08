@@ -1,5 +1,6 @@
-import React from "react"
+"use client"
 import { Anchor, Compass, Globe2, Lightbulb } from "lucide-react"
+import { motion } from "framer-motion"
 
 const features = [
   {
@@ -31,17 +32,20 @@ export function WhyChooseUs() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
           {/* Sticky Left Column */}
           <div className="flex flex-col justify-center">
-            <div className="sticky top-32">
-              <h2 className="text-sm font-semibold tracking-wider text-primary uppercase dark:text-maritime-teal">
+            <div className="sticky max-w-2xl space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+                <Anchor className="h-3 w-3" />
                 The Maritime Advantage
-              </h2>
-              <h3 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-                We don't just advise. <br className="hidden sm:block" />
-                <span className="text-maritime-gradient dark:text-maritime-light-gradient">
-                  We engineer success.
+              </div>
+
+              <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                We don't just give advice,{" "}
+                <span className="text-muted-foreground">
+                  we build success artisans.
                 </span>
-              </h3>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+              </h2>
+
+              <p className="text-lg leading-relaxed text-muted-foreground">
                 In an industry where delays cost millions, standard consulting
                 isn't enough. We combine rigorous technical engineering with
                 high-level strategic management to ensure your fleet operates at
@@ -50,23 +54,28 @@ export function WhyChooseUs() {
             </div>
           </div>
 
-          {/* Right Column Grid */}
+          {/* Right Column - Features Grid */}
           <div className="grid gap-8 sm:grid-cols-2">
             {features.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="glass rounded-2xl p-6 transition-transform hover:-translate-y-1"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 dark:bg-white/5">
-                  <item.icon className="h-6 w-6 text-primary dark:text-maritime-foam" />
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/15 dark:bg-white/5 dark:group-hover:bg-white/10">
+                  <item.icon className="h-6 w-6 text-primary transition-colors dark:text-maritime-foam" />
                 </div>
+
                 <h4 className="mb-2 text-lg font-bold text-foreground">
                   {item.title}
                 </h4>
+
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {item.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

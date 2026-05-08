@@ -1,26 +1,25 @@
 import { services } from "@/data/services"
+import { Anchor } from "lucide-react"
 
 export function Services() {
   return (
     <section className="bg-maritime-surface texture-maritime-noise py-24 dark:bg-background">
       <div className="container mx-auto px-6">
-        <div className="mb-16 max-w-2xl">
-          <h2 className="text-sm font-semibold tracking-wider text-primary uppercase dark:text-maritime-teal">
+        <div className="mb-16 max-w-2xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+            <Anchor className="h-3 w-3" />
             Core Competencies
+          </div>
+          <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            What We <span className="text-muted-foreground">Do.</span>
           </h2>
-          <h3 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-            What We{" "}
-            <span className="text-maritime-gradient dark:text-maritime-light-gradient">
-              Do
-            </span>
-          </h3>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             We provide a comprehensive range of services tailored to the needs
             of Bangladesh’s marine and inland water sectors
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {services.map((Service, index) => (
             <div
               key={index}
