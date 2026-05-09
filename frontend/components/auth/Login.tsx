@@ -2,26 +2,38 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Eye, EyeOff, Loader2, Lock, Mail, Anchor } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { cn } from "@/lib/utils"
+import { api, getApiErrorMessage } from "@/lib/api"
 
 export default function LoginPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsPending(true)
     setError("")
 
-    await new Promise((r) => setTimeout(r, 2000))
-    setIsPending(false)
-    setError("Access Denied: Invalid maritime credentials.")
+    try {
+      await api.post("/auth/login", { email, password })
+
+      router.replace(searchParams.get("redirect") ?? "/admin")
+      router.refresh()
+    } catch (loginError) {
+      setError(getApiErrorMessage(loginError))
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -71,6 +83,8 @@ export default function LoginPage() {
                 <Input
                   required
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   placeholder="name@company.com"
                   className="h-14 rounded-2xl border-slate-200 bg-slate-100/50 pl-12 text-slate-900 transition-all placeholder:text-slate-400 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 dark:border-white/5 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-600"
                 />
@@ -95,6 +109,8 @@ export default function LoginPage() {
                 <Input
                   required
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   placeholder="••••••••"
                   className="h-14 rounded-2xl border-slate-200 bg-slate-100/50 pr-12 pl-12 text-slate-900 transition-all placeholder:text-slate-400 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 dark:border-white/5 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-600"
                 />
@@ -137,6 +153,7 @@ export default function LoginPage() {
 
             {/* Primary Action Button */}
             <Button
+              type="submit"
               disabled={isPending}
               className="h-16 w-full rounded-2xl bg-primary font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(20,184,166,0.5)] transition-all hover:-translate-y-1 hover:bg-primary/90 active:scale-95"
             >

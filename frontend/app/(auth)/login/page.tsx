@@ -1,10 +1,11 @@
+import { Suspense } from "react"
 import LoginPage from "@/components/auth/Login"
 
 const page = () => {
   return (
-    <div>
+    <Suspense fallback={null}>
       <LoginPage />
-    </div>
+    </Suspense>
   )
 }
 

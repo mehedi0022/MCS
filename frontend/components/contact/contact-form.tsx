@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { api, getApiErrorMessage } from "@/lib/api"
 import {
   Select,
   SelectContent,
@@ -23,6 +24,7 @@ import {
 export function ContactForm() {
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState("")
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -35,10 +37,31 @@ export function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     setIsPending(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsPending(false)
-    setIsSuccess(true)
+    try {
+      await api.post("/messages", {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phoneNumber,
+        subject: `${formData.service || "General Inquiry"} - ${formData.companyName}`,
+        message: formData.message,
+      })
+
+      setIsSuccess(true)
+      setFormData({
+        fullName: "",
+        email: "",
+        companyName: "",
+        phoneNumber: "",
+        service: "",
+        message: "",
+      })
+    } catch (submitError) {
+      setError(getApiErrorMessage(submitError))
+    } finally {
+      setIsPending(false)
+    }
   }
 
   if (isSuccess) {
@@ -54,7 +77,10 @@ export function ContactForm() {
         </p>
         <Button
           variant="outline"
-          onClick={() => setIsSuccess(false)}
+          onClick={() => {
+            setIsSuccess(false)
+            setError("")
+          }}
           className="mt-8 rounded-full border-primary/20 hover:bg-primary/5"
         >
           New Inquiry
@@ -68,6 +94,11 @@ export function ContactForm() {
       <Anchor className="pointer-events-none absolute -top-12 -right-12 h-64 w-64 rotate-12 text-primary/5 dark:text-white/5" />
 
       <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+        {error && (
+          <div className="rounded-2xl border border-rose-500/25 bg-rose-500/10 p-4 text-sm font-semibold text-rose-600 dark:text-rose-300">
+            {error}
+          </div>
+        )}
         <div className="grid gap-6 md:grid-cols-2">
           {/* Full Name */}
           <div className="space-y-3">

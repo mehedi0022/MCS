@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, EffectFade } from "swiper/modules"
@@ -9,9 +10,50 @@ import "swiper/css"
 import "swiper/css/effect-fade"
 import "swiper/css/pagination"
 
-import slides from "@/data/hero-slides.json"
+import fallbackSlides from "@/data/hero-slides.json"
+import { api, type ApiResponse } from "@/lib/api"
+
+type HeroSlide = {
+  id: string | number
+  badgeText: string
+  title: string
+  subtitle: string
+  imageUrl?: string
+  image?: string
+  primaryButtonText?: string | null
+  primaryButtonLink?: string | null
+  secondaryButtonText?: string | null
+  secondaryButtonLink?: string | null
+  primaryButton?: {
+    text: string
+    link: string
+  }
+  secondaryButton?: {
+    text: string
+    link: string
+  }
+}
 
 export function Hero() {
+  const [slides, setSlides] = useState<HeroSlide[]>(fallbackSlides)
+
+  useEffect(() => {
+    async function loadHeroSlides() {
+      try {
+        const response =
+          await api.get<ApiResponse<HeroSlide[]>>("/hero-slides")
+
+        if (response.data.data.length > 0) {
+          setSlides(response.data.data)
+        }
+      } catch {
+        setSlides(fallbackSlides)
+      }
+    }
+
+    loadHeroSlides()
+  }, [])
+
   return (
     <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-maritime-abyss">
       {/* Top highlight */}
@@ -29,15 +71,32 @@ export function Hero() {
         loop={true}
         className="h-full w-full [&_.swiper-pagination]:bottom-6 [&_.swiper-pagination-bullet]:bg-white/20 [&_.swiper-pagination-bullet-active]:bg-primary"
       >
-        {slides.map((slide, index) => (
+        {slides.map((slide) => {
+          const primaryButton =
+            slide.primaryButton ??
+            (slide.primaryButtonText && slide.primaryButtonLink
+              ? { text: slide.primaryButtonText, link: slide.primaryButtonLink }
+              : null)
+          const secondaryButton =
+            slide.secondaryButton ??
+            (slide.secondaryButtonText && slide.secondaryButtonLink
+              ? {
+                  text: slide.secondaryButtonText,
+                  link: slide.secondaryButtonLink,
+                }
+              : null)
+
+          return (
           <SwiperSlide
-            key={index}
+            key={slide.id}
             className="relative flex h-full w-full items-center justify-center"
           >
             {/* Background Image */}
             <div
               className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-[10000ms] ease-out [.swiper-slide-active_&]:scale-105"
-              style={{ backgroundImage: `url(${slide.image})` }}
+              style={{
+                backgroundImage: `url(${slide.imageUrl ?? slide.image})`,
+              }}
             />
 
             {/* Atmospheric Overlays */}
@@ -67,23 +126,23 @@ export function Hero() {
                   {/* CTA Buttons */}
                   <div className="mt-6 flex w-full animate-in flex-col items-stretch justify-center gap-3 px-4 delay-700 duration-1000 fade-in slide-in-from-bottom-12 sm:mt-8 sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:px-0 md:mt-10">
                     {/* PRIMARY BUTTON */}
-                    {slide.primaryButton && (
+                    {primaryButton && (
                       <Link
-                        href={slide.primaryButton.link}
+                        href={primaryButton.link}
                         className="group shadow-maritime hover:shadow-maritime-lg inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-1 active:scale-95 sm:h-13 sm:px-10 sm:text-base md:h-14"
                       >
-                        {slide.primaryButton.text}
+                        {primaryButton.text}
                         <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5" />
                       </Link>
                     )}
 
                     {/* SECONDARY BUTTON */}
-                    {slide.secondaryButton && (
+                    {secondaryButton && (
                       <Link
-                        href={slide.secondaryButton.link}
+                        href={secondaryButton.link}
                         className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 text-sm font-bold text-white backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-white/60 hover:bg-white/20 active:scale-95 sm:h-13 sm:px-10 sm:text-base md:h-14"
                       >
-                        {slide.secondaryButton.text}
+                        {secondaryButton.text}
                       </Link>
                     )}
                   </div>
@@ -91,7 +150,8 @@ export function Hero() {
               </div>
             </div>
           </SwiperSlide>
-        ))}
+          )
+        })}
       </Swiper>
 
       {/* Bottom gradient fade - reduced height */}
