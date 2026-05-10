@@ -1,16 +1,33 @@
-import { Globe, Layers, Gauge, ShieldCheck } from "lucide-react"
+import { CalendarDays, Globe, Layers, UserRound } from "lucide-react"
 
-export function ProjectMeta({ category }: { category: string }) {
+interface ProjectMetaProps {
+  year?: number | null
+  date?: string | null
+  location?: string | null
+  category?: string | null
+  client?: string | null
+}
+
+export function ProjectMeta({
+  year,
+  location,
+  category,
+  client,
+}: ProjectMetaProps) {
   const items = [
-    { icon: <Globe size={18} />, label: "Deployment", value: "Global" },
-    { icon: <Layers size={18} />, label: "Sector", value: category },
     {
-      icon: <Gauge size={18} />,
-      label: "Status",
-      value: "Operational",
-      color: "text-emerald-500",
+      icon: <CalendarDays size={18} />,
+      label: "Year",
+      value: year ? `${year}` : "-",
     },
-    { icon: <ShieldCheck size={18} />, label: "Security", value: "Encrypted" },
+    { icon: <Globe size={18} />, label: "Location", value: location || "-" },
+    { icon: <Layers size={18} />, label: "Category", value: category || "-" },
+    {
+      icon: <UserRound size={18} />,
+      label: "Client",
+      value: client || "-",
+      color: "text-slate-900 dark:text-white",
+    },
   ]
 
   return (

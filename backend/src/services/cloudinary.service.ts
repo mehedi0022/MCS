@@ -34,3 +34,19 @@ export async function uploadToCloudinary(
     stream.end(file.buffer)
   })
 }
+
+export async function deleteFromCloudinary(publicId: string) {
+  if (!publicId) {
+    return
+  }
+
+  await cloudinary.uploader.destroy(publicId, {
+    resource_type: "image",
+  })
+}
+
+export async function cleanupCloudinaryUploads(publicIds: string[]) {
+  await Promise.allSettled(
+    publicIds.filter(Boolean).map((publicId) => deleteFromCloudinary(publicId))
+  )
+}

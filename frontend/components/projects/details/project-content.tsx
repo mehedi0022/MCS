@@ -1,78 +1,79 @@
+"use client"
+
 import Image from "next/image"
-import { CheckCircle2 } from "lucide-react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Pagination } from "swiper/modules"
+
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
 
 export function ProjectContent({
   cover,
+  description,
   gallery,
 }: {
   cover: string
+  description: string
   gallery: string[]
 }) {
   return (
-    <div className="space-y-20">
-      {/* Cinematic Hero */}
+    <div className="space-y-10">
+      {/* Cover Image */}
       <div className="relative aspect-[21/9] overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-100 shadow-2xl dark:border-white/10 dark:bg-white/5">
         <Image
           src={cover}
-          alt="Case Study Hero"
+          alt="Project cover image"
           fill
           className="object-cover"
           priority
         />
       </div>
 
-      {/* Narrative Section */}
-      <div className="grid items-start gap-12 md:grid-cols-2">
-        <div className="prose dark:prose-invert">
-          <h3 className="text-xl font-bold tracking-tight text-slate-900 uppercase dark:text-white">
-            Technical Overview
-          </h3>
-          <p className="leading-relaxed text-slate-500 dark:text-slate-400">
-            The integration process involved standardizing disparate telemetry
-            streams into a unified Project Borealis dashboard. By leveraging
-            low-latency satellite links, we achieved unprecedented control over
-            autonomous maneuvers.
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-slate-200 bg-slate-100/50 p-8 dark:border-white/5 dark:bg-white/5">
-          <h3 className="mb-6 text-sm font-bold tracking-widest text-slate-900 uppercase dark:text-white">
-            Key Results
-          </h3>
-          <ul className="space-y-4">
-            {[
-              "99.8% Navigation Accuracy",
-              "14% Average Fuel Savings",
-              "Remote Pilot Override Latency < 50ms",
-            ].map((result) => (
-              <li
-                key={result}
-                className="flex items-center gap-3 text-sm font-medium text-slate-600 dark:text-slate-400"
-              >
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                {result}
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Description below cover */}
+      <div className="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-white/10 dark:bg-white/5">
+        <h3 className="mb-4 text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+          Project Description
+        </h3>
+        <p className="whitespace-pre-line leading-relaxed text-slate-600 dark:text-slate-300">
+          {description}
+        </p>
       </div>
 
-      {/* Large-Scale Gallery */}
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {gallery.map((img, i) => (
-          <div
-            key={i}
-            className="group relative aspect-video overflow-hidden rounded-[2rem] border border-slate-200 dark:border-white/10"
+      {/* Gallery Slider */}
+      {gallery.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+            Gallery
+          </h3>
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={1}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+              },
+            }}
+            className="[&_.swiper-button-next]:text-white [&_.swiper-button-prev]:text-white [&_.swiper-pagination-bullet-active]:bg-primary"
           >
-            <Image
-              src={img}
-              alt={`View ${i}`}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          </div>
-        ))}
-      </div>
+            {gallery.map((img, index) => (
+              <SwiperSlide key={img + index}>
+                <div className="group relative aspect-video overflow-hidden rounded-[2rem] border border-slate-200 dark:border-white/10">
+                  <Image
+                    src={img}
+                    alt={`Project gallery image ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
     </div>
   )
 }

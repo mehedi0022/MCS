@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { DynamicModal } from "@/components/DynamicModal"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
@@ -58,6 +59,10 @@ export function HeroSlidesManager() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
+  const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
+  const [deleteLoadingOpen, setDeleteLoadingOpen] = useState(false)
+  const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   const previewImage = useMemo(() => {
     if (form.file) {
@@ -74,6 +79,18 @@ export function HeroSlidesManager() {
       }
     }
   }, [previewImage])
+
+  useEffect(() => {
+    if (!deleteSuccessOpen) {
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      setDeleteSuccessOpen(false)
+    }, 2500)
+
+    return () => window.clearTimeout(timer)
+  }, [deleteSuccessOpen])
 
   useEffect(() => {
     loadSlides()
@@ -185,16 +202,18 @@ export function HeroSlidesManager() {
   }
 
   async function deleteSlide(id: string) {
-    const shouldDelete = window.confirm("Delete this hero slide?")
-
-    if (!shouldDelete) {
+    if (!id) {
       return
     }
 
     try {
+      setDeleteLoadingOpen(true)
       await api.delete(`/hero-slides/${id}`)
       await loadSlides()
+      setDeleteLoadingOpen(false)
+      setDeleteSuccessOpen(true)
     } catch (deleteError) {
+      setDeleteLoadingOpen(false)
       setError(getApiErrorMessage(deleteError))
     }
   }
@@ -341,7 +360,11 @@ export function HeroSlidesManager() {
           </label>
         </div>
 
-        <Button disabled={isSaving} className="h-11 w-full gap-2 rounded-none">
+        <Button
+          type="submit"
+          disabled={isSaving}
+          className="h-11 w-full gap-2 rounded-none"
+        >
           {isSaving ? (
             <Loader2 className="size-4 animate-spin" />
           ) : editingId ? (
@@ -429,7 +452,10 @@ export function HeroSlidesManager() {
                     type="button"
                     variant="destructive"
                     size="icon-sm"
-                    onClick={() => deleteSlide(slide.id)}
+                    onClick={() => {
+                      setPendingDeleteId(slide.id)
+                      setDeleteWarningOpen(true)
+                    }}
                   >
                     <Trash2 className="size-4" />
                   </Button>
@@ -439,6 +465,44 @@ export function HeroSlidesManager() {
           )}
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={deleteWarningOpen}
+        onClose={() => {
+          setDeleteWarningOpen(false)
+          setPendingDeleteId(null)
+        }}
+        type="warning"
+        title="Delete Slide?"
+        description="This slide will be permanently removed."
+        actionText="Confirm Delete"
+        onAction={async () => {
+          if (!pendingDeleteId) return
+          setDeleteWarningOpen(false)
+          await deleteSlide(pendingDeleteId)
+          setPendingDeleteId(null)
+        }}
+      />
+
+      <DynamicModal
+        isOpen={deleteLoadingOpen}
+        onClose={() => {}}
+        type="loading"
+        title="Deleting"
+        description="Please wait while we delete the slide."
+        actionText="Please Wait"
+        onAction={() => {}}
+        showCloseButton={false}
+      />
+
+      <DynamicModal
+        isOpen={deleteSuccessOpen}
+        onClose={() => setDeleteSuccessOpen(false)}
+        type="success"
+        title="Deleted"
+        description="Hero slide deleted successfully."
+        actionText="Continue"
+      />
     </section>
   )
 }

@@ -11,13 +11,29 @@ import {
   type MessageReplyInput,
   type MessageStatusInput,
 } from "../validations/message.validation.js"
-import { sendReplyEmail } from "../services/email.service.js"
+import {
+  isSmtpConfigured,
+  sendReplyEmail,
+  sendWelcomeEmail,
+} from "../services/email.service.js"
 import { ApiError } from "../utils/api.js"
 
 export const createMessage: RequestHandler = async (req, res, next) => {
   try {
     const data = await validateBody<MessageInput>(messageSchema, req.body)
     const message = await prisma.contactMessage.create({ data })
+
+    if (isSmtpConfigured()) {
+      try {
+        await sendWelcomeEmail({
+          to: message.email,
+          recipientName: message.name,
+        })
+      } catch (welcomeError) {
+        console.error("Welcome email send failed:", welcomeError)
+      }
+    }
+
     return sendSuccess(res, message, 201)
   } catch (error) {
     return next(error)

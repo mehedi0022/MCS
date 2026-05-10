@@ -1,11 +1,45 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Ship, Anchor, Globe } from "lucide-react"
-import { projects } from "@/data/projects"
+import { projects as fallbackProjects } from "@/data/projects"
+import { api, type ApiResponse } from "@/lib/api"
+
+type HomeProject = {
+  id: string | number
+  slug: string
+  title: string
+  category: string
+  description?: string | null
+  summary?: string
+  imageUrl?: string | null
+  cover?: string
+  isFeatured?: boolean
+}
 
 export function Projects() {
+  const [projects, setProjects] = useState<HomeProject[]>(fallbackProjects)
+
+  useEffect(() => {
+    async function loadProjects() {
+      try {
+        const response = await api.get<ApiResponse<HomeProject[]>>("/projects")
+        const rows = response.data.data
+        const featured = rows.filter((project) => project.isFeatured)
+        const items = featured.length > 0 ? featured : rows.slice(0, 3)
+        if (items.length > 0) {
+          setProjects(items)
+        }
+      } catch {
+        setProjects(fallbackProjects)
+      }
+    }
+
+    void loadProjects()
+  }, [])
+
   return (
     <section className="relative overflow-hidden bg-background py-24 lg:py-32">
       {/* Background Grid Pattern */}
@@ -50,7 +84,7 @@ export function Projects() {
               {/* Image Container with Dynamic Label */}
               <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src={project.cover}
+                  src={project.imageUrl ?? project.cover ?? "/project1.jpg"}
                   alt={project.title}
                   fill
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -82,7 +116,7 @@ export function Projects() {
                 </h4>
 
                 <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                  {project.description}
+                  {project.summary ?? project.description ?? ""}
                 </p>
 
                 {/* Footer / CTA */}

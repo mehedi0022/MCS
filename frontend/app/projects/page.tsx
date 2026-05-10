@@ -1,13 +1,53 @@
-import { projects } from "@/data/projects"
 import { ProjectGallery } from "@/components/projects/project-gallery"
 import { Anchor } from "lucide-react"
+import { API_URL } from "@/lib/api"
+import { projects as fallbackProjects } from "@/data/projects"
 
 export const metadata = {
   title: "Strategic Portfolio | MCS Global",
   description: "Explore our maritime intelligence and infrastructure projects.",
 }
 
-export default function ProjectPage() {
+type ProjectCard = {
+  id: string
+  slug: string
+  title: string
+  category: string
+  imageUrl?: string | null
+}
+
+async function getProjects(): Promise<ProjectCard[]> {
+  try {
+    const response = await fetch(`${API_URL}/projects`, {
+      cache: "no-store",
+    })
+
+    if (!response.ok) {
+      return fallbackProjects.map((item) => ({
+        id: String(item.id),
+        slug: item.slug,
+        title: item.title,
+        category: item.category,
+        imageUrl: item.cover,
+      }))
+    }
+
+    const payload = await response.json()
+    return (payload.data ?? []) as ProjectCard[]
+  } catch {
+    return fallbackProjects.map((item) => ({
+      id: String(item.id),
+      slug: item.slug,
+      title: item.title,
+      category: item.category,
+      imageUrl: item.cover,
+    }))
+  }
+}
+
+export default async function ProjectPage() {
+  const projects = await getProjects()
+
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       {/* Hero Header - Static Content */}

@@ -2,10 +2,10 @@ import { ShieldCheck } from "lucide-react"
 
 interface ProjectHeaderProps {
   title: string
-  description: string
+  summary: string
 }
 
-export function ProjectHeader({ title, description }: ProjectHeaderProps) {
+export function ProjectHeader({ title, summary }: ProjectHeaderProps) {
   return (
     <header className="space-y-6">
       {/* Verification Badge */}
@@ -21,7 +21,7 @@ export function ProjectHeader({ title, description }: ProjectHeaderProps) {
 
       {/* Project Summary */}
       <p className="max-w-3xl text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-        {description}
+        {summary}
       </p>
     </header>
   )

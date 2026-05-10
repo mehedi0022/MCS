@@ -9,6 +9,7 @@ datasource db {
 
 enum Role {
   ADMIN
+  EDITOR
 }
 
 enum MessageStatus {
@@ -23,6 +24,7 @@ model User {
   email        String   @unique
   passwordHash String
   role         Role     @default(ADMIN)
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -44,12 +46,15 @@ model Project {
   id          String   @id @default(uuid())
   title       String
   slug        String   @unique
+  category    String   @default("General")
   client      String?
   location    String?
   year        Int?
   summary     String   @db.Text
   description String?  @db.Text
   imageUrl    String?
+  imagePublicId String?
+  gallery     Json?
   isFeatured  Boolean  @default(false)
   isPublished Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -86,4 +91,22 @@ model ContactMessage {
   deletedAt     DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+model SiteSettings {
+  id                 String   @id @default("main")
+  logoUrl            String?
+  logoPublicId       String?
+  faviconUrl         String?
+  faviconPublicId    String?
+  officeAddressLine1 String?
+  officeAddressLine2 String?
+  mapLocation        String?
+  mapLocationText    String?
+  contactEmails      Json?
+  contactPhones      Json?
+  branches           Json?
+  socialLinks        Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

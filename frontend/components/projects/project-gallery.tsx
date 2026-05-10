@@ -4,22 +4,34 @@ import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { Filter, ArrowRight } from "lucide-react"
+import { ArrowRight, Globe, Ship } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const categories = [
-  "All",
-  "Autonomous Navigation",
-  "Infrastructure Analytics",
-  "Sustainability",
-]
 
 export function ProjectGallery({
   initialProjects,
 }: {
-  initialProjects: any[]
+  initialProjects: Array<{
+    id: string
+    slug: string
+    title: string
+    category: string
+    imageUrl?: string | null
+    cover?: string
+    summary?: string | null
+    description?: string | null
+  }>
 }) {
   const [activeTab, setActiveTab] = useState("All")
+  const categories = [
+    "All",
+    ...Array.from(
+      new Set(
+        initialProjects
+          .map((project) => project.category?.trim())
+          .filter((category): category is string => Boolean(category))
+      )
+    ),
+  ]
 
   const filtered = initialProjects.filter((p) =>
     activeTab === "All" ? true : p.category === activeTab
@@ -70,27 +82,45 @@ export function ProjectGallery({
                     href={`/projects/${project.slug}`}
                     className="group block"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-slate-200 dark:bg-white/5">
+                    <div className="group hover:shadow-maritime-xl relative flex flex-col overflow-hidden rounded-[2rem] border border-border/50 bg-card transition-all hover:border-primary/30">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Image
-                        src={project.cover}
+                        src={project.imageUrl ?? project.cover ?? "/project1.jpg"}
                         alt={project.title}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                      <div className="absolute right-6 bottom-6 translate-y-4 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white">
-                          <ArrowRight className="h-5 w-5" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-maritime-abyss/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-90" />
+                        <div className="absolute top-6 left-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-xl transition-all group-hover:bg-primary group-hover:ring-primary">
+                          <Ship className="h-5 w-5" />
                         </div>
                       </div>
-                    </div>
-                    <div className="mt-6 space-y-2 px-2">
-                      <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">
-                        {project.category}
-                      </span>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                        {project.title}
-                      </h3>
+
+                      <div className="flex flex-1 flex-col p-8">
+                        <div className="mb-4 flex items-center justify-between">
+                          <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+                            {project.category}
+                          </span>
+                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
+                            <Globe className="h-3 w-3" />
+                            Global Reach
+                          </div>
+                        </div>
+
+                        <h3 className="mb-4 font-heading text-2xl font-bold text-card-foreground transition-colors group-hover:text-primary">
+                          {project.title}
+                        </h3>
+                        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                          {project.summary ?? project.description ?? ""}
+                        </p>
+
+                        <div className="mt-auto pt-8">
+                          <span className="inline-flex items-center gap-2 text-sm font-bold tracking-tight text-foreground transition-all hover:gap-3 hover:text-primary">
+                            View Case Study
+                            <ArrowRight className="h-4 w-4 text-primary" />
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </Link>
                 </motion.div>

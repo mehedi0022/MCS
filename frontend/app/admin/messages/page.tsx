@@ -19,6 +19,7 @@ import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import { DynamicModal } from "@/components/DynamicModal"
 
 type ContactMessage = {
   id: string
@@ -52,6 +53,9 @@ export default function AdminMessagesPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
+  const [deleteLoadingOpen, setDeleteLoadingOpen] = useState(false)
+  const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
 
   const selected = useMemo(
     () => messages.find((message) => message.id === selectedId),
@@ -92,6 +96,18 @@ export default function AdminMessagesPage() {
       setLoading(false)
     }
   }, [activeTab, router])
+
+  useEffect(() => {
+    if (!deleteSuccessOpen) {
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      setDeleteSuccessOpen(false)
+    }, 2500)
+
+    return () => window.clearTimeout(timer)
+  }, [deleteSuccessOpen])
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -145,19 +161,10 @@ export default function AdminMessagesPage() {
       return
     }
 
-    const messageText =
-      activeTab === "trash"
-        ? "Delete this message permanently? This action cannot be undone."
-        : "Move this message to trash?"
-
-    const ok = window.confirm(messageText)
-    if (!ok) {
-      return
-    }
-
     try {
       setSaving(true)
       setError("")
+      setDeleteLoadingOpen(true)
       await api.delete(`/messages/${selected.id}`, {
         params: activeTab === "trash" ? { force: true } : undefined,
       })
@@ -167,7 +174,10 @@ export default function AdminMessagesPage() {
       setSelectedId(remaining[0]?.id ?? "")
       setReplyMessage("")
       setReplySubject("")
+      setDeleteLoadingOpen(false)
+      setDeleteSuccessOpen(true)
     } catch (deleteError) {
+      setDeleteLoadingOpen(false)
       setError(getApiErrorMessage(deleteError))
     } finally {
       setSaving(false)
@@ -371,7 +381,7 @@ export default function AdminMessagesPage() {
                       <Button
                         variant="destructive"
                         className="rounded-none"
-                        onClick={deleteSelectedMessage}
+                        onClick={() => setDeleteWarningOpen(true)}
                         disabled={saving}
                       >
                         <Trash2 className="size-4" />
@@ -392,7 +402,7 @@ export default function AdminMessagesPage() {
                       <Button
                         variant="destructive"
                         className="rounded-none"
-                        onClick={deleteSelectedMessage}
+                        onClick={() => setDeleteWarningOpen(true)}
                         disabled={saving}
                       >
                         <Trash2 className="size-4" />
@@ -453,6 +463,47 @@ export default function AdminMessagesPage() {
           </section>
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={deleteWarningOpen}
+        onClose={() => setDeleteWarningOpen(false)}
+        type="warning"
+        title={activeTab === "trash" ? "Delete Permanently?" : "Move To Trash?"}
+        description={
+          activeTab === "trash"
+            ? "This action cannot be undone."
+            : "You can restore this message later from Trash."
+        }
+        actionText="Confirm"
+        onAction={async () => {
+          setDeleteWarningOpen(false)
+          await deleteSelectedMessage()
+        }}
+      />
+
+      <DynamicModal
+        isOpen={deleteLoadingOpen}
+        onClose={() => {}}
+        type="loading"
+        title="Processing"
+        description="Please wait while we update this message."
+        actionText="Please Wait"
+        onAction={() => {}}
+        showCloseButton={false}
+      />
+
+      <DynamicModal
+        isOpen={deleteSuccessOpen}
+        onClose={() => setDeleteSuccessOpen(false)}
+        type="success"
+        title="Success"
+        description={
+          activeTab === "trash"
+            ? "Message permanently deleted."
+            : "Message moved to trash."
+        }
+        actionText="Continue"
+      />
     </main>
   )
 }

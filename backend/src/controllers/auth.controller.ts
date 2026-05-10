@@ -16,6 +16,10 @@ export const login: RequestHandler = async (req, res, next) => {
       throw new ApiError(401, "Invalid email or password")
     }
 
+    if (!user.isActive) {
+      throw new ApiError(403, "Your account is deactivated. Please contact admin.")
+    }
+
     const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash)
 
     if (!isPasswordValid) {
@@ -62,11 +66,15 @@ export const getMe: RequestHandler = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.id },
-      select: { id: true, name: true, email: true, role: true },
+      select: { id: true, name: true, email: true, role: true, isActive: true },
     })
 
     if (!user) {
       throw new ApiError(401, "User no longer exists")
+    }
+
+    if (!user.isActive) {
+      throw new ApiError(403, "Your account is deactivated. Please contact admin.")
     }
 
     return sendSuccess(res, { user })

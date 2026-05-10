@@ -1,6 +1,7 @@
 import { ServicesHero } from "@/components/services/services-hero"
 import { ExpertiseGrid } from "@/components/services/expertise-grid"
 import { OurApproach } from "@/components/services/our-approach"
+import { API_URL } from "@/lib/api"
 
 export const metadata = {
   title: "Global Expertise | MCS Maritime Consultancy",
@@ -8,13 +9,65 @@ export const metadata = {
     "Professional maritime engineering, inspection, and strategic consulting services.",
 }
 
-export default function ServicesPage() {
+type ServiceItem = {
+  id: string
+  title: string
+  summary: string
+}
+
+const fallbackServices: ServiceItem[] = [
+  {
+    id: "1",
+    title: "Vessel Inspection",
+    summary:
+      "Rigorous condition assessments and pre-purchase surveys following international class standards.",
+  },
+  {
+    id: "2",
+    title: "Marine Engineering",
+    summary:
+      "Advanced naval architecture and propulsion system design optimized for hydro-efficiency.",
+  },
+  {
+    id: "3",
+    title: "Safety Compliance",
+    summary:
+      "Implementation of ISM/ISPS protocols and comprehensive regulatory audits for global fleets.",
+  },
+]
+
+async function getServices(): Promise<ServiceItem[]> {
+  try {
+    const response = await fetch(`${API_URL}/services`, { cache: "no-store" })
+    if (!response.ok) return fallbackServices
+
+    const payload = await response.json()
+    const rows = (payload.data ?? []) as Array<{
+      id: string
+      title: string
+      summary?: string
+      description?: string
+    }>
+
+    return rows.map((item) => ({
+      id: item.id,
+      title: item.title,
+      summary: item.summary ?? item.description ?? "",
+    }))
+  } catch {
+    return fallbackServices
+  }
+}
+
+export default async function ServicesPage() {
+  const services = await getServices()
+
   return (
     <div className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <ServicesHero />
 
       {/* Section 1: Expertise */}
-      <ExpertiseGrid />
+      <ExpertiseGrid services={services} />
 
       {/* Section 2: Our Approach */}
       <OurApproach />

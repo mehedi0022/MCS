@@ -41,11 +41,11 @@ type MeResponse = {
 
 const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard, active: true },
-  { label: "Services", href: "#", icon: BriefcaseBusiness },
-  { label: "Projects", href: "#", icon: FolderKanban },
+  { label: "Services", href: "/admin/services", icon: BriefcaseBusiness },
+  { label: "Projects", href: "/admin/projects", icon: FolderKanban },
   { label: "Messages", href: "/admin/messages", icon: Inbox },
-  { label: "Users", href: "#", icon: Users },
-  { label: "Settings", href: "#", icon: Settings },
+  { label: "Users", href: "/admin/users", icon: Users },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
 
 const emptySummary: Summary = {
@@ -123,13 +123,13 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-background pt-24 text-foreground">
       <div className="container mx-auto grid gap-6 px-6 pb-12 lg:grid-cols-[260px_1fr]">
-        <aside className="h-fit border border-border bg-card p-4 shadow-maritime-sm">
+        <aside className="shadow-maritime-sm h-fit border border-border bg-card p-4">
           <div className="mb-6 flex items-center gap-3 border-b border-border pb-4">
             <div className="flex size-10 items-center justify-center bg-primary text-primary-foreground">
               <ShipWheel className="size-5" />
             </div>
             <div>
-              <p className="text-sm font-bold uppercase tracking-wide">
+              <p className="text-sm font-bold tracking-wide uppercase">
                 MCS Admin
               </p>
               <p className="text-xs text-muted-foreground">Operations desk</p>
@@ -143,7 +143,8 @@ export default function AdminDashboardPage() {
                 href={item.href}
                 className={cn(
                   "flex h-11 w-full items-center gap-3 px-3 text-left text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground",
-                  item.active && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+                  item.active &&
+                    "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                 )}
               >
                 <item.icon className="size-4" />
@@ -154,9 +155,9 @@ export default function AdminDashboardPage() {
         </aside>
 
         <main className="space-y-6">
-          <section className="flex flex-col justify-between gap-4 border border-border bg-card p-5 shadow-maritime-sm md:flex-row md:items-center">
+          <section className="shadow-maritime-sm flex flex-col justify-between gap-4 border border-border bg-card p-5 md:flex-row md:items-center">
             <div>
-              <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              <div className="mb-2 flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-primary uppercase">
                 <ShieldCheck className="size-4" />
                 Protected dashboard
               </div>
@@ -189,7 +190,7 @@ export default function AdminDashboardPage() {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="border border-border bg-card p-5 shadow-maritime-sm"
+                className="shadow-maritime-sm border border-border bg-card p-5"
               >
                 <div className="mb-5 flex items-center justify-between">
                   <stat.icon className={cn("size-5", stat.tone)} />
@@ -198,7 +199,7 @@ export default function AdminDashboardPage() {
                 <p className="text-3xl font-bold">
                   {isLoading ? "-" : stat.value}
                 </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <p className="mt-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
                   {stat.label}
                 </p>
               </div>
@@ -206,65 +207,6 @@ export default function AdminDashboardPage() {
           </section>
 
           <HeroSlidesManager />
-
-          <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-            <div className="border border-border bg-card p-5 shadow-maritime-sm">
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold">Content Workflow</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Your next CRUD screens can plug into the protected API
-                    routes already prepared.
-                  </p>
-                </div>
-                <Button variant="outline" size="sm" className="rounded-none">
-                  View All
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {[
-                  "Review new contact messages",
-                  "Update featured projects",
-                  "Publish service page changes",
-                ].map((item, index) => (
-                  <div
-                    key={item}
-                    className="flex items-center justify-between border border-border/70 p-4"
-                  >
-                    <div>
-                      <p className="font-semibold">{item}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Priority {index + 1}
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon-sm">
-                      <ArrowUpRight className="size-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="border border-border bg-card p-5 shadow-maritime-sm">
-              <h2 className="text-xl font-bold">Session</h2>
-              <div className="mt-5 space-y-4 text-sm">
-                <div className="flex justify-between border-b border-border pb-3">
-                  <span className="text-muted-foreground">Email</span>
-                  <span className="font-semibold">{user?.email ?? "-"}</span>
-                </div>
-                <div className="flex justify-between border-b border-border pb-3">
-                  <span className="text-muted-foreground">Role</span>
-                  <span className="font-semibold">{user?.role ?? "-"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Auth</span>
-                  <span className="font-semibold text-primary">
-                    HTTP-only cookie
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
         </main>
       </div>
     </div>

@@ -9,6 +9,8 @@ import heroSlideRoutes from "./routes/hero-slides.routes.js";
 import messageRoutes from "./routes/messages.routes.js";
 import projectRoutes from "./routes/projects.routes.js";
 import serviceRoutes from "./routes/services.routes.js";
+import settingsRoutes from "./routes/settings.routes.js";
+import usersRoutes from "./routes/users.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 export const app = express();
@@ -45,5 +47,7 @@ app.use("/api/hero-slides", heroSlideRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/users", usersRoutes);
 
 app.use(errorHandler);

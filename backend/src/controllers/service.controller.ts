@@ -22,6 +22,17 @@ export const getServices: RequestHandler = async (_req, res, next) => {
   }
 }
 
+export const getServicesAdmin: RequestHandler = async (_req, res, next) => {
+  try {
+    const services = await prisma.service.findMany({
+      orderBy: { createdAt: "desc" },
+    })
+    return sendSuccess(res, services)
+  } catch (error) {
+    return next(error)
+  }
+}
+
 export const createService: RequestHandler = async (req, res, next) => {
   try {
     const data = await validateBody<ServiceInput>(serviceSchema, req.body)

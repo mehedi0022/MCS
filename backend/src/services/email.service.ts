@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer"
 import { env } from "../config/env.js"
 import { ApiError } from "../utils/api.js"
+import {
+  buildReplyEmailTemplate,
+  buildWelcomeEmailTemplate,
+} from "../templates/email-templates.js"
 
 const smtpConfigured = Boolean(env.SMTP_USER && env.SMTP_PASS)
 
@@ -16,6 +20,32 @@ const transporter = nodemailer.createTransport({
     : undefined,
 })
 
+export function isSmtpConfigured() {
+  return smtpConfigured
+}
+
+export async function sendWelcomeEmail(params: {
+  to: string
+  recipientName: string
+}) {
+  if (!smtpConfigured) {
+    return
+  }
+
+  const template = buildWelcomeEmailTemplate({
+    recipientName: params.recipientName,
+    fromName: env.SMTP_FROM_NAME,
+  })
+
+  await transporter.sendMail({
+    from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_USER}>`,
+    to: params.to,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  })
+}
+
 export async function sendReplyEmail(params: {
   to: string
   recipientName: string
@@ -30,25 +60,18 @@ export async function sendReplyEmail(params: {
     )
   }
 
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;">
-      <h2 style="margin-bottom:8px;">Hello ${params.recipientName},</h2>
-      <p style="margin-top:0;">Thank you for contacting MCS. Here is our response:</p>
-      <blockquote style="margin:16px 0;padding:12px 16px;border-left:4px solid #0ea5e9;background:#f8fafc;">
-        ${params.replyMessage.replace(/\n/g, "<br/>")}
-      </blockquote>
-      <p style="margin-bottom:6px;"><strong>Your original message:</strong></p>
-      <blockquote style="margin:0;padding:12px 16px;border-left:4px solid #cbd5e1;background:#f8fafc;">
-        ${params.originalMessage.replace(/\n/g, "<br/>")}
-      </blockquote>
-      <p style="margin-top:20px;">Best regards,<br/>${env.SMTP_FROM_NAME}</p>
-    </div>
-  `
+  const template = buildReplyEmailTemplate({
+    recipientName: params.recipientName,
+    fromName: env.SMTP_FROM_NAME,
+    replyMessage: params.replyMessage,
+    originalMessage: params.originalMessage,
+  })
 
   await transporter.sendMail({
     from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_USER}>`,
     to: params.to,
     subject: params.subject,
-    html,
+    html: template.html,
+    text: template.text,
   })
 }
