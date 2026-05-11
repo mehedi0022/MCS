@@ -14,6 +14,9 @@ type ProjectCard = {
   title: string
   category: string
   imageUrl?: string | null
+  client?: string
+  location?: string
+  year?: number
   summary?: string
   description?: string
 }
@@ -25,6 +28,9 @@ const fallbackProjectCards: ProjectCard[] = fallbackProjects.map((item) => ({
   category: item.category,
   imageUrl: item.cover,
   summary: item.summary,
+  client: item.client,
+  location: item.location,
+  year: item.year,
   description: item.description,
 }))
 
@@ -49,6 +55,9 @@ async function getProjects(): Promise<ProjectCard[]> {
         title: String(item.title ?? "").trim(),
         category: String(item.category ?? "General").trim() || "General",
         imageUrl: item.imageUrl ?? null,
+        client: String(item.client ?? "").trim(),
+        location: String(item.location ?? "").trim(),
+        year: Number(item.year) || undefined,
         summary: item.summary ?? "",
         description: item.description ?? "",
       }))

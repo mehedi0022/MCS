@@ -87,7 +87,7 @@ export function Projects() {
                   src={project.imageUrl ?? project.cover ?? "/project1.jpg"}
                   alt={project.title}
                   fill
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  className="line-clamp-1 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
 
                 {/* Visual Scrim */}

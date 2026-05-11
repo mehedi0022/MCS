@@ -19,6 +19,9 @@ export function ProjectGallery({
     cover?: string
     summary?: string | null
     description?: string | null
+    client?: string
+    location?: string
+    year?: number
   }>
 }) {
   const [activeTab, setActiveTab] = useState("All")
@@ -84,12 +87,14 @@ export function ProjectGallery({
                   >
                     <div className="group hover:shadow-maritime-xl relative flex flex-col overflow-hidden rounded-[2rem] border border-border/50 bg-card transition-all hover:border-primary/30">
                       <div className="relative aspect-[4/3] w-full overflow-hidden">
-                      <Image
-                        src={project.imageUrl ?? project.cover ?? "/project1.jpg"}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                      />
+                        <Image
+                          src={
+                            project.imageUrl ?? project.cover ?? "/project1.jpg"
+                          }
+                          alt={project.title}
+                          fill
+                          className="line-clamp-1 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-maritime-abyss/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-90" />
                         <div className="absolute top-6 left-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-xl transition-all group-hover:bg-primary group-hover:ring-primary">
                           <Ship className="h-5 w-5" />

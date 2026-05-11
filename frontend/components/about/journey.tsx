@@ -1,41 +1,52 @@
-"use client"
-
 import React from "react"
 
-const milestones = [
+export type JourneyItem = {
+  id: string
+  year: string
+  title: string
+  desc: string
+}
+
+const fallbackMilestones: JourneyItem[] = [
   {
+    id: "fallback-1",
     year: "2014",
     title: "The Maiden Voyage",
     desc: "Founded in Singapore by a team of 4 naval architects focused on regional port efficiency.",
   },
   {
+    id: "fallback-2",
     year: "2015",
     title: "Pacific Expansion",
     desc: "Opened operations across 12 Pacific ports, growing our fleet monitoring network.",
   },
   {
+    id: "fallback-3",
     year: "2016",
     title: "Safety First",
     desc: "Launched our proprietary hazard detection system, reducing incidents by 40%.",
   },
   {
+    id: "fallback-4",
     year: "2017",
     title: "Expanding Horizons",
     desc: "Established our European headquarters in Rotterdam, doubling our engineering capacity.",
   },
   {
+    id: "fallback-5",
     year: "2020",
     title: "Digital Twin Launch",
     desc: "Pioneered the industry's first real-time digital twin simulation for vessel logistics.",
   },
   {
+    id: "fallback-6",
     year: "2024",
     title: "Sustainable Future",
     desc: "Committed to zero-emission infrastructure projects across the Middle East and Asia.",
   },
 ]
 
-export function Journey() {
+export function Journey({ milestones = fallbackMilestones }: { milestones?: JourneyItem[] }) {
   return (
     <section className="relative overflow-hidden border-y border-slate-200 bg-slate-50 py-24 md:py-32 dark:border-white/5 dark:bg-[#020617]/50">
       {/* Heading */}
@@ -73,22 +84,11 @@ export function Journey() {
       </div>
 
       <div className="pointer-events-none absolute -bottom-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-
-      <style jsx>{`
-        @keyframes marquee {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-100%);
-          }
-        }
-      `}</style>
     </section>
   )
 }
 
-function Card({ item, i }: { item: (typeof milestones)[0]; i: number }) {
+function Card({ item, i }: { item: JourneyItem; i: number }) {
   const isTop = i % 2 === 0
   return (
     <div className="relative h-[320px] w-[300px] shrink-0 md:w-[340px]">

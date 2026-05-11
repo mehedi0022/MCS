@@ -5,6 +5,9 @@ export const projects = [
     title: "Padma River Hydrographic Baseline",
     category: "Hydrography",
     cover: "/project1.jpg",
+    client: "Bangladesh Inland Water Transport Authority",
+    location: "Chattogram, Bangladesh",
+    year: 2023,
     gallery: [
       "https://images.unsplash.com/photo-1505299341142-8888fc657cae?q=80&w=1200",
       "https://images.unsplash.com/photo-1494412574643-ff0c0b8d8f57?q=80&w=1200",
@@ -20,6 +23,9 @@ export const projects = [
     title: "Chattogram Port Berth Optimization",
     category: "Port Operations",
     cover: "/project2.jpg",
+    client: "Chattogram Port Authority",
+    location: "Chattogram, Bangladesh",
+    year: 2021,
     gallery: [
       "https://images.unsplash.com/photo-1554522965-dbaf4c01726a?q=80&w=1200",
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200",
@@ -35,6 +41,9 @@ export const projects = [
     title: "Meghna Dredging Monitoring Program",
     category: "Dredging Monitoring",
     cover: "/project3.jpg",
+    client: "Meghna River Authority",
+    location: "Dhaka, Bangladesh",
+    year: 2024,
     gallery: [
       "https://images.unsplash.com/photo-1605333036665-d069da5c06fc?q=80&w=1200",
       "https://images.unsplash.com/photo-1473445361085-b9a07f55608b?q=80&w=1200",

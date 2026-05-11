@@ -69,12 +69,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const description =
     apiProject?.description ?? fallbackProject?.description ?? ""
   const summary =
-    apiProject?.summary ?? fallbackProject?.description ?? ""
+    apiProject?.summary ?? fallbackProject?.summary ?? fallbackProject?.description ?? ""
   const title = apiProject?.title ?? fallbackProject?.title ?? ""
   const category = apiProject?.category ?? fallbackProject?.category ?? null
-  const year = apiProject?.year ?? null
-  const location = apiProject?.location ?? null
-  const client = apiProject?.client ?? null
+  const year = apiProject?.year ?? fallbackProject?.year ?? null
+  const location = apiProject?.location ?? fallbackProject?.location ?? null
+  const client = apiProject?.client ?? fallbackProject?.client ?? null
   const date = apiProject?.createdAt ?? null
 
   return (

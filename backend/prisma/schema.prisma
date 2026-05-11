@@ -140,3 +140,14 @@ model WhatWeDoItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model JourneyMilestone {
+  id        String   @id @default(uuid())
+  year      String
+  title     String
+  desc      String   @db.Text
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

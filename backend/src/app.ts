@@ -12,6 +12,7 @@ import serviceRoutes from "./routes/services.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import whatWeDoRoutes from "./routes/what-we-do.routes.js";
+import journeyRoutes from "./routes/journey.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 export const app = express();
@@ -51,5 +52,6 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/what-we-do", whatWeDoRoutes);
+app.use("/api/journey", journeyRoutes);
 
 app.use(errorHandler);

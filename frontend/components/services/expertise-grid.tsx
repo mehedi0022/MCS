@@ -16,14 +16,22 @@ export function ExpertiseGrid({ services }: { services: ServiceItem[] }) {
   return (
     <section className="relative overflow-hidden py-24">
       <div className="container mx-auto px-6">
-        <div className="mb-16 max-w-2xl">
-          <h2 className="mb-4 font-heading text-sm font-bold tracking-[0.4em] text-primary uppercase">
-            Core Expertise
+        <div className="mb-16 max-w-2xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+            <Anchor className="h-3 w-3" />
+            Our Expertise
+          </div>
+          <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Strategic Interventions{" "}
+            <span className="text-muted-foreground">
+              Across the Global Fleet.
+            </span>
           </h2>
-          <h3 className="text-4xl leading-tight font-bold tracking-tight text-slate-900 dark:text-white">
-            Strategic Interventions <br />
-            <span className="text-slate-400">Across the Global Fleet.</span>
-          </h3>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            We specialize in translating complex maritime challenges into
+            precise technical solutions, empowering our clients to navigate the
+            evolving maritime landscape with confidence and strategic foresight.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -41,9 +49,9 @@ export function ExpertiseGrid({ services }: { services: ServiceItem[] }) {
                   (icons[item.icon as keyof typeof icons] as typeof Anchor) ??
                   Anchor
                 return (
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-white/5">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-white/5">
                     <Icon className="h-6 w-6" />
-              </div>
+                  </div>
                 )
               })()}
               <h4 className="mb-3 text-lg font-bold tracking-tight text-slate-900 uppercase transition-colors group-hover:text-primary dark:text-white">
