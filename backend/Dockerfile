@@ -23,4 +23,4 @@ COPY --from=build /app/prisma ./prisma
 RUN npm prune --omit=dev && npm cache clean --force
 
 EXPOSE 5000
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/src/server.js"]
