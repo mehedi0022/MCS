@@ -5,9 +5,9 @@ import { Anchor } from "lucide-react"
 
 export default function ContactPage() {
   return (
-    <main className="bg-maritime-surface texture-maritime-noise relative min-h-screen pb-24 dark:bg-background dark:bg-none">
+    <main className="relative min-h-screen bg-slate-50 pb-24 transition-colors duration-500 dark:bg-[#020617]">
       {/* Background Glow */}
-      <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[600px] w-full -translate-x-1/2 rounded-full bg-primary/5 blur-[120px] dark:bg-maritime-ocean/10" />
+      <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[600px] w-full -translate-x-1/2 rounded-full bg-primary/5 blur-[120px] dark:bg-primary/10" />
       <section className="relative overflow-hidden pt-32 pb-20">
         {/* Background patterns */}
         <div className="absolute inset-0 z-0">

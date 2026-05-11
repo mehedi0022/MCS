@@ -7,6 +7,7 @@ import { Menu, X, Anchor, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useSiteSettings } from "@/context/site-settings-context"
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -20,6 +21,9 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { settings } = useSiteSettings()
+  const logoUrl = settings?.logoUrl?.trim()
+  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "consult@maritime.com"
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -49,9 +53,17 @@ export function Navbar() {
       <nav className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2">
-          <div className="rounded-lg bg-primary p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-6">
-            <Anchor className="h-6 w-6 text-primary-foreground" />
-          </div>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt="Company logo"
+              className="h-9 w-auto object-contain"
+            />
+          ) : (
+            <div className="rounded-lg bg-primary p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-6">
+              <Anchor className="h-6 w-6 text-primary-foreground" />
+            </div>
+          )}
           <div className="flex flex-col leading-none">
             <span
               className={cn(
@@ -199,7 +211,7 @@ export function Navbar() {
               GET CONSULTATION
             </Button>
             <p className="text-center text-sm text-muted-foreground italic">
-              Consult@Maritime-Solutions.com
+              {primaryEmail}
             </p>
           </div>
         </div>

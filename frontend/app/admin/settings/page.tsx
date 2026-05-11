@@ -7,23 +7,10 @@ import { ArrowLeft, ImagePlus, Loader2, Plus, Save, Trash2 } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
-type SocialLink = { platform: string; url: string }
-
-type SiteSettings = {
-  logoUrl?: string | null
-  faviconUrl?: string | null
-  officeAddressLine1?: string | null
-  officeAddressLine2?: string | null
-  mapLocation?: string | null
-  mapLocationText?: string | null
-  contactEmails?: string[] | null
-  contactPhones?: string[] | null
-  branches?: string[] | null
-  socialLinks?: SocialLink[] | null
-}
+import { useSiteSettings, type SiteSettings, type SocialLink } from "@/context/site-settings-context"
 
 export default function AdminSettingsPage() {
+  const { refreshSettings } = useSiteSettings()
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
@@ -164,6 +151,7 @@ export default function AdminSettingsPage() {
       setLogoFile(null)
       setFaviconFile(null)
       setSuccess("Settings updated successfully.")
+      await refreshSettings()
       await loadSettings()
     } catch (saveError) {
       setError(getApiErrorMessage(saveError))
@@ -303,6 +291,10 @@ export default function AdminSettingsPage() {
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Office & Map
                 </h2>
+                <p className="text-xs text-muted-foreground">
+                  Enter a Google Plus Code (example: P9F9+5Q, Dhaka). URL/iframe
+                  also works, but Plus Code is recommended.
+                </p>
                 <div className="grid gap-4 md:grid-cols-2">
                   <Input
                     placeholder="Office address line 1"
@@ -320,13 +312,13 @@ export default function AdminSettingsPage() {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <Input
-                    placeholder="Map location URL (Google Maps embed/link)"
+                    placeholder="Google Plus Code (e.g. P9F9+5Q, Dhaka)"
                     value={mapLocation}
                     onChange={(e) => setMapLocation(e.target.value)}
                     className="border-input px-3"
                   />
                   <Input
-                    placeholder="Map location text"
+                    placeholder="Map label text (e.g. Mirpur-11, Dhaka)"
                     value={mapLocationText}
                     onChange={(e) => setMapLocationText(e.target.value)}
                     className="border-input px-3"

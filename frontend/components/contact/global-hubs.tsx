@@ -11,14 +11,14 @@ const hubs = [
 
 export function GlobalPresence() {
   return (
-    <div className="glass group shadow-maritime-lg relative overflow-hidden rounded-[2.5rem] border-white/5 bg-background/40 dark:bg-white/5">
+    <div className="group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-lg dark:border-white/10 dark:bg-[#020617]/80">
       {/* Structural Shape Divider (Top Right Accent) */}
       <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-primary/5 blur-2xl" />
 
       <div className="relative z-10 p-8 md:p-10">
         {/* Header Section */}
         <div className="mb-10 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-primary dark:text-maritime-teal">
+          <div className="flex items-center gap-3 text-primary">
             <Globe className="h-5 w-5 animate-[spin_10s_linear_infinite]" />
             <span className="text-[10px] font-bold tracking-[0.4em] text-foreground/80 uppercase">
               Global Coordination Centers
@@ -38,7 +38,7 @@ export function GlobalPresence() {
           {hubs.map((hub, index) => (
             <React.Fragment key={hub.city}>
               <div className="flex-1 space-y-2 first:pl-0 last:pr-0 md:px-6">
-                <p className="text-[10px] font-bold tracking-[0.2em] text-primary/70 uppercase dark:text-maritime-teal/70">
+                <p className="text-[10px] font-bold tracking-[0.2em] text-primary/70 uppercase">
                   {hub.zone}
                 </p>
                 <h4 className="font-heading text-2xl font-bold tracking-tight text-foreground">
@@ -64,7 +64,7 @@ export function GlobalPresence() {
         <div className="mt-12 flex items-center justify-between border-t border-border/40 pt-8">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/5">
-              <Clock className="h-3.5 w-3.5 text-primary dark:text-maritime-teal" />
+              <Clock className="h-3.5 w-3.5 text-primary" />
             </div>
             <span className="font-medium tracking-wide">
               Ready for 24/7 Deployment
@@ -76,7 +76,7 @@ export function GlobalPresence() {
               FLEET UPTIME 99.8%
             </span>
             <div className="h-1 w-32 overflow-hidden rounded-full bg-primary/10">
-              <div className="h-full w-[98%] bg-gradient-to-r from-primary via-maritime-ocean to-maritime-teal transition-all duration-1000 group-hover/progress:w-full" />
+              <div className="h-full w-[98%] bg-gradient-to-r from-primary via-cyan-500 to-emerald-400 transition-all duration-1000 group-hover/progress:w-full" />
             </div>
           </div>
         </div>

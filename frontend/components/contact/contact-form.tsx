@@ -66,7 +66,7 @@ export function ContactForm() {
 
   if (isSuccess) {
     return (
-      <div className="glass-strong shadow-maritime-xl relative flex min-h-[600px] animate-in flex-col items-center justify-center overflow-hidden rounded-[2.5rem] p-8 text-center duration-500 zoom-in-95 fade-in dark:bg-white/5">
+      <div className="relative flex min-h-[600px] animate-in flex-col items-center justify-center overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white p-8 text-center shadow-xl duration-500 zoom-in-95 fade-in dark:border-white/10 dark:bg-[#020617]/80">
         <div className="mb-6 rounded-full bg-emerald-500/10 p-4 dark:bg-emerald-500/20">
           <CheckCircle2 className="h-12 w-12 text-emerald-500" />
         </div>
@@ -90,8 +90,8 @@ export function ContactForm() {
   }
 
   return (
-    <div className="glass-strong shadow-maritime-xl relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12 dark:bg-white/5">
-      <Anchor className="pointer-events-none absolute -top-12 -right-12 h-64 w-64 rotate-12 text-primary/5 dark:text-white/5" />
+    <div className="relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-xl sm:p-12 dark:border-white/10 dark:bg-[#020617]/80">
+      <Anchor className="pointer-events-none absolute -top-12 -right-12 h-64 w-64 rotate-12 text-primary/5 dark:text-primary/10" />
 
       <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
         {error && (
@@ -112,7 +112,7 @@ export function ContactForm() {
               onChange={(e) =>
                 setFormData({ ...formData, fullName: e.target.value })
               }
-              className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+              className="h-14 w-full rounded-2xl border-slate-200 bg-slate-50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50"
             />
           </div>
 
@@ -129,7 +129,7 @@ export function ContactForm() {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+              className="h-14 w-full rounded-2xl border-slate-200 bg-slate-50 px-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50"
             />
           </div>
 
@@ -146,7 +146,7 @@ export function ContactForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, companyName: e.target.value })
                 }
-                className="h-14 w-full rounded-2xl border-border/50 bg-background/50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+                className="h-14 w-full rounded-2xl border-slate-200 bg-slate-50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50"
               />
               <Building2 className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
             </div>
@@ -166,7 +166,7 @@ export function ContactForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, phoneNumber: e.target.value })
                 }
-                className="h-14 w-full rounded-2xl border-border/50 bg-background/50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+                className="h-14 w-full rounded-2xl border-slate-200 bg-slate-50 pr-5 pl-12 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50"
               />
               <Phone className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
             </div>
@@ -184,7 +184,7 @@ export function ContactForm() {
               setFormData({ ...formData, service: value || "" })
             }
           >
-            <SelectTrigger className="h-14 w-full rounded-2xl border-border/50 bg-background/50 px-5 text-left text-sm transition-all focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal">
+            <SelectTrigger className="h-14 w-full rounded-2xl border-slate-200 bg-slate-50 px-5 text-left text-sm transition-all focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50">
               <SelectValue placeholder="Select a maritime service" />
             </SelectTrigger>
             <SelectContent className="glass-modal rounded-2xl border-border/50 bg-background/95 shadow-2xl dark:bg-maritime-abyss/98">
@@ -228,7 +228,7 @@ export function ContactForm() {
             onChange={(e) =>
               setFormData({ ...formData, message: e.target.value })
             }
-            className="min-h-[120px] w-full rounded-[1.5rem] border-border/50 bg-background/50 p-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-white/5 dark:focus:border-maritime-teal"
+            className="min-h-[120px] w-full rounded-[1.5rem] border-slate-200 bg-slate-50 p-5 text-sm transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:bg-slate-900/50"
           />
         </div>
 

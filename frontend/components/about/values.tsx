@@ -31,7 +31,7 @@ const values = [
 
 export function Values() {
   return (
-    <section className="bg-maritime-surface texture-maritime-noise py-32 dark:bg-maritime-abyss">
+    <section className="border-t border-slate-200 bg-white py-24 md:py-32 dark:border-white/5 dark:bg-white/5">
       <div className="container mx-auto mb-16 px-6 text-center">
         <h2 className="mb-4 text-sm font-bold tracking-[0.3em] text-primary uppercase dark:text-maritime-teal">
           Values
@@ -46,7 +46,7 @@ export function Values() {
           {values.map((val, i) => (
             <div
               key={i}
-              className="glass group hover:shadow-maritime rounded-3xl p-8 text-center transition-all hover:border-primary/40"
+              className="group rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center shadow-sm transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl dark:border-white/10 dark:bg-[#020617]/70"
             >
               <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform group-hover:scale-110 dark:bg-white/5 dark:text-maritime-foam">
                 <val.icon className="h-6 w-6" />

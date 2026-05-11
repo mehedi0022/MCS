@@ -3,11 +3,11 @@ import { Target, Eye } from "lucide-react"
 
 export function MissionVision() {
   return (
-    <section className="bg-background py-24">
+    <section className="border-y border-slate-200 bg-white py-24 dark:border-white/5 dark:bg-white/5">
       <div className="container mx-auto px-6">
         <div className="grid gap-8 md:grid-cols-2">
           {/* Mission Card */}
-          <div className="glass-strong group hover:shadow-maritime-lg relative overflow-hidden rounded-[2.5rem] p-10 transition-all sm:p-16">
+          <div className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 p-8 shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl sm:p-12 dark:border-white/10 dark:bg-[#020617]/70">
             <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:bg-white/5 dark:text-maritime-teal">
               <Target className="h-7 w-7" />
             </div>
@@ -29,7 +29,7 @@ export function MissionVision() {
           </div>
 
           {/* Vision Card */}
-          <div className="glass-strong group hover:shadow-maritime-lg relative overflow-hidden rounded-[2.5rem] p-10 transition-all sm:p-16">
+          <div className="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 p-8 shadow-sm transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl sm:p-12 dark:border-white/10 dark:bg-[#020617]/70">
             <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:bg-white/5 dark:text-maritime-teal">
               <Eye className="h-7 w-7" />
             </div>

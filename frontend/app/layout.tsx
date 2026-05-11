@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
+import { SiteSettingsProvider } from "@/context/site-settings-context"
 
 // 1. Premium SaaS Font Pairing
 const fontHeading = Outfit({
@@ -108,9 +109,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <SiteSettingsProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </SiteSettingsProvider>
         </ThemeProvider>
       </body>
     </html>

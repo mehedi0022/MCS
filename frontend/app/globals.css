@@ -522,3 +522,7 @@
     var(--maritime-abyss) 100%
   );
 }
+
+.journey-marquee .swiper-wrapper {
+  transition-timing-function: linear !important;
+}

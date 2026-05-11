@@ -1,9 +1,21 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
 import { Anchor, Mail, Phone, MapPin } from "lucide-react"
+import { useSiteSettings } from "@/context/site-settings-context"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { settings } = useSiteSettings()
+  const addressLine1 = settings?.officeAddressLine1?.trim() || "123 Harbour Way"
+  const addressLine2 =
+    settings?.officeAddressLine2?.trim() || "Maritime District, Singapore"
+  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "consult@maritime.com"
+  const primaryPhone = settings?.contactPhones?.[0]?.trim() || "+1 (555) 000-MARI"
+  const socialLinks = (settings?.socialLinks ?? []).filter(
+    (item) => item?.platform?.trim() && item?.url?.trim()
+  )
 
   return (
     <footer className="bg-maritime-surface texture-maritime-noise relative overflow-hidden border-t border-border/30 pt-16 pb-8 dark:bg-maritime-abyss">
@@ -31,27 +43,44 @@ export function Footer() {
               oceanic engineering.
             </p>
             <div className="flex gap-4">
-              <Link
-                href="#"
-                className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
-                aria-label="LinkedIn"
-              >
-                <LinkedinIcon className="h-4 w-4" />
-              </Link>
-              <Link
-                href="#"
-                className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
-                aria-label="Twitter"
-              >
-                <TwitterIcon className="h-4 w-4" />
-              </Link>
-              <Link
-                href="#"
-                className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
-                aria-label="GitHub"
-              >
-                <GithubIcon className="h-4 w-4" />
-              </Link>
+              {socialLinks.length > 0 ? (
+                socialLinks.slice(0, 3).map((item) => (
+                  <Link
+                    key={`${item.platform}-${item.url}`}
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
+                    aria-label={item.platform}
+                  >
+                    <Anchor className="h-4 w-4" />
+                  </Link>
+                ))
+              ) : (
+                <>
+                  <Link
+                    href="#"
+                    className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
+                    aria-label="LinkedIn"
+                  >
+                    <LinkedinIcon className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="#"
+                    className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
+                    aria-label="Twitter"
+                  >
+                    <TwitterIcon className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="#"
+                    className="rounded-full border border-border/50 bg-background/50 p-2 text-muted-foreground transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-primary dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-maritime-foam"
+                    aria-label="GitHub"
+                  >
+                    <GithubIcon className="h-4 w-4" />
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -107,15 +136,15 @@ export function Footer() {
             <div className="space-y-4 text-sm">
               <div className="flex items-start gap-3 text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-maritime-ocean dark:text-maritime-teal" />
-                <span>123 Harbour Way, Maritime District, Singapore</span>
+                <span>{addressLine1}, {addressLine2}</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="h-4 w-4 shrink-0 text-maritime-ocean dark:text-maritime-teal" />
-                <span>consult@maritime.com</span>
+                <span>{primaryEmail}</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="h-4 w-4 shrink-0 text-maritime-ocean dark:text-maritime-teal" />
-                <span>+1 (555) 000-MARI</span>
+                <span>{primaryPhone}</span>
               </div>
             </div>
           </div>

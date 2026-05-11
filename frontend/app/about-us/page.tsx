@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <AboutHero />
       <MissionVision />
       <OurStory />
