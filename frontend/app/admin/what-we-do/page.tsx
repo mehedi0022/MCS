@@ -6,13 +6,11 @@ import { useRouter } from "next/navigation"
 import {
   Anchor,
   ArrowLeft,
-  BarChart3,
   Loader2,
   Pencil,
   Plus,
   Save,
   Trash2,
-  Wrench,
 } from "lucide-react"
 import { icons } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
@@ -29,36 +27,29 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-type ServiceItem = {
+type WhatWeDoItem = {
   id: string
   title: string
-  slug?: string
   summary: string
-  points?: string[] | null
-  description?: string | null
-  icon?: string | null
-  isFeatured: boolean
-  isPublished: boolean
+  iconKey: string
+  sortOrder: number
+  isActive: boolean
 }
 
-type ServiceFormState = {
+type FormState = {
   title: string
   summary: string
-  pointsText: string
-  description: string
-  icon: string
-  isFeatured: boolean
-  isPublished: boolean
+  iconKey: string
+  sortOrder: number
+  isActive: boolean
 }
 
-const emptyForm: ServiceFormState = {
+const emptyForm: FormState = {
   title: "",
   summary: "",
-  pointsText: "",
-  description: "",
-  icon: "Anchor",
-  isFeatured: false,
-  isPublished: true,
+  iconKey: "Anchor",
+  sortOrder: 0,
+  isActive: true,
 }
 
 const iconOptions = [
@@ -118,12 +109,14 @@ const iconOptions = [
   "Container",
 ] as const
 
-export default function AdminServicesPage() {
+type IconKey = (typeof iconOptions)[number]
+
+export default function AdminWhatWeDoPage() {
   const router = useRouter()
-  const [services, setServices] = useState<ServiceItem[]>([])
+  const [items, setItems] = useState<WhatWeDoItem[]>([])
   const [selectedId, setSelectedId] = useState("")
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState<ServiceFormState>(emptyForm)
+  const [form, setForm] = useState<FormState>(emptyForm)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
@@ -133,21 +126,23 @@ export default function AdminServicesPage() {
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
 
   const selected = useMemo(
-    () => services.find((item) => item.id === selectedId),
-    [services, selectedId]
+    () => items.find((item) => item.id === selectedId),
+    [items, selectedId]
   )
 
   useEffect(() => {
-    void loadServices()
+    void loadItems()
   }, [])
 
-  async function loadServices() {
+  async function loadItems() {
     try {
       setIsLoading(true)
       setError("")
-      const response = await api.get<ApiResponse<ServiceItem[]>>("/services/admin")
+      const response = await api.get<ApiResponse<WhatWeDoItem[]>>(
+        "/what-we-do/admin"
+      )
       const rows = response.data.data
-      setServices(rows)
+      setItems(rows)
       setSelectedId((current) =>
         rows.some((item) => item.id === current) ? current : (rows[0]?.id ?? "")
       )
@@ -163,10 +158,7 @@ export default function AdminServicesPage() {
     }
   }
 
-  function updateField<K extends keyof ServiceFormState>(
-    key: K,
-    value: ServiceFormState[K]
-  ) {
+  function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
@@ -177,16 +169,14 @@ export default function AdminServicesPage() {
     setError("")
   }
 
-  function startEdit(item: ServiceItem) {
+  function startEdit(item: WhatWeDoItem) {
     setEditingId(item.id)
     setForm({
       title: item.title,
       summary: item.summary,
-      pointsText: (item.points ?? []).join("\n"),
-      description: item.description ?? "",
-      icon: item.icon ?? "Anchor",
-      isFeatured: item.isFeatured,
-      isPublished: item.isPublished,
+      iconKey: item.iconKey,
+      sortOrder: item.sortOrder,
+      isActive: item.isActive,
     })
     setSuccess("")
     setError("")
@@ -200,29 +190,14 @@ export default function AdminServicesPage() {
 
     try {
       if (editingId) {
-        await api.put(`/services/${editingId}`, {
-          ...form,
-          points: form.pointsText
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean),
-        })
-        setSuccess("Service updated successfully.")
+        await api.put(`/what-we-do/${editingId}`, form)
+        setSuccess("Item updated successfully.")
       } else {
-        await api.post("/services", {
-          ...form,
-          points: form.pointsText
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean),
-        })
-        setSuccess("Service created successfully.")
+        await api.post("/what-we-do", form)
+        setSuccess("Item created successfully.")
       }
-
-      await loadServices()
-      if (!editingId) {
-        setForm(emptyForm)
-      }
+      await loadItems()
+      if (!editingId) setForm(emptyForm)
     } catch (submitError) {
       setError(getApiErrorMessage(submitError))
     } finally {
@@ -234,17 +209,16 @@ export default function AdminServicesPage() {
     if (!selected) return
     try {
       setIsSaving(true)
-      setError("")
-      setSuccess("")
-      await api.delete(`/services/${selected.id}`)
+      setDeleteLoadingOpen(true)
+      await api.delete(`/what-we-do/${selected.id}`)
       setDeleteLoadingOpen(false)
       setDeleteSuccessOpen(true)
-      setSuccess("Service deleted successfully.")
+      setSuccess("Item deleted successfully.")
       if (editingId === selected.id) {
         setEditingId(null)
         setForm(emptyForm)
       }
-      await loadServices()
+      await loadItems()
     } catch (deleteError) {
       setDeleteLoadingOpen(false)
       setError(getApiErrorMessage(deleteError))
@@ -252,6 +226,9 @@ export default function AdminServicesPage() {
       setIsSaving(false)
     }
   }
+
+  const PreviewIcon = (icons[form.iconKey as keyof typeof icons] ??
+    Anchor) as typeof Anchor
 
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
@@ -266,15 +243,15 @@ export default function AdminServicesPage() {
               Back
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Services Admin</h1>
+              <h1 className="text-2xl font-bold">What We Do Admin</h1>
               <p className="text-sm text-muted-foreground">
-                Create, update, publish, and manage service items.
+                Manage capability cards in the Home section.
               </p>
             </div>
           </div>
           <Button className="rounded-none" onClick={startCreate}>
             <Plus className="size-4" />
-            New Service
+            New Item
           </Button>
         </div>
 
@@ -289,33 +266,36 @@ export default function AdminServicesPage() {
           </div>
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+        <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
           <section className="border border-border bg-card p-4 shadow-maritime-sm">
             <div className="space-y-3">
               {isLoading ? (
                 <div className="flex h-64 items-center justify-center">
                   <Loader2 className="size-5 animate-spin text-primary" />
                 </div>
-              ) : services.length === 0 ? (
+              ) : items.length === 0 ? (
                 <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
-                  No services yet.
+                  No items yet.
                 </div>
               ) : (
-                services.map((item) => (
+                items.map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => setSelectedId(item.id)}
                     className={`w-full border p-3 text-left ${selectedId === item.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
                   >
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between">
                       <p className="line-clamp-1 font-semibold">{item.title}</p>
-                      {!item.isPublished && (
-                        <span className="px-2 py-1 text-[10px] font-bold uppercase text-amber-600">
-                          Draft
+                      {!item.isActive && (
+                        <span className="text-[10px] font-bold uppercase text-amber-600">
+                          Hidden
                         </span>
                       )}
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      Sort: {item.sortOrder}
+                    </p>
                   </button>
                 ))
               )}
@@ -325,17 +305,11 @@ export default function AdminServicesPage() {
           <section className="space-y-4 border border-border bg-card p-5 shadow-maritime-sm">
             {selected && (
               <div className="flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-none"
-                  onClick={() => startEdit(selected)}
-                >
+                <Button variant="outline" className="rounded-none" onClick={() => startEdit(selected)}>
                   <Pencil className="size-4" />
                   Edit
                 </Button>
                 <Button
-                  type="button"
                   variant="destructive"
                   className="rounded-none"
                   onClick={() => setDeleteWarningOpen(true)}
@@ -348,80 +322,64 @@ export default function AdminServicesPage() {
             )}
 
             <form onSubmit={submitForm} className="space-y-4">
-              <div className="grid gap-3 md:grid-cols-1">
-                <Input
-                  required
-                  placeholder="Service title"
-                  value={form.title}
-                  onChange={(e) => updateField("title", e.target.value)}
-                  className="border-input px-3"
-                />
-              </div>
+              <Input
+                required
+                placeholder="Title"
+                value={form.title}
+                onChange={(e) => updateField("title", e.target.value)}
+                className="border-input px-3"
+              />
 
               <Textarea
                 required
                 placeholder="Summary"
                 value={form.summary}
                 onChange={(e) => updateField("summary", e.target.value)}
-                className="min-h-20 border-input px-3"
-              />
-
-              <Textarea
-                placeholder="Bullet list items (one per line)"
-                value={form.pointsText}
-                onChange={(e) => updateField("pointsText", e.target.value)}
                 className="min-h-24 border-input px-3"
               />
 
-              <Textarea
-                placeholder="Description"
-                value={form.description}
-                onChange={(e) => updateField("description", e.target.value)}
-                className="min-h-24 border-input px-3"
-              />
+              <div className="grid gap-3 md:grid-cols-2">
+                <Select
+                  value={form.iconKey}
+                  onValueChange={(value) =>
+                    updateField("iconKey", value ?? "Anchor")
+                  }
+                >
+                  <SelectTrigger className="border-input">
+                    <SelectValue placeholder="Icon" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {iconOptions.map((iconName) => (
+                      <SelectItem key={iconName} value={iconName}>
+                        {iconName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select
-                value={form.icon}
-                onValueChange={(value) => updateField("icon", value ?? "Anchor")}
-              >
-                <SelectTrigger className="border-input">
-                  <SelectValue placeholder="Select icon" />
-                </SelectTrigger>
-                <SelectContent>
-                  {iconOptions.map((iconName) => (
-                    <SelectItem key={iconName} value={iconName}>
-                      {iconName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <div className="flex items-center gap-5">
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={form.isPublished}
-                    onCheckedChange={(value) =>
-                      updateField("isPublished", value === true)
-                    }
-                  />
-                  Published
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={form.isFeatured}
-                    onCheckedChange={(value) =>
-                      updateField("isFeatured", value === true)
-                    }
-                  />
-                  Featured
-                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  placeholder="Sort Order"
+                  value={form.sortOrder}
+                  onChange={(e) =>
+                    updateField("sortOrder", Number(e.target.value) || 0)
+                  }
+                  className="border-input px-3"
+                />
               </div>
 
-              <Button
-                type="submit"
-                className="h-11 w-full rounded-none"
-                disabled={isSaving}
-              >
+              <label className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={form.isActive}
+                  onCheckedChange={(value) =>
+                    updateField("isActive", value === true)
+                  }
+                />
+                Active
+              </label>
+
+              <Button type="submit" className="h-11 w-full rounded-none" disabled={isSaving}>
                 {isSaving ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : editingId ? (
@@ -429,34 +387,22 @@ export default function AdminServicesPage() {
                 ) : (
                   <Plus className="size-4" />
                 )}
-                {editingId ? "Update Service" : "Create Service"}
+                {editingId ? "Update Item" : "Create Item"}
               </Button>
             </form>
 
-            {selected && (
-              <div className="border border-border/70 p-4">
-                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Preview
-                </p>
-                <div className="mb-2 inline-flex rounded-lg bg-muted p-2">
-                  {(() => {
-                    const Icon =
-                      (icons[form.icon as keyof typeof icons] as typeof Anchor) ??
-                      Wrench
-                    return <Icon className="size-5 text-primary" />
-                  })()}
-                </div>
-                <h3 className="font-semibold">{selected.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{selected.summary}</p>
-                {(selected.points ?? []).length > 0 && (
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-                    {selected.points?.map((point, idx) => (
-                      <li key={`${selected.id}-point-${idx}`}>{point}</li>
-                    ))}
-                  </ul>
-                )}
+            <div className="border border-border/70 p-4">
+              <p className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                Preview
+              </p>
+              <div className="mb-2 inline-flex rounded-lg bg-muted p-2">
+                <PreviewIcon className="size-5 text-primary" />
               </div>
-            )}
+              <h3 className="font-semibold">{form.title || "Title Preview"}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {form.summary || "Summary preview"}
+              </p>
+            </div>
           </section>
         </div>
       </div>
@@ -465,12 +411,11 @@ export default function AdminServicesPage() {
         isOpen={deleteWarningOpen}
         onClose={() => setDeleteWarningOpen(false)}
         type="warning"
-        title="Delete Service?"
-        description="This will permanently remove the selected service."
+        title="Delete Item?"
+        description="This will permanently remove this What We Do entry."
         actionText="Confirm Delete"
         onAction={() => {
           setDeleteWarningOpen(false)
-          setDeleteLoadingOpen(true)
           void deleteSelected()
         }}
       />
@@ -480,7 +425,7 @@ export default function AdminServicesPage() {
         onClose={() => undefined}
         type="loading"
         title="Deleting..."
-        description="Please wait while we remove the service."
+        description="Please wait while we remove the item."
         showCloseButton={false}
       />
 
@@ -489,7 +434,7 @@ export default function AdminServicesPage() {
         onClose={() => setDeleteSuccessOpen(false)}
         type="success"
         title="Deleted"
-        description="Service removed successfully."
+        description="The What We Do item has been removed successfully."
         actionText="Continue"
       />
     </main>

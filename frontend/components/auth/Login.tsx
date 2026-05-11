@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,7 +26,7 @@ export default function LoginPage() {
     setError("")
 
     try {
-      await api.post("/auth/login", { email, password })
+      await api.post("/auth/login", { email, password, rememberMe })
 
       router.replace(searchParams.get("redirect") ?? "/admin")
       router.refresh()
@@ -128,13 +129,15 @@ export default function LoginPage() {
             <div className="flex items-center space-x-3 px-1">
               <Checkbox
                 id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
                 className="h-5 w-5 border-slate-300 data-[state=checked]:border-primary data-[state=checked]:bg-primary dark:border-white/10"
               />
               <label
                 htmlFor="remember"
                 className="cursor-pointer text-xs font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
               >
-                Remember this terminal for 30 days
+                Remember me for 7 days
               </label>
             </div>
 

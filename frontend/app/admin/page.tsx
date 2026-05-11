@@ -12,6 +12,7 @@ import {
   LogOut,
   MessageCircleWarning,
   Plus,
+  Compass,
   Settings,
   ShieldCheck,
   ShipWheel,
@@ -45,6 +46,7 @@ const navItems = [
   { label: "Projects", href: "/admin/projects", icon: FolderKanban },
   { label: "Messages", href: "/admin/messages", icon: Inbox },
   { label: "Users", href: "/admin/users", icon: Users },
+  { label: "What We Do", href: "/admin/what-we-do", icon: Compass },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
 

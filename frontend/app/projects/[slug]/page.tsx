@@ -36,7 +36,16 @@ async function getProject(slug: string): Promise<ProjectDetails | null> {
     }
 
     const payload = await response.json()
-    return payload.data as ProjectDetails
+    const row = payload.data as Partial<ProjectDetails> | null
+    if (!row) return null
+    if (!row.slug || !row.title) return null
+    return {
+      ...row,
+      slug: String(row.slug),
+      title: String(row.title),
+      category: String(row.category ?? "General"),
+      summary: String(row.summary ?? ""),
+    } as ProjectDetails
   } catch {
     return null
   }

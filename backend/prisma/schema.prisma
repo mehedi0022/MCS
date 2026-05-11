@@ -27,6 +27,24 @@ model User {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  sessions     AuthSession[]
+}
+
+model AuthSession {
+  id               String   @id @default(uuid())
+  userId           String
+  accessTokenHash  String
+  refreshTokenHash String
+  rememberMe       Boolean  @default(false)
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model Service {
@@ -34,6 +52,7 @@ model Service {
   title       String
   slug        String   @unique
   summary     String   @db.Text
+  points      Json?
   description String?  @db.Text
   icon        String?
   isFeatured  Boolean  @default(false)
@@ -109,4 +128,15 @@ model SiteSettings {
   socialLinks        Json?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+}
+
+model WhatWeDoItem {
+  id        String   @id @default(uuid())
+  title     String
+  summary   String   @db.Text
+  iconKey   String   @default("Anchor")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -13,6 +13,9 @@ type ServiceItem = {
   id: string
   title: string
   summary: string
+  points: string[]
+  icon?: string
+  description?: string
 }
 
 const fallbackServices: ServiceItem[] = [
@@ -21,18 +24,42 @@ const fallbackServices: ServiceItem[] = [
     title: "Vessel Inspection",
     summary:
       "Rigorous condition assessments and pre-purchase surveys following international class standards.",
+    points: [
+      "Hull and machinery condition survey",
+      "Class and compliance gap review",
+      "Risk notes with actionable recommendations",
+    ],
+    icon: "Anchor",
+    description:
+      "A full-spectrum inspection workflow built for operational confidence.",
   },
   {
     id: "2",
     title: "Marine Engineering",
     summary:
       "Advanced naval architecture and propulsion system design optimized for hydro-efficiency.",
+    points: [
+      "Performance and fuel-efficiency modeling",
+      "Design validation for retrofit/new build",
+      "Technical documentation and review",
+    ],
+    icon: "Compass",
+    description:
+      "Engineering-first planning that improves performance and lifecycle reliability.",
   },
   {
     id: "3",
     title: "Safety Compliance",
     summary:
       "Implementation of ISM/ISPS protocols and comprehensive regulatory audits for global fleets.",
+    points: [
+      "ISM / ISPS readiness checks",
+      "Audit evidence mapping",
+      "Corrective action planning",
+    ],
+    icon: "ShipWheel",
+    description:
+      "Compliance execution aligned to international standards and audit readiness.",
   },
 ]
 
@@ -47,13 +74,25 @@ async function getServices(): Promise<ServiceItem[]> {
       title: string
       summary?: string
       description?: string
+      points?: string[] | null
+      icon?: string | null
     }>
 
-    return rows.map((item) => ({
+    if (!rows.length) return fallbackServices
+
+    const normalized = rows.map((item) => ({
       id: item.id,
       title: item.title,
       summary: item.summary ?? item.description ?? "",
+      points: Array.isArray(item.points)
+        ? item.points.map((point) => String(point))
+        : [],
+      icon: item.icon ?? "Anchor",
+      description: item.description ?? "",
     }))
+
+    const valid = normalized.filter((item) => item.id && item.title?.trim())
+    return valid.length > 0 ? valid : fallbackServices
   } catch {
     return fallbackServices
   }

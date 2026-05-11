@@ -14,7 +14,19 @@ type ProjectCard = {
   title: string
   category: string
   imageUrl?: string | null
+  summary?: string
+  description?: string
 }
+
+const fallbackProjectCards: ProjectCard[] = fallbackProjects.map((item) => ({
+  id: String(item.id),
+  slug: item.slug,
+  title: item.title,
+  category: item.category,
+  imageUrl: item.cover,
+  summary: item.summary,
+  description: item.description,
+}))
 
 async function getProjects(): Promise<ProjectCard[]> {
   try {
@@ -23,25 +35,28 @@ async function getProjects(): Promise<ProjectCard[]> {
     })
 
     if (!response.ok) {
-      return fallbackProjects.map((item) => ({
-        id: String(item.id),
-        slug: item.slug,
-        title: item.title,
-        category: item.category,
-        imageUrl: item.cover,
-      }))
+      return fallbackProjectCards
     }
 
     const payload = await response.json()
-    return (payload.data ?? []) as ProjectCard[]
+    const rows = (payload.data ?? []) as ProjectCard[]
+    if (!rows.length) return fallbackProjectCards
+
+    const normalized = rows
+      .map((item) => ({
+        id: String(item.id ?? ""),
+        slug: String(item.slug ?? "").trim(),
+        title: String(item.title ?? "").trim(),
+        category: String(item.category ?? "General").trim() || "General",
+        imageUrl: item.imageUrl ?? null,
+        summary: item.summary ?? "",
+        description: item.description ?? "",
+      }))
+      .filter((item) => item.id && item.slug && item.title)
+
+    return normalized.length > 0 ? normalized : fallbackProjectCards
   } catch {
-    return fallbackProjects.map((item) => ({
-      id: String(item.id),
-      slug: item.slug,
-      title: item.title,
-      category: item.category,
-      imageUrl: item.cover,
-    }))
+    return fallbackProjectCards
   }
 }
 

@@ -31,8 +31,9 @@ const envSchema = yup.object({
     .string()
     .min(24, "JWT_SECRET must be at least 24 characters")
     .required("JWT_SECRET is required"),
-  JWT_EXPIRES_IN: yup.string().default("7d"),
+  ACCESS_TOKEN_EXPIRES_IN: yup.string().default("15m"),
   COOKIE_NAME: yup.string().default("mcs_admin_token"),
+  REFRESH_COOKIE_NAME: yup.string().default("mcs_admin_refresh_token"),
   CLOUDINARY_CLOUD_NAME: yup.string().optional(),
   CLOUDINARY_API_KEY: yup.string().optional(),
   CLOUDINARY_API_SECRET: yup.string().optional(),

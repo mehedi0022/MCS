@@ -1,5 +1,3 @@
-"use client"
-
 import React from "react"
 import { Anchor, BarChart3, Compass, Waves } from "lucide-react"
 
@@ -7,17 +5,17 @@ const capabilities = [
   {
     icon: Compass,
     title: "Hydrography",
-    desc: "Precision bathymetric surveys and navigation mapping.",
+    summary: "Precision bathymetric surveys and navigation mapping.",
   },
   {
     icon: BarChart3,
     title: "Geospatial Analysis",
-    desc: "Advanced GIS modeling for dynamic riverine data.",
+    summary: "Advanced GIS modeling for dynamic riverine data.",
   },
   {
     icon: Waves,
     title: "Waterway Development",
-    desc: "End-to-end infrastructure planning and implementation.",
+    summary: "End-to-end infrastructure planning and implementation.",
   },
 ]
 
@@ -86,21 +84,23 @@ export function IntroSection() {
                 </h3>
 
                 <div className="space-y-10">
-                  {capabilities.map((item, index) => (
-                    <div key={index} className="group flex gap-5">
-                      <div className="shadow-maritime-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background ring-1 ring-border transition-all group-hover:scale-110 group-hover:ring-primary/40 dark:bg-white/5 dark:ring-white/10">
-                        <item.icon className="h-5 w-5 text-primary dark:text-maritime-teal" />
+                  {capabilities.map((item, index) => {
+                    return (
+                      <div key={index} className="group flex gap-5">
+                        <div className="shadow-maritime-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-background ring-1 ring-border transition-all group-hover:scale-110 group-hover:ring-primary/40 dark:bg-white/5 dark:ring-white/10">
+                          <item.icon className="h-5 w-5 text-primary dark:text-maritime-teal" />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="font-bold text-foreground">
+                            {item.title}
+                          </h4>
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {item.summary}
+                          </p>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-bold text-foreground">
-                          {item.title}
-                        </h4>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 <div className="mt-10 rounded-2xl bg-primary/5 p-5 dark:bg-maritime-teal/5">

@@ -2,8 +2,9 @@ import * as yup from "yup"
 
 export type ServiceInput = {
   title: string
-  slug: string
+  slug?: string
   summary: string
+  points?: string[]
   description?: string
   icon?: string
   isFeatured?: boolean
@@ -12,8 +13,9 @@ export type ServiceInput = {
 
 export const serviceSchema = yup.object({
   title: yup.string().min(2).required(),
-  slug: yup.string().min(2).required(),
+  slug: yup.string().min(2).optional(),
   summary: yup.string().min(10).required(),
+  points: yup.array().of(yup.string().trim().required()).optional(),
   description: yup.string().optional(),
   icon: yup.string().optional(),
   isFeatured: yup.boolean().optional(),
