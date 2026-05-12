@@ -1,23 +1,23 @@
-import dotenv from "dotenv"
-import * as yup from "yup"
+import dotenv from "dotenv";
+import * as yup from "yup";
 
-dotenv.config()
+dotenv.config();
 
 const urlSchema = yup
   .string()
   .required()
   .test("is-url", "${path} must be a valid URL", (value) => {
     if (!value) {
-      return false
+      return false;
     }
 
     try {
-      new URL(value)
-      return true
+      new URL(value);
+      return true;
     } catch {
-      return false
+      return false;
     }
-  })
+  });
 
 const envSchema = yup.object({
   PORT: yup.number().default(5000),
@@ -26,6 +26,7 @@ const envSchema = yup.object({
     .oneOf(["development", "test", "production"])
     .default("development"),
   FRONTEND_URL: urlSchema.default("http://localhost:3000"),
+  COOKIE_DOMAIN: yup.string().optional(),
   DATABASE_URL: yup.string().required("DATABASE_URL is required"),
   JWT_SECRET: yup
     .string()
@@ -44,9 +45,9 @@ const envSchema = yup.object({
   SMTP_USER: yup.string().optional(),
   SMTP_PASS: yup.string().optional(),
   SMTP_FROM_NAME: yup.string().default("MCS Team"),
-})
+});
 
 export const env = envSchema.validateSync(process.env, {
   abortEarly: false,
   stripUnknown: true,
-})
+});
