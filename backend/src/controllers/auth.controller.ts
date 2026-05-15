@@ -52,6 +52,16 @@ function createRefreshToken(
   );
 }
 
+function getAuthCookieBaseOptions() {
+  return {
+    httpOnly: true as const,
+    secure: env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    domain: env.COOKIE_DOMAIN || undefined,
+  };
+}
+
 function setAuthCookies(
   res: Parameters<RequestHandler>[1],
   accessToken: string,
@@ -60,13 +70,7 @@ function setAuthCookies(
 ) {
   const refreshMaxAge = rememberMe ? SEVEN_DAYS_MS : ONE_DAY_MS;
   const accessMaxAge = 15 * 60 * 1000;
-  const cookieBase = {
-    httpOnly: true as const,
-    secure: env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-    domain: env.COOKIE_DOMAIN || undefined,
-  };
+  const cookieBase = getAuthCookieBaseOptions();
 
   res.cookie(env.COOKIE_NAME, accessToken, {
     ...cookieBase,
@@ -233,8 +237,9 @@ export const logout: RequestHandler = async (req, res) => {
     }
   }
 
-  res.clearCookie(env.COOKIE_NAME, { path: "/" });
-  res.clearCookie(env.REFRESH_COOKIE_NAME, { path: "/" });
+  const cookieBase = getAuthCookieBaseOptions();
+  res.clearCookie(env.COOKIE_NAME, cookieBase);
+  res.clearCookie(env.REFRESH_COOKIE_NAME, cookieBase);
   return sendSuccess(res, { loggedOut: true });
 };
 
