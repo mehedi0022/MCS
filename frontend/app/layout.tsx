@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     siteName: "Maritime Solutions",
     images: [
       {
-        url: "/og-image.jpg", // Add a 1200x630px image to your /public folder
+        url: "/og-image.png", // Add a 1200x630px image to your /public folder
         width: 1200,
         height: 630,
         alt: "Maritime Solutions Consulting",
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Maritime Solutions | Premium Consulting",
     description: "High-end maritime consulting and logistics strategies.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     creator: "@maritimesolutions", // Replace with your Twitter handle
   },
   icons: {
