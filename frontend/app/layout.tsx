@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
+import { DynamicFavicon } from "@/components/layout/DynamicFavicon"
 import { SiteSettingsProvider } from "@/context/site-settings-context"
 
 // 1. Premium SaaS Font Pairing
@@ -39,7 +40,7 @@ export const viewport: Viewport = {
 
 // 3. Comprehensive SEO Metadata
 export const metadata: Metadata = {
-  metadataBase: new URL("https://your-maritime-domain.com"), // Replace with your actual domain
+  metadataBase: new URL("https://mcs.meetmehedi.dev"), // Replace with your actual domain
   title: {
     default: "Maritime Solutions | Premium Consulting & Logistics",
     template: "%s | Maritime Solutions", // Automatically appends the brand to page titles
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://your-maritime-domain.com",
+    url: "https://mcs.meetmehedi.dev",
     title: "Maritime Solutions | Premium Consulting & Logistics",
     description:
       "Leading the horizon in maritime consulting. Professional solutions for logistics, fleet management, and engineering.",
@@ -110,6 +111,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SiteSettingsProvider>
+            <DynamicFavicon />
             <Navbar />
             <main className="flex-1">{children}</main>
             <Footer />
