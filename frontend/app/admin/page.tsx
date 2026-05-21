@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
   ArrowUpRight,
+  Building2,
   BriefcaseBusiness,
   FolderKanban,
   Inbox,
@@ -27,6 +28,7 @@ import { cn } from "@/lib/utils"
 type Summary = {
   services: number
   projects: number
+  clients: number
   messages: number
   unreadMessages: number
   heroSlides: number
@@ -45,6 +47,7 @@ const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard, active: true },
   { label: "Services", href: "/admin/services", icon: BriefcaseBusiness },
   { label: "Projects", href: "/admin/projects", icon: FolderKanban },
+  { label: "Clients", href: "/admin/clients", icon: Building2 },
   { label: "Messages", href: "/admin/messages", icon: Inbox },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "What We Do", href: "/admin/what-we-do", icon: Compass },
@@ -55,6 +58,7 @@ const navItems = [
 const emptySummary: Summary = {
   services: 0,
   projects: 0,
+  clients: 0,
   messages: 0,
   unreadMessages: 0,
   heroSlides: 0,
@@ -97,30 +101,42 @@ export default function AdminDashboardPage() {
       value: summary.heroSlides,
       icon: LayoutDashboard,
       tone: "text-maritime-sea",
+      href: "/admin#hero-slides",
     },
     {
       label: "Published services",
       value: summary.services,
       icon: BriefcaseBusiness,
       tone: "text-maritime-ocean",
+      href: "/admin/services",
     },
     {
       label: "Project entries",
       value: summary.projects,
       icon: FolderKanban,
       tone: "text-maritime-teal",
+      href: "/admin/projects",
+    },
+    {
+      label: "Client records",
+      value: summary.clients,
+      icon: Building2,
+      tone: "text-maritime-navy",
+      href: "/admin/clients",
     },
     {
       label: "Total messages",
       value: summary.messages,
       icon: Inbox,
       tone: "text-maritime-brass",
+      href: "/admin/messages",
     },
     {
       label: "Unread messages",
       value: summary.unreadMessages,
       icon: MessageCircleWarning,
       tone: "text-destructive",
+      href: "/admin/messages",
     },
   ]
 
@@ -175,10 +191,6 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="flex gap-2">
-              <Button className="h-11 gap-2 rounded-none">
-                <Plus className="size-4" />
-                New Entry
-              </Button>
               <Button
                 variant="outline"
                 className="h-11 gap-2 rounded-none"
@@ -190,15 +202,16 @@ export default function AdminDashboardPage() {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
             {stats.map((stat) => (
-              <div
+              <Link
                 key={stat.label}
-                className="shadow-maritime-sm border border-border bg-card p-5"
+                href={stat.href}
+                className="shadow-maritime-sm group border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none"
               >
                 <div className="mb-5 flex items-center justify-between">
                   <stat.icon className={cn("size-5", stat.tone)} />
-                  <ArrowUpRight className="size-4 text-muted-foreground" />
+                  <ArrowUpRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
                 <p className="text-3xl font-bold">
                   {isLoading ? "-" : stat.value}
@@ -206,11 +219,13 @@ export default function AdminDashboardPage() {
                 <p className="mt-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
                   {stat.label}
                 </p>
-              </div>
+              </Link>
             ))}
           </section>
 
-          <HeroSlidesManager />
+          <section id="hero-slides">
+            <HeroSlidesManager />
+          </section>
         </main>
       </div>
     </div>
