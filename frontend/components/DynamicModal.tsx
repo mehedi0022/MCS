@@ -32,25 +32,25 @@ const modalConfig = {
     icon: CheckCircle2,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
-    shadow: "shadow-[0_0_30px_rgba(16,185,129,0.2)]",
+    shadow: "shadow-[0_0_30px_rgba(16,185,129,0.16)]",
   },
   error: {
     icon: XCircle,
     color: "text-rose-500",
     bgColor: "bg-rose-500/10",
-    shadow: "shadow-[0_0_30px_rgba(244,63,94,0.2)]",
+    shadow: "shadow-[0_0_30px_rgba(244,63,94,0.16)]",
   },
   warning: {
     icon: AlertCircle,
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",
-    shadow: "shadow-[0_0_30px_rgba(245,158,11,0.2)]",
+    shadow: "shadow-[0_0_30px_rgba(245,158,11,0.16)]",
   },
   info: {
     icon: Info,
     color: "text-primary",
     bgColor: "bg-primary/10",
-    shadow: "shadow-[0_0_30px_rgba(20,184,166,0.2)]",
+    shadow: "shadow-[0_0_30px_rgba(20,184,166,0.16)]",
   },
   loading: {
     icon: Loader2,
@@ -75,7 +75,7 @@ export function DynamicModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-modal max-w-sm overflow-hidden rounded-[2.5rem] border-white/10 p-0 outline-none">
+      <DialogContent className="glass-modal max-w-sm overflow-hidden rounded-[2rem] border-border/60 p-0 outline-none">
         <div className="flex flex-col items-center p-10 text-center">
           {/* Animated Icon Container */}
           <AnimatePresence mode="wait">
@@ -101,20 +101,20 @@ export function DynamicModal({
           </AnimatePresence>
 
           {/* Text Content */}
-          <h2 className="font-heading text-2xl font-bold tracking-tight text-white uppercase">
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground uppercase">
             {title}
           </h2>
-          <p className="mt-4 px-2 text-sm leading-relaxed text-maritime-horizon/70">
+          <p className="mt-4 px-2 text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
 
           {/* Action Footer */}
           <div className="mt-10 w-full space-y-3">
-            <Button
-              onClick={onAction || onClose}
-              className={cn(
-                "group shadow-maritime-lg h-16 w-full rounded-2xl font-bold transition-all hover:-translate-y-1 active:scale-95",
-                type === "error"
+              <Button
+                onClick={onAction || onClose}
+                className={cn(
+                  "group shadow-maritime-lg h-16 w-full rounded-2xl font-bold transition-all hover:-translate-y-1 active:scale-95",
+                  type === "error"
                   ? "bg-rose-600 hover:bg-rose-700"
                   : "bg-primary"
               )}
@@ -126,7 +126,7 @@ export function DynamicModal({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-[10px] font-bold tracking-[0.2em] text-maritime-horizon/40 uppercase transition-colors hover:text-white"
+                className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase transition-colors hover:text-foreground"
               >
                 Dismiss
               </button>

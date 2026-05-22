@@ -163,3 +163,18 @@ model JourneyMilestone {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model OurStoryCard {
+  id        String   @id @default("main")
+  sinceLabel String  @default("Since 2014")
+  headingLine1 String @default("Built by the sea,") @db.Text
+  headingLine2 String @default("for the sea.") @db.Text
+  storyHtml String   @default("<p>Maritime Solutions was founded by a small group of naval architects and former captains who shared a singular realization: the industry was changing faster than the engineering firms could adapt.</p><p>We started in a small office near the Port of Singapore with nothing but a set of blueprints and a commitment to radical transparency. We didn't want to be another generic corporate consultancy; we wanted to be technical partners who understood the vibration of the engine and the weight of the cargo.</p><p>Today, we have grown into a global presence, yet our purpose remains unchanged: providing the engineering backbone for those who navigate the world's most vital waterways.</p>") @db.Text
+  badge     String   @default("Global Impact")
+  title     String
+  imageUrl  String
+  imagePublicId String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

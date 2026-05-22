@@ -130,16 +130,18 @@ export function Navbar() {
             <ThemeToggle />
           </div>
 
-          <Button
-            className={cn(
-              "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 md:flex",
-              isScrolled
-                ? "bg-primary text-primary-foreground"
-                : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
-            )}
-          >
-            GET CONSULTATION
-          </Button>
+          <Link href="/contact">
+            <Button
+              className={cn(
+                "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 md:flex",
+                isScrolled
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
+              )}
+            >
+              GET CONSULTATION
+            </Button>
+          </Link>
 
           {/* Mobile Toggle */}
           <button
@@ -207,9 +209,11 @@ export function Navbar() {
                 : "translate-y-8 opacity-0"
             )}
           >
-            <Button className="shadow-maritime-lg h-14 w-full rounded-2xl text-lg font-bold">
-              GET CONSULTATION
-            </Button>
+            <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+              <Button className="shadow-maritime-lg h-14 w-full rounded-2xl text-lg font-bold">
+                GET CONSULTATION
+              </Button>
+            </Link>
             <p className="text-center text-sm text-muted-foreground italic">
               {primaryEmail}
             </p>

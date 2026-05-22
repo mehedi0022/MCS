@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { DynamicModal } from "@/components/DynamicModal"
@@ -204,11 +205,11 @@ export default function AdminMessagesPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-4 shadow-maritime-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 items-center gap-2 border border-border px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -222,7 +223,7 @@ export default function AdminMessagesPage() {
           </div>
           <Button
             variant="outline"
-            className="h-10 rounded-none"
+            className="h-10 rounded-lg"
             onClick={loadMessages}
           >
             <RefreshCcw className="size-4" />
@@ -230,18 +231,17 @@ export default function AdminMessagesPage() {
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
 
         <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-          <section className="border border-border bg-card p-4 shadow-maritime-sm">
+          <section className="rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
             <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
               <button
                 onClick={() => setActiveTab("inbox")}
-                className={cn(
-                  "inline-flex items-center gap-2 border px-3 py-1.5 text-xs font-bold uppercase tracking-wide",
+                className={cn("inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                   activeTab === "inbox"
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border text-muted-foreground hover:bg-muted"
@@ -252,8 +252,7 @@ export default function AdminMessagesPage() {
               </button>
               <button
                 onClick={() => setActiveTab("trash")}
-                className={cn(
-                  "inline-flex items-center gap-2 border px-3 py-1.5 text-xs font-bold uppercase tracking-wide",
+                className={cn("inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                   activeTab === "trash"
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border text-muted-foreground hover:bg-muted"
@@ -278,8 +277,7 @@ export default function AdminMessagesPage() {
                   <button
                     key={message.id}
                     onClick={() => setSelectedId(message.id)}
-                    className={cn(
-                      "w-full border border-border/70 p-3 text-left hover:bg-muted/40",
+                    className={cn("w-full rounded-lg border border-border/70 p-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                       selectedId === message.id && "border-primary/40 bg-primary/5"
                     )}
                   >
@@ -289,7 +287,7 @@ export default function AdminMessagesPage() {
                       </span>
                       <span
                         className={cn(
-                          "px-2 py-1 text-[10px] font-bold uppercase",
+                          "rounded-md px-2 py-1 text-[10px] font-bold uppercase",
                           statusColors[message.status]
                         )}
                       >
@@ -308,19 +306,19 @@ export default function AdminMessagesPage() {
             </div>
           </section>
 
-          <section className="border border-border bg-card p-5 shadow-maritime-sm">
+          <section className="rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
             {!selected ? (
               <div className="flex h-80 items-center justify-center text-muted-foreground">
                 Select a message to view details.
               </div>
             ) : (
               <div className="space-y-5">
-                <div className="border border-border/80 p-4">
+                <div className="rounded-lg border border-border/80 p-4">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <h2 className="text-xl font-bold">{selected.subject || "General inquiry"}</h2>
                     <span
                       className={cn(
-                        "px-2 py-1 text-xs font-bold",
+                        "rounded-md px-2 py-1 text-xs font-bold",
                         statusColors[selected.status]
                       )}
                     >
@@ -353,7 +351,7 @@ export default function AdminMessagesPage() {
                     <>
                       <Button
                         variant="outline"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => updateStatus("READ")}
                         disabled={saving}
                       >
@@ -362,7 +360,7 @@ export default function AdminMessagesPage() {
                       </Button>
                       <Button
                         variant="outline"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => updateStatus("ARCHIVED")}
                         disabled={saving}
                       >
@@ -371,7 +369,7 @@ export default function AdminMessagesPage() {
                       </Button>
                       <Button
                         variant="outline"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => updateStatus("NEW")}
                         disabled={saving}
                       >
@@ -380,7 +378,7 @@ export default function AdminMessagesPage() {
                       </Button>
                       <Button
                         variant="destructive"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => setDeleteWarningOpen(true)}
                         disabled={saving}
                       >
@@ -392,7 +390,7 @@ export default function AdminMessagesPage() {
                     <>
                       <Button
                         variant="outline"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={restoreSelectedMessage}
                         disabled={saving}
                       >
@@ -401,7 +399,7 @@ export default function AdminMessagesPage() {
                       </Button>
                       <Button
                         variant="destructive"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => setDeleteWarningOpen(true)}
                         disabled={saving}
                       >
@@ -415,16 +413,14 @@ export default function AdminMessagesPage() {
                 {activeTab === "inbox" && (
                   <form
                     onSubmit={sendReply}
-                    className="space-y-3 border border-border/80 p-4"
+                    className="space-y-3 rounded-lg border border-border/80 p-4"
                   >
                     <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-primary">
                       <MessageSquareReply className="size-4" />
                       Reply via email
                     </div>
-                    <input
-                      type="text"
+                    <Input
                       placeholder="Subject (optional)"
-                      className="h-10 w-full border border-input bg-transparent px-3 text-sm outline-none focus:border-ring"
                       value={replySubject}
                       onChange={(event) => setReplySubject(event.target.value)}
                     />
@@ -437,7 +433,7 @@ export default function AdminMessagesPage() {
                     />
                     <Button
                       type="submit"
-                      className="h-11 gap-2 rounded-none"
+                      className="h-11 gap-2 rounded-lg"
                       disabled={saving || replyMessage.trim().length < 10}
                     >
                       {saving ? (
@@ -451,7 +447,7 @@ export default function AdminMessagesPage() {
                 )}
 
                 {selected.repliedAt && (
-                  <div className="border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-300">
+                  <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-300">
                     <p className="font-semibold">
                       Replied on {new Date(selected.repliedAt).toLocaleString()}
                     </p>
@@ -463,6 +459,17 @@ export default function AdminMessagesPage() {
           </section>
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={saving && !deleteLoadingOpen}
+        onClose={() => {}}
+        type="loading"
+        title="Saving..."
+        description="Please wait while we update this message."
+        actionText="Please Wait"
+        onAction={() => {}}
+        showCloseButton={false}
+      />
 
       <DynamicModal
         isOpen={deleteWarningOpen}
@@ -507,3 +514,8 @@ export default function AdminMessagesPage() {
     </main>
   )
 }
+
+
+
+
+

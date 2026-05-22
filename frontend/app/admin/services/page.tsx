@@ -128,6 +128,7 @@ export default function AdminServicesPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [saveLoadingOpen, setSaveLoadingOpen] = useState(false)
   const [deleteWarningOpen, setDeleteWarningOpen] = useState(false)
   const [deleteLoadingOpen, setDeleteLoadingOpen] = useState(false)
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
@@ -197,6 +198,7 @@ export default function AdminServicesPage() {
     setError("")
     setSuccess("")
     setIsSaving(true)
+    setSaveLoadingOpen(true)
 
     try {
       if (editingId) {
@@ -224,8 +226,10 @@ export default function AdminServicesPage() {
         setForm(emptyForm)
       }
     } catch (submitError) {
+      setSaveLoadingOpen(false)
       setError(getApiErrorMessage(submitError))
     } finally {
+      setSaveLoadingOpen(false)
       setIsSaving(false)
     }
   }
@@ -256,11 +260,11 @@ export default function AdminServicesPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="flex items-center justify-between border border-border bg-card p-4 shadow-maritime-sm">
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 items-center gap-2 border border-border px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -272,25 +276,25 @@ export default function AdminServicesPage() {
               </p>
             </div>
           </div>
-          <Button className="rounded-none" onClick={startCreate}>
+          <Button className="rounded-lg" onClick={startCreate}>
             <Plus className="size-4" />
             New Service
           </Button>
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
         {success && (
-          <div className="border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
             {success}
           </div>
         )}
 
         <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-          <section className="border border-border bg-card p-4 shadow-maritime-sm">
+          <section className="rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
             <div className="space-y-3">
               {isLoading ? (
                 <div className="flex h-64 items-center justify-center">
@@ -306,12 +310,12 @@ export default function AdminServicesPage() {
                     key={item.id}
                     type="button"
                     onClick={() => setSelectedId(item.id)}
-                    className={`w-full border p-3 text-left ${selectedId === item.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
+                    className={`w-full rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${selectedId === item.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="line-clamp-1 font-semibold">{item.title}</p>
                       {!item.isPublished && (
-                        <span className="px-2 py-1 text-[10px] font-bold uppercase text-amber-600">
+                        <span className="rounded-md px-2 py-1 text-[10px] font-bold uppercase text-amber-600">
                           Draft
                         </span>
                       )}
@@ -322,13 +326,13 @@ export default function AdminServicesPage() {
             </div>
           </section>
 
-          <section className="space-y-4 border border-border bg-card p-5 shadow-maritime-sm">
+          <section className="space-y-4 rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
             {selected && (
               <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
                   variant="outline"
-                  className="rounded-none"
+                  className="rounded-lg"
                   onClick={() => startEdit(selected)}
                 >
                   <Pencil className="size-4" />
@@ -337,7 +341,7 @@ export default function AdminServicesPage() {
                 <Button
                   type="button"
                   variant="destructive"
-                  className="rounded-none"
+                  className="rounded-lg"
                   onClick={() => setDeleteWarningOpen(true)}
                   disabled={isSaving}
                 >
@@ -419,7 +423,7 @@ export default function AdminServicesPage() {
 
               <Button
                 type="submit"
-                className="h-11 w-full rounded-none"
+                className="h-11 w-full rounded-lg"
                 disabled={isSaving}
               >
                 {isSaving ? (
@@ -434,11 +438,11 @@ export default function AdminServicesPage() {
             </form>
 
             {selected && (
-              <div className="border border-border/70 p-4">
+              <div className="rounded-lg border border-border/70 p-4">
                 <p className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Preview
                 </p>
-                <div className="mb-2 inline-flex rounded-lg bg-muted p-2">
+                <div className="mb-2 inline-flex rounded-md bg-muted p-2">
                   {(() => {
                     const Icon =
                       (icons[form.icon as keyof typeof icons] as typeof Anchor) ??
@@ -460,6 +464,15 @@ export default function AdminServicesPage() {
           </section>
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={saveLoadingOpen}
+        onClose={() => undefined}
+        type="loading"
+        title="Saving..."
+        description="Please wait while we save the service."
+        showCloseButton={false}
+      />
 
       <DynamicModal
         isOpen={deleteWarningOpen}
@@ -495,3 +508,8 @@ export default function AdminServicesPage() {
     </main>
   )
 }
+
+
+
+
+

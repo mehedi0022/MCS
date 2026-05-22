@@ -8,6 +8,7 @@ import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useSiteSettings, type SiteSettings, type SocialLink } from "@/context/site-settings-context"
+import { DynamicModal } from "@/components/DynamicModal"
 
 export default function AdminSettingsPage() {
   const { refreshSettings } = useSiteSettings()
@@ -15,6 +16,7 @@ export default function AdminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [saveLoadingOpen, setSaveLoadingOpen] = useState(false)
 
   const [logoUrl, setLogoUrl] = useState("")
   const [faviconUrl, setFaviconUrl] = useState("")
@@ -111,6 +113,7 @@ export default function AdminSettingsPage() {
     setError("")
     setSuccess("")
     setIsSaving(true)
+    setSaveLoadingOpen(true)
 
     try {
       const payload = new FormData()
@@ -154,8 +157,10 @@ export default function AdminSettingsPage() {
       await refreshSettings()
       await loadSettings()
     } catch (saveError) {
+      setSaveLoadingOpen(false)
       setError(getApiErrorMessage(saveError))
     } finally {
+      setSaveLoadingOpen(false)
       setIsSaving(false)
     }
   }
@@ -163,11 +168,11 @@ export default function AdminSettingsPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="flex items-center justify-between border border-border bg-card p-4 shadow-maritime-sm">
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 items-center gap-2 border border-border px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -182,19 +187,19 @@ export default function AdminSettingsPage() {
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
         {success && (
-          <div className="border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
             {success}
           </div>
         )}
 
         <form
           onSubmit={submitSettings}
-          className="space-y-6 border border-border bg-card p-5 shadow-maritime-sm"
+          className="space-y-6 rounded-xl border border-border bg-card p-5 shadow-maritime-sm"
         >
           {isLoading ? (
             <div className="flex h-48 items-center justify-center">
@@ -202,7 +207,7 @@ export default function AdminSettingsPage() {
             </div>
           ) : (
             <>
-              <section className="space-y-4 border border-border p-4">
+              <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Brand Assets
                 </h2>
@@ -233,7 +238,7 @@ export default function AdminSettingsPage() {
                       </label>
                     </div>
                     {logoPreview && (
-                      <div className="relative h-20 w-40 overflow-hidden border border-border">
+                      <div className="relative h-20 w-40 overflow-hidden rounded-lg border border-border">
                         <Image
                           src={logoPreview}
                           alt="Logo preview"
@@ -273,7 +278,7 @@ export default function AdminSettingsPage() {
                       </label>
                     </div>
                     {faviconPreview && (
-                      <div className="relative h-16 w-16 overflow-hidden border border-border">
+                      <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-border">
                         <Image
                           src={faviconPreview}
                           alt="Favicon preview"
@@ -287,7 +292,7 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <section className="space-y-4 border border-border p-4">
+              <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Office & Map
                 </h2>
@@ -326,7 +331,7 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <section className="space-y-4 border border-border p-4">
+              <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Contact Info
                 </h2>
@@ -359,7 +364,7 @@ export default function AdminSettingsPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="rounded-none"
+                      className="rounded-lg"
                       onClick={() => setContactEmails((current) => [...current, ""])}
                     >
                       <Plus className="size-4" />
@@ -395,7 +400,7 @@ export default function AdminSettingsPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="rounded-none"
+                      className="rounded-lg"
                       onClick={() => setContactPhones((current) => [...current, ""])}
                     >
                       <Plus className="size-4" />
@@ -405,7 +410,7 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <section className="space-y-4 border border-border p-4">
+              <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Branches
                 </h2>
@@ -434,7 +439,7 @@ export default function AdminSettingsPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="rounded-none"
+                    className="rounded-lg"
                     onClick={() => setBranches((current) => [...current, ""])}
                   >
                     <Plus className="size-4" />
@@ -443,7 +448,7 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <section className="space-y-4 border border-border p-4">
+              <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Social Links
                 </h2>
@@ -497,7 +502,7 @@ export default function AdminSettingsPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="rounded-none"
+                    className="rounded-lg"
                     onClick={() =>
                       setSocialLinks((current) => [...current, { platform: "", url: "" }])
                     }
@@ -508,7 +513,7 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <Button type="submit" className="h-11 w-full rounded-none mt-6" disabled={isSaving}>
+              <Button type="submit" className="h-11 w-full rounded-lg mt-6" disabled={isSaving}>
                 {isSaving ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
@@ -520,6 +525,18 @@ export default function AdminSettingsPage() {
           )}
         </form>
       </div>
+
+      <DynamicModal
+        isOpen={saveLoadingOpen}
+        onClose={() => undefined}
+        type="loading"
+        title="Saving..."
+        description="Please wait while we update settings."
+        showCloseButton={false}
+      />
     </main>
   )
 }
+
+
+

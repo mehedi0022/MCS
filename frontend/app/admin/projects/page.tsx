@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DynamicModal } from "@/components/DynamicModal"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 
 type GalleryImage = {
   url: string
@@ -81,6 +82,7 @@ export default function AdminProjectsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
+  const [saveLoadingOpen, setSaveLoadingOpen] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteLoadingOpen, setDeleteLoadingOpen] = useState(false)
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
@@ -227,6 +229,7 @@ export default function AdminProjectsPage() {
     event.preventDefault()
     setIsSaving(true)
     setError("")
+    setSaveLoadingOpen(true)
 
     try {
       if (editingId) {
@@ -242,8 +245,10 @@ export default function AdminProjectsPage() {
       startCreate()
       await loadProjects()
     } catch (submitError) {
+      setSaveLoadingOpen(false)
       setError(getApiErrorMessage(submitError))
     } finally {
+      setSaveLoadingOpen(false)
       setIsSaving(false)
     }
   }
@@ -268,11 +273,11 @@ export default function AdminProjectsPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="shadow-maritime-sm flex items-center justify-between border border-border bg-card p-4">
+        <div className="shadow-maritime-sm rounded-xl flex items-center justify-between border border-border bg-card p-4">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 items-center gap-2 border border-border px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -284,20 +289,20 @@ export default function AdminProjectsPage() {
               </p>
             </div>
           </div>
-          <Button className="rounded-none" onClick={startCreate}>
+          <Button className="rounded-lg" onClick={startCreate}>
             <Plus className="size-4" />
             New Project
           </Button>
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
 
         <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-          <section className="shadow-maritime-sm border border-border bg-card p-4">
+          <section className="shadow-maritime-sm rounded-xl border border-border bg-card p-4">
             <div className="space-y-3">
               {isLoading ? (
                 <div className="flex h-64 items-center justify-center">
@@ -312,14 +317,14 @@ export default function AdminProjectsPage() {
                   <button
                     key={project.id}
                     onClick={() => setSelectedId(project.id)}
-                    className={`w-full border p-3 text-left ${selectedId === project.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
+                    className={`w-full rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${selectedId === project.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="line-clamp-1 font-semibold">
                         {project.title}
                       </p>
                       {!project.isPublished && (
-                        <span className="px-2 py-1 text-[10px] font-bold text-amber-600 uppercase">
+                        <span className="rounded-md px-2 py-1 text-[10px] font-bold text-amber-600 uppercase">
                           Draft
                         </span>
                       )}
@@ -333,12 +338,12 @@ export default function AdminProjectsPage() {
             </div>
           </section>
 
-          <section className="shadow-maritime-sm space-y-4 border border-border bg-card p-5">
+          <section className="shadow-maritime-sm space-y-4 rounded-xl border border-border bg-card p-5">
             {selected && (
               <div className="flex flex-wrap gap-2">
                 <Button
                   variant="outline"
-                  className="rounded-none"
+                  className="rounded-lg"
                   onClick={() => startEdit(selected)}
                 >
                   <Pencil className="size-4" />
@@ -346,7 +351,7 @@ export default function AdminProjectsPage() {
                 </Button>
                 <Button
                   variant="destructive"
-                  className="rounded-none"
+                  className="rounded-lg"
                   onClick={() => setDeleteModalOpen(true)}
                   disabled={isSaving}
                 >
@@ -382,12 +387,16 @@ export default function AdminProjectsPage() {
                 className="min-h-20 border-input px-3"
               />
 
-              <Textarea
-                placeholder="Description"
-                value={form.description}
-                onChange={(e) => updateField("description", e.target.value)}
-                className="min-h-24 border-input px-3"
-              />
+              <div className="space-y-2">
+                <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                  Project Description
+                </p>
+                <RichTextEditor
+                  value={form.description}
+                  onChange={(value) => updateField("description", value)}
+                  placeholder="Write formatted project details..."
+                />
+              </div>
 
               <div className="grid gap-3 md:grid-cols-3">
                 <Input
@@ -448,7 +457,7 @@ export default function AdminProjectsPage() {
                   <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                     Cover Preview
                   </p>
-                  <div className="relative h-48 overflow-hidden border border-border">
+                  <div className="relative h-48 overflow-hidden rounded-lg border border-border">
                     <Image
                       src={coverPreviewUrl}
                       alt="Cover preview"
@@ -469,7 +478,7 @@ export default function AdminProjectsPage() {
                     {galleryPreviewUrls.map((url) => (
                       <div
                         key={url}
-                        className="relative h-24 overflow-hidden border border-border"
+                        className="relative h-24 overflow-hidden rounded-lg border border-border"
                       >
                         <Image
                           src={url}
@@ -493,7 +502,7 @@ export default function AdminProjectsPage() {
                     {retainedGallery.map((image) => (
                       <div
                         key={image.publicId}
-                        className="relative h-24 overflow-hidden border border-border"
+                        className="relative h-24 overflow-hidden rounded-lg border border-border"
                       >
                         <Image
                           src={image.url}
@@ -537,7 +546,7 @@ export default function AdminProjectsPage() {
 
               <Button
                 type="submit"
-                className="h-11 w-full rounded-none"
+                className="h-11 w-full rounded-lg"
                 disabled={isSaving}
               >
                 {isSaving ? (
@@ -553,6 +562,17 @@ export default function AdminProjectsPage() {
           </section>
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={saveLoadingOpen}
+        onClose={() => {}}
+        type="loading"
+        title="Saving"
+        description="Please wait while we save the project."
+        actionText="Please Wait"
+        onAction={() => {}}
+        showCloseButton={false}
+      />
 
       <DynamicModal
         isOpen={deleteModalOpen}
@@ -591,3 +611,8 @@ export default function AdminProjectsPage() {
     </main>
   )
 }
+
+
+
+
+

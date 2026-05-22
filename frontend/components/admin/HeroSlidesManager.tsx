@@ -222,7 +222,7 @@ export function HeroSlidesManager() {
     <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 border border-border bg-card p-5 shadow-maritime-sm"
+        className="space-y-4 rounded-xl border border-border bg-card p-5 shadow-maritime-sm"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -244,7 +244,7 @@ export function HeroSlidesManager() {
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
@@ -363,7 +363,7 @@ export function HeroSlidesManager() {
         <Button
           type="submit"
           disabled={isSaving}
-          className="h-11 w-full gap-2 rounded-none"
+          className="h-11 w-full gap-2 rounded-lg"
         >
           {isSaving ? (
             <Loader2 className="size-4 animate-spin" />
@@ -376,7 +376,7 @@ export function HeroSlidesManager() {
         </Button>
       </form>
 
-      <div className="border border-border bg-card p-5 shadow-maritime-sm">
+      <div className="rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold">Current Slides</h2>
@@ -387,7 +387,7 @@ export function HeroSlidesManager() {
           <Button
             variant="outline"
             size="sm"
-            className="rounded-none"
+            className="rounded-lg"
             onClick={loadSlides}
           >
             Refresh
@@ -407,7 +407,7 @@ export function HeroSlidesManager() {
             slides.map((slide) => (
               <article
                 key={slide.id}
-                className="grid gap-4 border border-border/70 p-3 md:grid-cols-[140px_1fr_auto]"
+                className="grid gap-4 rounded-lg border border-border/70 p-3 md:grid-cols-[140px_1fr_auto]"
               >
                 <div
                   className="h-28 bg-muted bg-cover bg-center"
@@ -506,3 +506,5 @@ export function HeroSlidesManager() {
     </section>
   )
 }
+
+

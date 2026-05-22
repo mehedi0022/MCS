@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, Save, Users } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { DynamicModal } from "@/components/DynamicModal"
 
 type UserItem = {
   id: string
@@ -41,6 +42,7 @@ export default function AdminUsersPage() {
   const [statusUpdatingId, setStatusUpdatingId] = useState<string | null>(null)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [saveLoadingOpen, setSaveLoadingOpen] = useState(false)
 
   useEffect(() => {
     void loadData()
@@ -84,6 +86,7 @@ export default function AdminUsersPage() {
     setError("")
     setSuccess("")
     setIsSaving(true)
+    setSaveLoadingOpen(true)
 
     try {
       await api.post("/users", form)
@@ -96,8 +99,10 @@ export default function AdminUsersPage() {
       })
       await loadData()
     } catch (submitError) {
+      setSaveLoadingOpen(false)
       setError(getApiErrorMessage(submitError))
     } finally {
+      setSaveLoadingOpen(false)
       setIsSaving(false)
     }
   }
@@ -124,11 +129,11 @@ export default function AdminUsersPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="flex items-center justify-between border border-border bg-card p-4 shadow-maritime-sm">
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 items-center gap-2 border border-border px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -147,18 +152,18 @@ export default function AdminUsersPage() {
         </div>
 
         {error && (
-          <div className="border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+          <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-semibold text-destructive">
             {error}
           </div>
         )}
         {success && (
-          <div className="border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
             {success}
           </div>
         )}
 
         <div className="grid gap-6 lg:grid-cols-[1fr_420px]">
-          <section className="border border-border bg-card p-5 shadow-maritime-sm">
+          <section className="rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
             <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-muted-foreground">
               User List
             </h2>
@@ -175,7 +180,7 @@ export default function AdminUsersPage() {
                 {users.map((user) => (
                   <div
                     key={user.id}
-                    className="grid gap-3 border border-border/80 p-3 md:grid-cols-[1fr_auto]"
+                    className="grid gap-3 rounded-lg border border-border/80 p-3 md:grid-cols-[1fr_auto]"
                   >
                     <div>
                       <p className="font-semibold">{user.name}</p>
@@ -186,7 +191,7 @@ export default function AdminUsersPage() {
                         {user.role}
                       </p>
                       <span
-                        className={`px-2 py-1 text-[10px] font-bold uppercase ${
+                        className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase ${
                           user.isActive
                             ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
                             : "bg-destructive/10 text-destructive"
@@ -201,7 +206,7 @@ export default function AdminUsersPage() {
                         type="button"
                         variant={user.isActive ? "destructive" : "outline"}
                         size="sm"
-                        className="rounded-none"
+                        className="rounded-lg"
                         onClick={() => toggleUserStatus(user)}
                         disabled={statusUpdatingId === user.id}
                       >
@@ -217,7 +222,7 @@ export default function AdminUsersPage() {
             )}
           </section>
 
-          <section className="border border-border bg-card p-5 shadow-maritime-sm">
+          <section className="rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
             <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-muted-foreground">
               Create User
             </h2>
@@ -252,7 +257,7 @@ export default function AdminUsersPage() {
                 <select
                   value={form.role}
                   onChange={(e) => updateField("role", e.target.value)}
-                  className="h-10 w-full border border-input bg-background px-3 text-sm"
+                  className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm"
                 >
                   {roles.map((role) => (
                     <option key={role} value={role}>
@@ -264,7 +269,7 @@ export default function AdminUsersPage() {
 
               <Button
                 type="submit"
-                className="h-11 w-full rounded-none"
+                className="h-11 w-full rounded-lg"
                 disabled={isSaving}
               >
                 {isSaving ? (
@@ -278,6 +283,19 @@ export default function AdminUsersPage() {
           </section>
         </div>
       </div>
+
+      <DynamicModal
+        isOpen={saveLoadingOpen}
+        onClose={() => undefined}
+        type="loading"
+        title="Saving..."
+        description="Please wait while we create the user."
+        showCloseButton={false}
+      />
     </main>
   )
 }
+
+
+
+

@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   Building2,
   BriefcaseBusiness,
+  Image,
   FolderKanban,
   Inbox,
   LayoutDashboard,
@@ -51,6 +52,7 @@ const navItems = [
   { label: "Messages", href: "/admin/messages", icon: Inbox },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "What We Do", href: "/admin/what-we-do", icon: Compass },
+  { label: "Our Story", href: "/admin/our-story", icon: Image },
   { label: "Journey", href: "/admin/journey", icon: Route },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
@@ -143,9 +145,9 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-background pt-24 text-foreground">
       <div className="container mx-auto grid gap-6 px-6 pb-12 lg:grid-cols-[260px_1fr]">
-        <aside className="shadow-maritime-sm h-fit border border-border bg-card p-4">
+        <aside className="shadow-maritime-sm h-fit rounded-xl border border-border bg-card p-4">
           <div className="mb-6 flex items-center gap-3 border-b border-border pb-4">
-            <div className="flex size-10 items-center justify-center bg-primary text-primary-foreground">
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
               <ShipWheel className="size-5" />
             </div>
             <div>
@@ -162,7 +164,7 @@ export default function AdminDashboardPage() {
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "flex h-11 w-full items-center gap-3 px-3 text-left text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground",
+                  "flex h-11 w-full cursor-pointer items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none",
                   item.active &&
                     "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                 )}
@@ -175,7 +177,7 @@ export default function AdminDashboardPage() {
         </aside>
 
         <main className="space-y-6">
-          <section className="shadow-maritime-sm flex flex-col justify-between gap-4 border border-border bg-card p-5 md:flex-row md:items-center">
+          <section className="shadow-maritime-sm flex flex-col justify-between gap-4 rounded-xl border border-border bg-card p-5 md:flex-row md:items-center">
             <div>
               <div className="mb-2 flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-primary uppercase">
                 <ShieldCheck className="size-4" />
@@ -193,7 +195,7 @@ export default function AdminDashboardPage() {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                className="h-11 gap-2 rounded-none"
+                className="h-11 cursor-pointer gap-2 rounded-lg"
                 onClick={handleLogout}
               >
                 <LogOut className="size-4" />
@@ -207,7 +209,7 @@ export default function AdminDashboardPage() {
               <Link
                 key={stat.label}
                 href={stat.href}
-                className="shadow-maritime-sm group border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none"
+                className="shadow-maritime-sm group rounded-xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none"
               >
                 <div className="mb-5 flex items-center justify-between">
                   <stat.icon className={cn("size-5", stat.tone)} />

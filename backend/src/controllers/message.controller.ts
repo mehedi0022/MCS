@@ -24,14 +24,14 @@ export const createMessage: RequestHandler = async (req, res, next) => {
     const message = await prisma.contactMessage.create({ data })
 
     if (isSmtpConfigured()) {
-      try {
-        await sendWelcomeEmail({
+      // Fire-and-forget to keep contact form response fast for end users.
+      void sendWelcomeEmail({
           to: message.email,
           recipientName: message.name,
         })
-      } catch (welcomeError) {
-        console.error("Welcome email send failed:", welcomeError)
-      }
+        .catch((welcomeError) => {
+          console.error("Welcome email send failed:", welcomeError)
+        })
     }
 
     return sendSuccess(res, message, 201)
@@ -145,6 +145,7 @@ export const replyToMessage: RequestHandler = async (req, res, next) => {
 
     const subject = input.subject?.trim() || `Re: ${message.subject || "Your Inquiry"}`
 
+    // Keep awaited: only mark as replied after email is successfully sent.
     await sendReplyEmail({
       to: message.email,
       recipientName: message.name,
