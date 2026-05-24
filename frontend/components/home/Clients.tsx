@@ -12,9 +12,9 @@ type ClientItem = {
 
 const fallbackClients: ClientItem[] = [
   { id: "1", name: "BIWTA", website: "https://biwta.gov.bd" },
-  { id: "2", name: "CPA", website: "https://cpa.gov.bd" },
-  { id: "3", name: "Mongla Port Authority", website: "https://mpa.gov.bd" },
-  { id: "4", name: "Dhaka WASA", website: "https://dwasa.org.bd" },
+  { id: "2", name: "Cox's Bazar Development Authority (CoxDA)" },
+  { id: "3", name: "Payra Port Authority (PPA)", website: "https://ppa.gov.bd" },
+  { id: "4", name: "Karnaphuli Ship Builders Ltd." },
 ]
 
 function toSafeWebsite(url?: string | null) {
@@ -55,15 +55,16 @@ export async function Clients() {
         <div className="mb-12 max-w-2xl space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
             <Handshake className="h-3 w-3" />
-            Trusted Clients
+            Clients & Partners
           </div>
           <h2 className="font-heading text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
             Organizations We
-            <span className="text-slate-500 dark:text-slate-400"> Support.</span>
+            <span className="text-slate-500 dark:text-slate-400"> Serve.</span>
           </h2>
           <p className="text-base leading-relaxed text-slate-600 dark:text-slate-300">
-            From port authorities to engineering institutions, our partners trust
-            us for reliable maritime and geospatial execution.
+            We work with government agencies, private sector clients, and
+            development partners involved in ports, waterways, and coastal
+            infrastructure.
           </p>
         </div>
 

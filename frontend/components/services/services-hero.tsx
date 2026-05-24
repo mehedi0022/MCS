@@ -16,18 +16,16 @@ export function ServicesHero() {
         <div className="max-w-3xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
             <Anchor className="h-3 w-3" />
-            Operational Excellence
+            Our Services
           </div>
 
           <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-            Technical <span className="text-primary">Mastery</span> <br />
-            for the Blue Economy.
+            Marine & Geospatial <span className="text-primary">Services</span>
           </h1>
 
           <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-            From naval architecture to ESG compliance, we provide the
-            intelligence needed to navigate the complexities of modern maritime
-            logistics.
+            Integrated solutions across hydrography, geospatial analysis,
+            environmental studies, and marine infrastructure development.
           </p>
         </div>
       </div>

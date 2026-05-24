@@ -14,6 +14,9 @@ const navLinks = [
   { name: "Services", href: "/services" },
   { name: "About", href: "/about-us" },
   { name: "Projects", href: "/projects" },
+  { name: "Clients & Sectors", href: "/clients-sectors" },
+  { name: "Training", href: "/training" },
+  { name: "FAQ", href: "/faq" },
   { name: "Contact", href: "/contact" },
 ]
 
@@ -23,7 +26,7 @@ export function Navbar() {
   const pathname = usePathname()
   const { settings } = useSiteSettings()
   const logoUrl = settings?.logoUrl?.trim()
-  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "consult@maritime.com"
+  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -33,12 +36,20 @@ export function Navbar() {
 
   // Lock scroll when mobile menu is open
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : originalOverflow
+    return () => {
+      document.body.style.overflow = originalOverflow
     }
   }, [mobileMenuOpen])
+
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false)
+    }
+    window.addEventListener("keydown", onEscape)
+    return () => window.removeEventListener("keydown", onEscape)
+  }, [])
 
   return (
     <header
@@ -67,29 +78,29 @@ export function Navbar() {
           <div className="flex flex-col leading-none">
             <span
               className={cn(
-                "text-base font-bold tracking-tighter uppercase transition-colors duration-300 md:text-lg",
+                "text-sm font-bold tracking-tighter uppercase transition-colors duration-300 sm:text-base md:text-lg",
                 isScrolled
                   ? "text-foreground"
                   : "text-maritime-navy dark:text-white"
               )}
             >
-              Maritime <span className="font-light">Consulting</span>
+              Marine <span className="font-light">Consultancy</span>
             </span>
             <span
               className={cn(
-                "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors duration-300",
+                "hidden text-[10px] font-medium tracking-[0.2em] uppercase transition-colors duration-300 sm:block",
                 isScrolled
                   ? "text-muted-foreground"
                   : "text-maritime-navy/70 dark:text-white/70"
               )}
             >
-              Solutions & Engineering
+              Services (MCS)
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 xl:flex">
           {navLinks.map((link) => {
             const isActive = pathname === link.href
             return (
@@ -133,13 +144,13 @@ export function Navbar() {
           <Link href="/contact">
             <Button
               className={cn(
-                "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 md:flex",
+                "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 xl:flex",
                 isScrolled
                   ? "bg-primary text-primary-foreground"
                   : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
               )}
             >
-              GET CONSULTATION
+              Contact Us
             </Button>
           </Link>
 
@@ -147,12 +158,13 @@ export function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={cn(
-              "p-2 transition-colors md:hidden",
+              "rounded-lg p-2 transition-colors xl:hidden",
               isScrolled
                 ? "text-foreground"
                 : "text-maritime-navy dark:text-white"
             )}
             aria-label="Toggle Menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -162,15 +174,15 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 h-screen w-full transition-all duration-500 ease-in-out md:hidden",
+          "fixed inset-0 z-40 h-screen w-full transition-all duration-500 ease-in-out xl:hidden",
           "bg-background/98 backdrop-blur-md", // More opaque for readability
           mobileMenuOpen
             ? "visible translate-x-0 opacity-100"
             : "invisible translate-x-full opacity-0"
         )}
       >
-        <div className="relative z-10 flex h-full flex-col p-8 pt-24">
-          <div className="flex flex-col gap-6">
+        <div className="relative z-10 flex h-dvh flex-col overflow-y-auto p-6 pt-24 sm:p-8 sm:pt-24">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {navLinks.map((link, i) => {
               const isActive = pathname === link.href
               return (
@@ -180,7 +192,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ transitionDelay: `${i * 50}ms` }}
                   className={cn(
-                    "flex items-center justify-between border-b border-border/50 pb-5 text-2xl font-bold tracking-tight transition-all duration-300",
+                    "flex items-center justify-between border-b border-border/50 pb-4 text-xl font-bold tracking-tight transition-all duration-300 sm:pb-5 sm:text-2xl",
                     isActive
                       ? "translate-x-2 text-primary"
                       : "text-foreground hover:translate-x-2",
@@ -203,7 +215,7 @@ export function Navbar() {
 
           <div
             className={cn(
-              "mt-auto space-y-6 transition-all delay-300 duration-500",
+              "mt-8 space-y-4 pb-6 transition-all delay-300 duration-500 sm:mt-auto sm:space-y-6",
               mobileMenuOpen
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
@@ -211,7 +223,7 @@ export function Navbar() {
           >
             <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
               <Button className="shadow-maritime-lg h-14 w-full rounded-2xl text-lg font-bold">
-                GET CONSULTATION
+                Contact Us
               </Button>
             </Link>
             <p className="text-center text-sm text-muted-foreground italic">

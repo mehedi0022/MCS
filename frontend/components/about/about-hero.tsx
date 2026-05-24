@@ -18,16 +18,16 @@ export function AboutHero() {
         <div className="max-w-3xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
             <Anchor className="h-3 w-3" />
-            ESTABLISHED 2014
+            Marine Consultancy Services
           </div>
 
           <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-            Built for the <span className="text-primary">Deep.</span>
+            Technical Expertise for <span className="text-primary">Bangladesh Waterways.</span>
           </h1>
 
           <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-            A decade of navigating complexity, delivering precision, and
-            pioneering sustainable oceanic engineering for a global fleet.
+            MCS delivers integrated hydrographic, geospatial, and environmental
+            consultancy support for inland and coastal development projects.
           </p>
         </div>
       </div>

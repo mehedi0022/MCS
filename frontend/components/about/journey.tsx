@@ -11,38 +11,32 @@ const fallbackMilestones: JourneyItem[] = [
   {
     id: "fallback-1",
     year: "2014",
-    title: "The Maiden Voyage",
-    desc: "Founded in Singapore by a team of 4 naval architects focused on regional port efficiency.",
+    title: "Foundation",
+    desc: "MCS formed with focus on hydrographic and geospatial support for Bangladesh waterways.",
   },
   {
     id: "fallback-2",
-    year: "2015",
-    title: "Pacific Expansion",
-    desc: "Opened operations across 12 Pacific ports, growing our fleet monitoring network.",
+    year: "2018",
+    title: "Survey Expansion",
+    desc: "Expanded inland waterway and coastal survey operations with modern field systems.",
   },
   {
     id: "fallback-3",
-    year: "2016",
-    title: "Safety First",
-    desc: "Launched our proprietary hazard detection system, reducing incidents by 40%.",
+    year: "2021",
+    title: "Integrated Delivery",
+    desc: "Added GIS, modelling, and environmental studies to provide full project support.",
   },
   {
     id: "fallback-4",
-    year: "2017",
-    title: "Expanding Horizons",
-    desc: "Established our European headquarters in Rotterdam, doubling our engineering capacity.",
+    year: "2024",
+    title: "Major National Assignments",
+    desc: "Contributed to Cox's Bazar, BIWTA, and Payra-linked assignments across key sectors.",
   },
   {
     id: "fallback-5",
-    year: "2020",
-    title: "Digital Twin Launch",
-    desc: "Pioneered the industry's first real-time digital twin simulation for vessel logistics.",
-  },
-  {
-    id: "fallback-6",
-    year: "2024",
-    title: "Sustainable Future",
-    desc: "Committed to zero-emission infrastructure projects across the Middle East and Asia.",
+    year: "2026",
+    title: "Capacity Building",
+    desc: "Expanded training and technical advisory programs for sustainable long-term capability.",
   },
 ]
 
@@ -55,7 +49,7 @@ export function Journey({ milestones = fallbackMilestones }: { milestones?: Jour
           The Journey
         </h2>
         <h3 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
-          Decades of Navigational Mastery
+          Building Reliable Technical Support
         </h3>
       </div>
 

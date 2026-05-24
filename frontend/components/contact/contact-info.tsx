@@ -7,24 +7,23 @@ import { useSiteSettings } from "@/context/site-settings-context"
 export function ContactInfo() {
   const { settings } = useSiteSettings()
 
-  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "consult@maritime.com"
-  const primaryPhone = settings?.contactPhones?.[0]?.trim() || "+1 (555) 000-MARI"
-  const addressLine1 = settings?.officeAddressLine1?.trim() || "123 Harbour Way"
-  const addressLine2 =
-    settings?.officeAddressLine2?.trim() || "Maritime District, Suite 402"
+  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
+  const primaryPhone = settings?.contactPhones?.[0]?.trim() || "+880 1XXX-XXXXXX"
+  const addressLine1 = settings?.officeAddressLine1?.trim() || "Dhaka"
+  const addressLine2 = settings?.officeAddressLine2?.trim() || "Bangladesh"
 
   const infoItems = [
     {
       icon: Mail,
       label: "Email",
       value: primaryEmail,
-      sub: "Direct line to our lead engineering team.",
+      sub: "Quick response from our technical team.",
     },
     {
       icon: Phone,
       label: "Phone",
       value: primaryPhone,
-      sub: "Mon-Fri from 9am to 6pm SGT.",
+      sub: "Mon-Sat from 9am to 6pm (BST).",
     },
     {
       icon: MapPin,

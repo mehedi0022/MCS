@@ -26,14 +26,13 @@ export default function ContactPage() {
             </div>
 
             <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-              Navigating your <span className="text-primary">objectives.</span>
+              Let&apos;s Discuss Your <span className="text-primary">Project.</span>
             </h1>
 
             <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-              Whether you have a question about our services, want to discuss a
-              potential project, or just want to say hello, we’re here to help.
-              Reach out to us and let’s start a conversation about how we can
-              support your maritime ambitions.
+              Whether you are planning a project, seeking technical expertise,
+              or exploring collaboration opportunities, our team is ready to
+              assist.
             </p>
           </div>
         </div>

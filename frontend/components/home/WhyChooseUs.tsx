@@ -5,23 +5,23 @@ import { motion } from "framer-motion"
 const features = [
   {
     icon: Compass,
-    title: "Navigational Precision",
-    desc: "Our strategies are built on exact data, removing guesswork from your logistics.",
+    title: "Proven Maritime Expertise",
+    desc: "Strong foundation in hydrography, navigation, and marine operations.",
   },
   {
     icon: Anchor,
-    title: "Deep Industry Roots",
-    desc: "Founded by former captains and maritime engineers with decades of at-sea experience.",
+    title: "Bangladesh-Focused Understanding",
+    desc: "Deep knowledge of river morphology, siltation, and coastal dynamics.",
   },
   {
     icon: Globe2,
-    title: "Global Network",
-    desc: "Direct relationships with port authorities and regulators across 50+ countries.",
+    title: "Technology-Driven Approach",
+    desc: "Modern survey systems, GIS platforms, and advanced modelling tools.",
   },
   {
     icon: Lightbulb,
-    title: "Innovative Tech",
-    desc: "We deploy proprietary software to model and solve complex supply chain bottlenecks.",
+    title: "Integrated Service Delivery",
+    desc: "From field surveys to analysis, modelling, reporting, and implementation support.",
   },
 ]
 
@@ -35,21 +35,18 @@ export function WhyChooseUs() {
             <div className="sticky max-w-2xl space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
                 <Anchor className="h-3 w-3" />
-                The Maritime Advantage
+                Why Choose MCS
               </div>
 
               <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-                We don't just give advice,{" "}
-                <span className="text-muted-foreground">
-                  we build success artisans.
-                </span>
+                Practical Expertise.{" "}
+                <span className="text-muted-foreground">Reliable Data. Trusted Solutions.</span>
               </h2>
 
               <p className="text-lg leading-relaxed text-muted-foreground">
-                In an industry where delays cost millions, standard consulting
-                isn't enough. We combine rigorous technical engineering with
-                high-level strategic management to ensure your fleet operates at
-                absolute peak performance.
+                We combine field experience and advanced data workflows to
+                deliver practical outcomes for inland waterways, coastal zones,
+                ports, and marine infrastructure projects.
               </p>
             </div>
           </div>

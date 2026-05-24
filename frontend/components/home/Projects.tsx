@@ -51,23 +51,23 @@ export function Projects() {
           <div className="max-w-2xl space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
               <Anchor className="h-3 w-3" />
-              Strategic Portfolio
+              Selected Experience
             </div>
             <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Proven Results{" "}
-              <span className="text-muted-foreground">at Sea.</span>
+              Delivering Data-Driven{" "}
+              <span className="text-muted-foreground">Solutions.</span>
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
-              Discover how our strategic interventions and geospatial insights
-              have transformed operations for global maritime agencies and
-              developers.
+              Our team has contributed to hydrographic, environmental, and
+              consultancy assignments across Bangladesh&apos;s coastal and
+              inland water sectors.
             </p>
           </div>
           <Link
             href="/projects"
             className="group inline-flex items-center gap-2 font-bold tracking-tight text-primary transition-colors hover:text-maritime-ocean"
           >
-            Explore Full Portfolio
+            View Projects
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-all group-hover:bg-primary group-hover:text-white">
               <ArrowRight className="h-5 w-5" />
             </div>
@@ -76,7 +76,7 @@ export function Projects() {
 
         {/* Project Grid */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {projects.slice(0, 3).map((project) => (
             <div
               key={project.id}
               className="group hover:shadow-maritime-xl relative flex flex-col overflow-hidden rounded-[2rem] border border-border/50 bg-card transition-all hover:border-primary/30"
@@ -107,7 +107,7 @@ export function Projects() {
                   </span>
                   <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
                     <Globe className="h-3 w-3" />
-                    Global Reach
+                    Bangladesh Focus
                   </div>
                 </div>
 

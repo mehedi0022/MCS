@@ -54,11 +54,11 @@ function sanitizeRichHtml(input: string) {
 
 const fallbackCard = {
   sinceLabel: "Since 2014",
-  headingLine1: "Built by the sea,",
-  headingLine2: "for the sea.",
-  storyHtml: `<p>Maritime Solutions was founded by a small group of naval architects and former captains who shared a singular realization: the industry was changing faster than the engineering firms could adapt.</p><p>We started in a small office near the Port of Singapore with nothing but a set of blueprints and a commitment to radical transparency. We didn't want to be another generic corporate consultancy; we wanted to be technical partners who understood the vibration of the engine and the weight of the cargo.</p><p>Today, we have grown into a global presence, yet our purpose remains unchanged: providing the engineering backbone for those who navigate the world's most vital waterways.</p>`,
-  badge: "Global Impact",
-  title: "40+ Ports Optimized Worldwide",
+  headingLine1: "Built around practical data,",
+  headingLine2: "for real-world waterway solutions.",
+  storyHtml: `<p>Marine Consultancy Services (MCS) is a specialist consultancy delivering integrated solutions in hydrography, geospatial analysis, and marine and inland waterway development.</p><p>With deep expertise in Bangladesh's dynamic riverine and coastal environment, we support government agencies, developers, and development partners with reliable data, technical insight, and end-to-end project support.</p><p>Our work spans field survey, processing, analysis, modelling, and implementation support, with a strong focus on practical, sustainable outcomes.</p>`,
+  badge: "Bangladesh Focus",
+  title: "Hydrography, GIS, Environment & Consultancy",
   imageUrl:
     "https://images.unsplash.com/photo-1494459940152-1e911caa8ea0?q=80&w=2787&auto=format&fit=crop",
 }

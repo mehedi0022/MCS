@@ -108,7 +108,7 @@ export function ProjectGallery({
                           </span>
                           <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
                             <Globe className="h-3 w-3" />
-                            Global Reach
+                            Bangladesh Focus
                           </div>
                         </div>
 

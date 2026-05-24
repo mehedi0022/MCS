@@ -1,28 +1,43 @@
 [
   {
     "id": 1,
-    "badgeText": "Leading The Horizon",
+    "badgeText": "Marine Consultancy Services",
     "title": "Marine & Geospatial Solutions for Bangladesh’s Waterways",
-    "subtitle": "Delivering accurate data, practical insights, and sustainable solutions for ports, rivers, and coastal development. Empowering growth, safety, and environmental stewardship.",
+    "subtitle": "Delivering accurate data, practical insights, and sustainable solutions for ports, rivers, and coastal development.",
     "image": "/hero1.png",
     "primaryButton": {
-      "text": "Explore Our Solutions",
-      "link": "/solutions"
+      "text": "Our Services",
+      "link": "/services"
     },
     "secondaryButton": {
-      "text": "Learn More",
-      "link": "/about"
+      "text": "Contact Us",
+      "link": "/contact"
     }
   },
   {
     "id": 2,
-    "badgeText": "Innovative Marine Solutions",
-    "title": "Transforming Bangladesh’s Waterways with Innovation and Expertise",
-    "subtitle": "Empowering sustainable development and efficient management of ports, rivers, and coastal areas. Harnessing advanced technology and local expertise to drive growth, safety, and environmental stewardship.",
+    "badgeText": "Hydrography | GIS | Consultancy",
+    "title": "Data-Driven Support for Coastal and Inland Water Projects",
+    "subtitle": "From survey and analysis to planning and implementation, MCS supports government agencies, developers, and development partners across Bangladesh.",
     "image": "/hero2.png",
     "primaryButton": {
-      "text": "Discover Our Services",
-      "link": "/services"
+      "text": "View Projects",
+      "link": "/projects"
+    },
+    "secondaryButton": {
+      "text": "Clients & Sectors",
+      "link": "/clients-sectors"
+    }
+  },
+  {
+    "id": 3,
+    "badgeText": "Capacity & Delivery",
+    "title": "Integrated Marine Services with Local Expertise",
+    "subtitle": "We combine practical expertise, reliable data, and flexible execution for sustainable outcomes in Bangladesh’s waterways.",
+    "image": "/hero3.png",
+    "primaryButton": {
+      "text": "Training",
+      "link": "/training"
     },
     "secondaryButton": {
       "text": "Contact Us",

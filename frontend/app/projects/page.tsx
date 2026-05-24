@@ -4,8 +4,9 @@ import { API_URL } from "@/lib/api"
 import { projects as fallbackProjects } from "@/data/projects"
 
 export const metadata = {
-  title: "Strategic Portfolio | MCS Global",
-  description: "Explore our maritime intelligence and infrastructure projects.",
+  title: "Our Projects & Experience | MCS",
+  description:
+    "Explore hydrographic, environmental, and consultancy assignments across Bangladesh's coastal and inland water sectors.",
 }
 
 type ProjectCard = {
@@ -90,16 +91,17 @@ export default async function ProjectPage() {
           <div className="max-w-3xl">
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
               <Anchor className="h-3 w-3" />
-              Strategic Portfolio
+              Our Projects & Experience
             </div>
 
             <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-              Maritime <span className="text-primary">Intelligence</span>
+              Delivering Data-Driven <span className="text-primary">Solutions</span>
             </h1>
 
             <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-              A record of strategic interventions, digital twin implementations,
-              and sustainable retrofitting across the global blue economy.
+              MCS has contributed to a range of hydrographic, environmental,
+              and consultancy assignments across Bangladesh&apos;s coastal and
+              inland water sectors.
             </p>
           </div>
         </div>

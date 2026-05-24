@@ -24,13 +24,13 @@ export function ExpertiseGrid({ services }: { services: ServiceItem[] }) {
           <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             Strategic Interventions{" "}
             <span className="text-muted-foreground">
-              Across the Global Fleet.
+              Across Bangladesh&apos;s Waterways.
             </span>
           </h2>
           <p className="text-lg leading-relaxed text-muted-foreground">
-            We specialize in translating complex maritime challenges into
-            precise technical solutions, empowering our clients to navigate the
-            evolving maritime landscape with confidence and strategic foresight.
+            Our services support planning, design, implementation, and
+            monitoring for inland waterways, coastal zones, and marine
+            environments.
           </p>
         </div>
 

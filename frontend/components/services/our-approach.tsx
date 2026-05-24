@@ -8,26 +8,26 @@ const steps = [
   {
     num: "01",
     icon: <Search className="h-5 w-5" />,
-    title: "Initial Intelligence",
-    desc: "Deep-dive data extraction to understand technical constraints and variables.",
+    title: "Field Data Collection",
+    desc: "High-quality survey and monitoring data collection from riverine, coastal, and marine environments.",
   },
   {
     num: "02",
     icon: <PenTool className="h-5 w-5" />,
-    title: "Strategic Modeling",
-    desc: "Digital twin simulations to pressure-test solutions before deployment.",
+    title: "Technical Analysis",
+    desc: "Integrated GIS, modelling, and environmental analysis to produce reliable technical insights.",
   },
   {
     num: "03",
     icon: <Activity className="h-5 w-5" />,
-    title: "Precise Execution",
-    desc: "On-site implementation led by senior consultants with zero-compromise specs.",
+    title: "Practical Solutions",
+    desc: "Actionable recommendations aligned with project realities, timelines, and operational needs.",
   },
   {
     num: "04",
     icon: <ShieldCheck className="h-5 w-5" />,
-    title: "Verification",
-    desc: "Technical certification and long-term performance monitoring.",
+    title: "Sustainable Delivery",
+    desc: "Implementation support focused on long-term environmental and operational performance.",
   },
 ]
 
@@ -42,7 +42,7 @@ export function OurApproach() {
             whileInView={{ opacity: 1, y: 0 }}
             className="mb-4 text-xs font-bold tracking-[0.5em] text-primary uppercase"
           >
-            Methodology
+            Our Delivery Approach
           </motion.h2>
           <motion.h3
             initial={{ opacity: 0, y: 10 }}
@@ -50,7 +50,7 @@ export function OurApproach() {
             transition={{ delay: 0.1 }}
             className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white"
           >
-            The MCS Protocol
+            Accurate. Actionable. Sustainable.
           </motion.h3>
         </div>
 

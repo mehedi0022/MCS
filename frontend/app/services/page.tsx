@@ -4,9 +4,9 @@ import { OurApproach } from "@/components/services/our-approach"
 import { API_URL } from "@/lib/api"
 
 export const metadata = {
-  title: "Global Expertise | MCS Maritime Consultancy",
+  title: "Our Services | Marine Consultancy Services (MCS)",
   description:
-    "Professional maritime engineering, inspection, and strategic consulting services.",
+    "Integrated hydrographic, geospatial, environmental, and marine consultancy services across Bangladesh.",
 }
 
 type ServiceItem = {
@@ -21,45 +21,45 @@ type ServiceItem = {
 const fallbackServices: ServiceItem[] = [
   {
     id: "1",
-    title: "Vessel Inspection",
+    title: "Hydrographic & Bathymetric Surveys",
     summary:
-      "Rigorous condition assessments and pre-purchase surveys following international class standards.",
+      "High-accuracy hydrographic surveys for navigation safety, dredging, and marine infrastructure.",
     points: [
-      "Hull and machinery condition survey",
-      "Class and compliance gap review",
-      "Risk notes with actionable recommendations",
+      "Multibeam and singlebeam echo sounder surveys",
+      "River, estuarine, and coastal bathymetric surveys",
+      "Channel condition and navigability assessment",
     ],
     icon: "Anchor",
     description:
-      "A full-spectrum inspection workflow built for operational confidence.",
+      "Field-to-report workflow for reliable depth and channel intelligence.",
   },
   {
     id: "2",
-    title: "Marine Engineering",
+    title: "Dredging Support & Morphological Studies",
     summary:
-      "Advanced naval architecture and propulsion system design optimized for hydro-efficiency.",
+      "Data-driven support for dredging operations and long-term channel management.",
     points: [
-      "Performance and fuel-efficiency modeling",
-      "Design validation for retrofit/new build",
-      "Technical documentation and review",
+      "Dredging monitoring and supervision",
+      "Sediment transport and morphology analysis",
+      "Volume calculation and certification",
     ],
     icon: "Compass",
     description:
-      "Engineering-first planning that improves performance and lifecycle reliability.",
+      "Optimized dredging strategies for safer and more sustainable waterways.",
   },
   {
     id: "3",
-    title: "Safety Compliance",
+    title: "GIS & Geospatial Solutions",
     summary:
-      "Implementation of ISM/ISPS protocols and comprehensive regulatory audits for global fleets.",
+      "Spatial data integration and analytics for planning and decision-making.",
     points: [
-      "ISM / ISPS readiness checks",
-      "Audit evidence mapping",
-      "Corrective action planning",
+      "GIS database development and management",
+      "Spatial analysis and thematic mapping",
+      "Decision-support dashboards",
     ],
     icon: "ShipWheel",
     description:
-      "Compliance execution aligned to international standards and audit readiness.",
+      "Actionable geospatial outputs for technical and operational teams.",
   },
 ]
 
@@ -115,14 +115,14 @@ export default async function ServicesPage() {
       <section className="border-t border-slate-200 bg-white py-24 dark:border-white/5 dark:bg-white/5">
         <div className="container mx-auto px-6 text-center">
           <h2 className="mb-6 font-heading text-3xl font-bold tracking-tight text-slate-900 uppercase dark:text-white">
-            Ready to Initialize a Project?
+            Ready to Discuss Your Project?
           </h2>
           <p className="mx-auto mb-10 max-w-xl text-slate-500 dark:text-slate-400">
-            Our strategic advisors are ready to translate complex maritime
-            challenges into precise technical solutions.
+            MCS is ready to support your project with reliable data, technical
+            expertise, and end-to-end consultancy services.
           </p>
           <button className="h-14 rounded-2xl bg-primary px-10 font-bold tracking-widest text-white uppercase transition-all hover:shadow-lg hover:shadow-primary/30">
-            Consult an Expert
+            Contact Us
           </button>
         </div>
       </section>

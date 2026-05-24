@@ -8,11 +8,10 @@ import { useSiteSettings } from "@/context/site-settings-context"
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const { settings } = useSiteSettings()
-  const addressLine1 = settings?.officeAddressLine1?.trim() || "123 Harbour Way"
-  const addressLine2 =
-    settings?.officeAddressLine2?.trim() || "Maritime District, Singapore"
-  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "consult@maritime.com"
-  const primaryPhone = settings?.contactPhones?.[0]?.trim() || "+1 (555) 000-MARI"
+  const addressLine1 = settings?.officeAddressLine1?.trim() || "Dhaka"
+  const addressLine2 = settings?.officeAddressLine2?.trim() || "Bangladesh"
+  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
+  const primaryPhone = settings?.contactPhones?.[0]?.trim() || "+880 1XXX-XXXXXX"
   const socialLinks = (settings?.socialLinks ?? []).filter(
     (item) => item?.platform?.trim() && item?.url?.trim()
   )
@@ -34,13 +33,13 @@ export function Footer() {
                 <Anchor className="h-5 w-5 text-primary dark:text-maritime-foam" />
               </div>
               <span className="text-xl font-bold tracking-tight text-maritime-navy dark:text-maritime-horizon">
-                MARITIME
+                MCS
               </span>
             </Link>
             <p className="max-w-xs leading-relaxed text-muted-foreground">
-              Leading the horizon in maritime consulting. We provide
-              professional solutions for logistics, fleet management, and
-              oceanic engineering.
+              Marine Consultancy Services (MCS) delivers integrated
+              hydrographic, geospatial, and waterway consultancy solutions
+              across Bangladesh.
             </p>
             <div className="flex gap-4">
               {socialLinks.length > 0 ? (
@@ -90,14 +89,20 @@ export function Footer() {
               Company
             </h4>
             <ul className="space-y-4">
-              {["About Us", "Our Projects", "Career", "News"].map((item) => (
-                <li key={item}>
+              {[
+                { label: "About Us", href: "/about-us" },
+                { label: "Our Projects", href: "/projects" },
+                { label: "Clients & Sectors", href: "/clients-sectors" },
+                { label: "Training", href: "/training" },
+                { label: "FAQ", href: "/faq" },
+              ].map((item) => (
+                <li key={item.label}>
                   <Link
-                    href="#"
+                    href={item.href}
                     className="group flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary dark:hover:text-maritime-foam"
                   >
                     <span className="h-px w-0 bg-primary transition-all group-hover:w-3 dark:bg-maritime-teal" />
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -111,10 +116,10 @@ export function Footer() {
             </h4>
             <ul className="space-y-4">
               {[
-                "Vessel Inspection",
-                "Logistics Strategy",
-                "Sustainability",
-                "Fleet Tech",
+                "Hydrographic Surveys",
+                "Dredging Monitoring",
+                "GIS & Mapping",
+                "Environmental Studies",
               ].map((item) => (
                 <li key={item}>
                   <Link
@@ -153,7 +158,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border/30 pt-8 text-xs text-muted-foreground md:flex-row md:text-sm">
           <p>
-            © {currentYear} Maritime Consulting Solutions. All rights reserved.
+            © {currentYear} Marine Consultancy Services (MCS). All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link

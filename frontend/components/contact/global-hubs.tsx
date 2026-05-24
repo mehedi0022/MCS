@@ -1,12 +1,12 @@
 "use client"
 
 import React from "react"
-import { Globe, Clock, Anchor } from "lucide-react"
+import { Globe, Clock } from "lucide-react"
 
 const hubs = [
-  { city: "Singapore", zone: "SGT (UTC+8)", status: "Active Hub" },
-  { city: "Rotterdam", zone: "CET (UTC+1)", status: "Operational" },
-  { city: "Houston", zone: "CDT (UTC-5)", status: "Active Hub" },
+  { city: "Inland Waterways", zone: "Rivers & Channels", status: "Active" },
+  { city: "Coastal & Estuarine", zone: "Coastline Coverage", status: "Active" },
+  { city: "Ports & Infrastructure", zone: "Marine Operations", status: "Active" },
 ]
 
 export function GlobalPresence() {
@@ -21,7 +21,7 @@ export function GlobalPresence() {
           <div className="flex items-center gap-3 text-primary">
             <Globe className="h-5 w-5 animate-[spin_10s_linear_infinite]" />
             <span className="text-[10px] font-bold tracking-[0.4em] text-foreground/80 uppercase">
-              Global Coordination Centers
+              Areas We Support
             </span>
           </div>
           <div className="hidden items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[9px] font-bold text-emerald-500 ring-1 ring-emerald-500/20 sm:flex">
@@ -29,7 +29,7 @@ export function GlobalPresence() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
             </span>
-            NETWORK LIVE
+            MCS READY
           </div>
         </div>
 
@@ -67,13 +67,13 @@ export function GlobalPresence() {
               <Clock className="h-3.5 w-3.5 text-primary" />
             </div>
             <span className="font-medium tracking-wide">
-              Ready for 24/7 Deployment
+              Flexible Project Engagement
             </span>
           </div>
 
           <div className="group/progress relative flex flex-col items-end gap-2">
             <span className="text-[9px] font-bold tracking-widest text-muted-foreground/60">
-              FLEET UPTIME 99.8%
+              RESPONSE PRIORITY HIGH
             </span>
             <div className="h-1 w-32 overflow-hidden rounded-full bg-primary/10">
               <div className="h-full w-[98%] bg-gradient-to-r from-primary via-cyan-500 to-emerald-400 transition-all duration-1000 group-hover/progress:w-full" />
