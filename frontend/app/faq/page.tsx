@@ -65,10 +65,12 @@ export default function FaqPage() {
               Frequently Asked Questions
             </div>
             <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-              Common Questions <span className="text-primary">Answered Clearly</span>
+              Common Questions{" "}
+              <span className="text-primary">Answered Clearly</span>
             </h1>
             <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
-              Quick guidance on our services, project support, and training programs.
+              Quick guidance on our services, project support, and training
+              programs.
             </p>
           </div>
         </div>
@@ -76,21 +78,6 @@ export default function FaqPage() {
 
       <div className="container mx-auto mt-8 px-6 pb-20 md:mt-12">
         <FaqAccordion groups={faqGroups} />
-
-        <section className="mt-12 text-center">
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Still Need Clarification?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-300">
-            Share your project context and our team will provide direct technical guidance.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-bold text-white"
-          >
-            Contact Us
-          </Link>
-        </section>
       </div>
     </main>
   )

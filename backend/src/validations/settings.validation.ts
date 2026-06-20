@@ -15,6 +15,11 @@ export type SiteSettingsInput = {
   branches?: string[]
   socialLinks?: SocialLinkInput[]
   logoUrl?: string
+  darkLogoUrl?: string
+  navbarBrandText?: string
+  navbarBrandAccent?: string
+  navbarBrandSubtext?: string
+  footerBrandText?: string
   faviconUrl?: string
 }
 
@@ -36,5 +41,10 @@ export const settingsSchema = yup.object({
     )
     .optional(),
   logoUrl: yup.string().optional(),
+  darkLogoUrl: yup.string().optional(),
+  navbarBrandText: yup.string().optional(),
+  navbarBrandAccent: yup.string().optional(),
+  navbarBrandSubtext: yup.string().optional(),
+  footerBrandText: yup.string().optional(),
   faviconUrl: yup.string().optional(),
 })

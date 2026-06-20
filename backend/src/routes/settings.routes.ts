@@ -14,6 +14,7 @@ router.put(
   requireAuth,
   upload.fields([
     { name: "logo", maxCount: 1 },
+    { name: "darkLogo", maxCount: 1 },
     { name: "favicon", maxCount: 1 },
   ]),
   updateSettings

@@ -7,8 +7,14 @@ import { ArrowLeft, ImagePlus, Loader2, Plus, Save, Trash2 } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { useSiteSettings, type SiteSettings, type SocialLink } from "@/context/site-settings-context"
 import { DynamicModal } from "@/components/DynamicModal"
+import {
+  getVisibleSocialLinks,
+  SOCIAL_PLATFORMS,
+  toFixedSocialLinks,
+} from "@/lib/social-links"
 
 export default function AdminSettingsPage() {
   const { refreshSettings } = useSiteSettings()
@@ -19,8 +25,14 @@ export default function AdminSettingsPage() {
   const [saveLoadingOpen, setSaveLoadingOpen] = useState(false)
 
   const [logoUrl, setLogoUrl] = useState("")
+  const [darkLogoUrl, setDarkLogoUrl] = useState("")
+  const [navbarBrandText, setNavbarBrandText] = useState("")
+  const [navbarBrandAccent, setNavbarBrandAccent] = useState("")
+  const [navbarBrandSubtext, setNavbarBrandSubtext] = useState("")
+  const [footerBrandText, setFooterBrandText] = useState("")
   const [faviconUrl, setFaviconUrl] = useState("")
   const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [darkLogoFile, setDarkLogoFile] = useState<File | null>(null)
   const [faviconFile, setFaviconFile] = useState<File | null>(null)
   const [officeAddressLine1, setOfficeAddressLine1] = useState("")
   const [officeAddressLine2, setOfficeAddressLine2] = useState("")
@@ -29,13 +41,17 @@ export default function AdminSettingsPage() {
   const [contactEmails, setContactEmails] = useState<string[]>([""])
   const [contactPhones, setContactPhones] = useState<string[]>([""])
   const [branches, setBranches] = useState<string[]>([""])
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([
-    { platform: "", url: "" },
-  ])
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
+    toFixedSocialLinks(null)
+  )
 
   const logoPreview = useMemo(
     () => (logoFile ? URL.createObjectURL(logoFile) : logoUrl),
     [logoFile, logoUrl]
+  )
+  const darkLogoPreview = useMemo(
+    () => (darkLogoFile ? URL.createObjectURL(darkLogoFile) : darkLogoUrl),
+    [darkLogoFile, darkLogoUrl]
   )
   const faviconPreview = useMemo(
     () => (faviconFile ? URL.createObjectURL(faviconFile) : faviconUrl),
@@ -45,10 +61,12 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     return () => {
       if (logoPreview.startsWith("blob:")) URL.revokeObjectURL(logoPreview)
+      if (darkLogoPreview.startsWith("blob:"))
+        URL.revokeObjectURL(darkLogoPreview)
       if (faviconPreview.startsWith("blob:"))
         URL.revokeObjectURL(faviconPreview)
     }
-  }, [logoPreview, faviconPreview])
+  }, [logoPreview, darkLogoPreview, faviconPreview])
 
   useEffect(() => {
     void loadSettings()
@@ -61,6 +79,11 @@ export default function AdminSettingsPage() {
       const data = response.data.data
 
       setLogoUrl(data.logoUrl ?? "")
+      setDarkLogoUrl(data.darkLogoUrl ?? "")
+      setNavbarBrandText(data.navbarBrandText ?? "")
+      setNavbarBrandAccent(data.navbarBrandAccent ?? "")
+      setNavbarBrandSubtext(data.navbarBrandSubtext ?? "")
+      setFooterBrandText(data.footerBrandText ?? "")
       setFaviconUrl(data.faviconUrl ?? "")
       setOfficeAddressLine1(data.officeAddressLine1 ?? "")
       setOfficeAddressLine2(data.officeAddressLine2 ?? "")
@@ -79,11 +102,7 @@ export default function AdminSettingsPage() {
       setBranches(
         data.branches && data.branches.length > 0 ? data.branches : [""]
       )
-      setSocialLinks(
-        data.socialLinks && data.socialLinks.length > 0
-          ? data.socialLinks
-          : [{ platform: "", url: "" }]
-      )
+      setSocialLinks(toFixedSocialLinks(data.socialLinks))
     } catch (loadError) {
       setError(getApiErrorMessage(loadError))
     } finally {
@@ -122,6 +141,11 @@ export default function AdminSettingsPage() {
       payload.append("mapLocation", mapLocation)
       payload.append("mapLocationText", mapLocationText)
       payload.append("logoUrl", logoUrl)
+      payload.append("darkLogoUrl", darkLogoUrl)
+      payload.append("navbarBrandText", navbarBrandText)
+      payload.append("navbarBrandAccent", navbarBrandAccent)
+      payload.append("navbarBrandSubtext", navbarBrandSubtext)
+      payload.append("footerBrandText", footerBrandText)
       payload.append("faviconUrl", faviconUrl)
       payload.append(
         "contactEmails",
@@ -137,14 +161,11 @@ export default function AdminSettingsPage() {
       )
       payload.append(
         "socialLinks",
-        JSON.stringify(
-          socialLinks.filter(
-            (item) => item.platform.trim() && item.url.trim()
-          )
-        )
+        JSON.stringify(getVisibleSocialLinks(socialLinks))
       )
 
       if (logoFile) payload.append("logo", logoFile)
+      if (darkLogoFile) payload.append("darkLogo", darkLogoFile)
       if (faviconFile) payload.append("favicon", faviconFile)
 
       await api.put("/settings", payload, {
@@ -152,6 +173,7 @@ export default function AdminSettingsPage() {
       })
 
       setLogoFile(null)
+      setDarkLogoFile(null)
       setFaviconFile(null)
       setSuccess("Settings updated successfully.")
       await refreshSettings()
@@ -214,14 +236,14 @@ export default function AdminSettingsPage() {
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   <div className="space-y-2">
                     <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                      Logo
+                      Light Mode Logo
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Recommended size: 320x100 px (PNG, transparent background).
+                      Use the dark/navy logo for light backgrounds.
                     </p>
                     <div className="flex gap-2">
                       <Input
-                        placeholder="Logo URL"
+                        placeholder="/mcs_logo.png"
                         value={logoUrl}
                         onChange={(e) => setLogoUrl(e.target.value)}
                         className="border-input px-3"
@@ -233,18 +255,60 @@ export default function AdminSettingsPage() {
                           type="file"
                           accept="image/*"
                           className="sr-only"
-                          onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
+                          onChange={(e) =>
+                            setLogoFile(e.target.files?.[0] ?? null)
+                          }
                         />
                       </label>
                     </div>
                     {logoPreview && (
-                      <div className="relative h-20 w-40 overflow-hidden rounded-lg border border-border">
+                      <div className="relative h-20 w-44 overflow-hidden rounded-lg border border-border bg-white p-3">
                         <Image
                           src={logoPreview}
                           alt="Logo preview"
                           fill
-                          className="object-contain"
+                          className="object-contain p-3"
                           unoptimized={logoPreview.startsWith("blob:")}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      White Logo
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Use the white logo for dark backgrounds.
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="/mcs_logo_dark.png"
+                        value={darkLogoUrl}
+                        onChange={(e) => setDarkLogoUrl(e.target.value)}
+                        className="border-input px-3"
+                      />
+                      <label className="inline-flex h-10 cursor-pointer items-center gap-2 border border-border px-3 text-xs font-bold uppercase hover:bg-muted">
+                        <ImagePlus className="size-4" />
+                        Upload
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="sr-only"
+                          onChange={(e) =>
+                            setDarkLogoFile(e.target.files?.[0] ?? null)
+                          }
+                        />
+                      </label>
+                    </div>
+                    {darkLogoPreview && (
+                      <div className="relative h-20 w-44 overflow-hidden rounded-lg border border-border bg-maritime-abyss p-3">
+                        <Image
+                          src={darkLogoPreview}
+                          alt="Dark mode logo preview"
+                          fill
+                          className="object-contain p-3"
+                          unoptimized={darkLogoPreview.startsWith("blob:")}
                         />
                       </div>
                     )}
@@ -288,6 +352,54 @@ export default function AdminSettingsPage() {
                         />
                       </div>
                     )}
+                  </div>
+
+                  <div className="space-y-3 md:col-span-2 lg:col-span-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        Navbar Text
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Desktop text shown beside the logo. Hidden on mobile.
+                      </p>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <Input
+                        placeholder="Marine"
+                        value={navbarBrandText}
+                        onChange={(e) => setNavbarBrandText(e.target.value)}
+                        className="border-input px-3"
+                      />
+                      <Input
+                        placeholder="Consultancy"
+                        value={navbarBrandAccent}
+                        onChange={(e) => setNavbarBrandAccent(e.target.value)}
+                        className="border-input px-3"
+                      />
+                      <Input
+                        placeholder="Services (MCS)"
+                        value={navbarBrandSubtext}
+                        onChange={(e) => setNavbarBrandSubtext(e.target.value)}
+                        className="border-input px-3"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 md:col-span-2 lg:col-span-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        Footer Brand Text
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Short paragraph shown below the footer logo.
+                      </p>
+                    </div>
+                    <Textarea
+                      placeholder="Marine Consultancy Services (MCS) delivers integrated hydrographic, geospatial, and waterway consultancy solutions across Bangladesh."
+                      value={footerBrandText}
+                      onChange={(e) => setFooterBrandText(e.target.value)}
+                      className="min-h-28"
+                    />
                   </div>
                 </div>
               </section>
@@ -452,64 +564,35 @@ export default function AdminSettingsPage() {
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Social Links
                 </h2>
-                <div className="space-y-3">
-                  {socialLinks.map((social, index) => (
-                    <div key={`social-${index}`} className="grid gap-2 grid-cols-1 md:grid-cols-[1fr_1fr_auto]">
-                      <Input
-                        placeholder="Platform (Facebook)"
-                        value={social.platform}
-                        onChange={(e) =>
-                          setSocialLinks((current) =>
-                            current.map((item, i) =>
-                              i === index
-                                ? { ...item, platform: e.target.value }
-                                : item
+                <p className="text-xs text-muted-foreground">
+                  Leave a URL empty to hide that social icon from the website.
+                </p>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {socialLinks.map((social, index) => {
+                    const config = SOCIAL_PLATFORMS[index]
+
+                    return (
+                      <div key={social.platform} className="space-y-2">
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                          {social.platform}
+                        </p>
+                        <Input
+                          placeholder={config?.placeholder ?? "https://..."}
+                          value={social.url}
+                          onChange={(e) =>
+                            setSocialLinks((current) =>
+                              current.map((item, i) =>
+                                i === index
+                                  ? { ...item, url: e.target.value }
+                                  : item
+                              )
                             )
-                          )
-                        }
-                        className="border-input px-3"
-                      />
-                      <Input
-                        placeholder="https://..."
-                        value={social.url}
-                        onChange={(e) =>
-                          setSocialLinks((current) =>
-                            current.map((item, i) =>
-                              i === index ? { ...item, url: e.target.value } : item
-                            )
-                          )
-                        }
-                        className="border-input px-3"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon-sm"
-                        className="w-full md:w-auto"
-                        onClick={() =>
-                          setSocialLinks((current) =>
-                            current.length === 1
-                              ? current
-                              : current.filter((_, i) => i !== index)
-                          )
-                        }
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="rounded-lg"
-                    onClick={() =>
-                      setSocialLinks((current) => [...current, { platform: "", url: "" }])
-                    }
-                  >
-                    <Plus className="size-4" />
-                    Add Social Link
-                  </Button>
+                          }
+                          className="border-input px-3"
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
               </section>
 

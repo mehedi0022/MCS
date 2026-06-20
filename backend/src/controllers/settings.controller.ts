@@ -13,6 +13,7 @@ import {
 
 type UploadedFiles = {
   logo?: Express.Multer.File[]
+  darkLogo?: Express.Multer.File[]
   favicon?: Express.Multer.File[]
 }
 
@@ -61,6 +62,7 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
     const body = req.body as Record<string, unknown>
     const files = readUploadedFiles(req.files)
     const logoFile = files.logo?.[0]
+    const darkLogoFile = files.darkLogo?.[0]
     const faviconFile = files.favicon?.[0]
 
     const input = await validateBody<SiteSettingsInput>(settingsSchema, {
@@ -75,11 +77,18 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
         body.socialLinks
       ),
       logoUrl: body.logoUrl,
+      darkLogoUrl: body.darkLogoUrl,
+      navbarBrandText: body.navbarBrandText,
+      navbarBrandAccent: body.navbarBrandAccent,
+      navbarBrandSubtext: body.navbarBrandSubtext,
+      footerBrandText: body.footerBrandText,
       faviconUrl: body.faviconUrl,
     })
 
     let logoUrl = input.logoUrl ?? existing.logoUrl ?? undefined
     let logoPublicId = existing.logoPublicId ?? undefined
+    let darkLogoUrl = input.darkLogoUrl ?? existing.darkLogoUrl ?? undefined
+    let darkLogoPublicId = existing.darkLogoPublicId ?? undefined
     let faviconUrl = input.faviconUrl ?? existing.faviconUrl ?? undefined
     let faviconPublicId = existing.faviconPublicId ?? undefined
 
@@ -87,6 +96,13 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
       const upload = await uploadToCloudinary(logoFile)
       logoUrl = upload.secure_url
       logoPublicId = upload.public_id
+      uploadedPublicIds.push(upload.public_id)
+    }
+
+    if (darkLogoFile) {
+      const upload = await uploadToCloudinary(darkLogoFile)
+      darkLogoUrl = upload.secure_url
+      darkLogoPublicId = upload.public_id
       uploadedPublicIds.push(upload.public_id)
     }
 
@@ -102,6 +118,12 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
       data: {
         logoUrl,
         logoPublicId,
+        darkLogoUrl,
+        darkLogoPublicId,
+        navbarBrandText: input.navbarBrandText,
+        navbarBrandAccent: input.navbarBrandAccent,
+        navbarBrandSubtext: input.navbarBrandSubtext,
+        footerBrandText: input.footerBrandText,
         faviconUrl,
         faviconPublicId,
         officeAddressLine1: input.officeAddressLine1,
@@ -117,6 +139,8 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
 
     const staleIds: string[] = []
     if (logoFile && existing.logoPublicId) staleIds.push(existing.logoPublicId)
+    if (darkLogoFile && existing.darkLogoPublicId)
+      staleIds.push(existing.darkLogoPublicId)
     if (faviconFile && existing.faviconPublicId)
       staleIds.push(existing.faviconPublicId)
     await cleanupCloudinaryUploads(staleIds)

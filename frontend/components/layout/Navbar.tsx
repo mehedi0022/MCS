@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, Anchor, ChevronRight } from "lucide-react"
+import { Menu, X, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useSiteSettings } from "@/context/site-settings-context"
+import { BrandLogo } from "@/components/layout/BrandLogo"
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -26,7 +27,14 @@ export function Navbar() {
   const pathname = usePathname()
   const { settings } = useSiteSettings()
   const logoUrl = settings?.logoUrl?.trim()
-  const primaryEmail = settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
+  const darkLogoUrl = settings?.darkLogoUrl?.trim()
+  const navbarBrandText = settings?.navbarBrandText?.trim() || "Marine"
+  const navbarBrandAccent =
+    settings?.navbarBrandAccent?.trim() || "Consultancy"
+  const navbarBrandSubtext =
+    settings?.navbarBrandSubtext?.trim() || "Services (MCS)"
+  const primaryEmail =
+    settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -63,38 +71,34 @@ export function Navbar() {
     >
       <nav className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-2">
-          {logoUrl ? (
-            <img
-              src={logoUrl}
-              alt="Company logo"
-              className="h-9 w-auto object-contain"
-            />
-          ) : (
-            <div className="rounded-lg bg-primary p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:rotate-6">
-              <Anchor className="h-6 w-6 text-primary-foreground" />
-            </div>
-          )}
-          <div className="flex flex-col leading-none">
+        <Link href="/" className="group inline-flex min-w-0 items-center gap-2">
+          <BrandLogo
+            lightSrc={logoUrl}
+            darkSrc={darkLogoUrl}
+            priority
+            className="h-10 w-auto sm:h-11 sm:w-auto lg:w-auto"
+          />
+          <div className="hidden min-w-0 flex-col leading-none lg:flex">
             <span
               className={cn(
-                "text-sm font-bold tracking-tighter uppercase transition-colors duration-300 sm:text-base md:text-lg",
+                "text-sm font-bold uppercase transition-colors duration-300 xl:text-base",
                 isScrolled
                   ? "text-foreground"
                   : "text-maritime-navy dark:text-white"
               )}
             >
-              Marine <span className="font-light">Consultancy</span>
+              {navbarBrandText}{" "}
+              <span className="font-light">{navbarBrandAccent}</span>
             </span>
             <span
               className={cn(
-                "hidden text-[10px] font-medium tracking-[0.2em] uppercase transition-colors duration-300 sm:block",
+                "text-[10px] font-medium uppercase transition-colors duration-300",
                 isScrolled
                   ? "text-muted-foreground"
                   : "text-maritime-navy/70 dark:text-white/70"
               )}
             >
-              Services (MCS)
+              {navbarBrandSubtext}
             </span>
           </div>
         </Link>
@@ -129,7 +133,7 @@ export function Navbar() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <div
             className={cn(
               "cursor-pointer rounded-full border border-border transition-colors duration-300",

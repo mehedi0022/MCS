@@ -17,6 +17,11 @@ export type SocialLink = {
 
 export type SiteSettings = {
   logoUrl?: string | null
+  darkLogoUrl?: string | null
+  navbarBrandText?: string | null
+  navbarBrandAccent?: string | null
+  navbarBrandSubtext?: string | null
+  footerBrandText?: string | null
   faviconUrl?: string | null
   officeAddressLine1?: string | null
   officeAddressLine2?: string | null
@@ -84,4 +89,3 @@ export function useSiteSettings() {
   }
   return context
 }
-
