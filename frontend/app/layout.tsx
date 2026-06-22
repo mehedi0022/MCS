@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 
 // 3. Comprehensive SEO Metadata
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mcs.meetmehedi.dev"),
+  metadataBase: new URL("https://mcs2024.com"),
   title: {
     default:
       "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
@@ -60,14 +60,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://mcs.meetmehedi.dev",
-    title: "Maritime Solutions | Premium Consulting & Logistics",
+    url: "https://mcs2024.com",
+    title:
+      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
     description:
-      "Leading the horizon in maritime consulting. Professional solutions for logistics, fleet management, and engineering.",
+      "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
     siteName: "Maritime Solutions",
     images: [
       {
-        url: "/og-image.png", // Add a 1200x630px image to your /public folder
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Maritime Solutions Consulting",
@@ -76,10 +77,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maritime Solutions | Premium Consulting",
-    description: "High-end maritime consulting and logistics strategies.",
+    title:
+      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
+    description:
+      "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
     images: ["/og-image.png"],
-    creator: "@maritimesolutions", // Replace with your Twitter handle
+    creator: "@maritimesolutions",
   },
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
