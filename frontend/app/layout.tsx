@@ -40,13 +40,14 @@ export const viewport: Viewport = {
 
 // 3. Comprehensive SEO Metadata
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mcs.meetmehedi.dev"), // Replace with your actual domain
+  metadataBase: new URL("https://mcs.meetmehedi.dev"),
   title: {
-    default: "Maritime Solutions | Premium Consulting & Logistics",
-    template: "%s | Maritime Solutions", // Automatically appends the brand to page titles
+    default:
+      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
+    template: "%s | Marine Consultancy Services (MCS)",
   },
   description:
-    "High-end maritime consulting, fleet management, oceanic engineering, and sustainable logistics strategies for the modern maritime industry.",
+    "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
   keywords: [
     "Maritime Consulting",
     "Fleet Management",
