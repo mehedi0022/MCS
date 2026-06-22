@@ -5,31 +5,15 @@ import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useEffect, useState } from "react"
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        disabled
-        className={cn("h-9 w-9 rounded-full", className)}
-      />
-    )
-  }
+  const { resolvedTheme, setTheme } = useTheme()
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className={cn(
         "relative rounded-full text-muted-foreground transition-colors hover:text-foreground",
         className

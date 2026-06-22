@@ -57,10 +57,10 @@ export function Footer() {
   return (
     <footer className="bg-maritime-surface texture-maritime-noise relative overflow-hidden border-t border-border/30 pt-16 pb-8 dark:bg-maritime-abyss">
       {/* Premium Top Edge Glow */}
-      <div className="absolute inset-x-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-maritime-ocean/30 to-transparent dark:via-maritime-teal/40" />
+      <div className="absolute inset-x-0 top-0 h-px w-full bg-linear-to-r from-transparent via-maritime-ocean/30 to-transparent dark:via-maritime-teal/40" />
 
       {/* Ambient Background Glow */}
-      <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[400px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-maritime-navy/5 blur-[100px] dark:bg-maritime-ocean/15" />
+      <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-100 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-maritime-navy/5 blur-[100px] dark:bg-maritime-ocean/15" />
 
       <div className="relative z-10 container mx-auto px-6">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[minmax(320px,1.45fr)_minmax(150px,0.8fr)_minmax(160px,0.85fr)_minmax(240px,1fr)] xl:grid-cols-[minmax(360px,1.5fr)_minmax(160px,0.75fr)_minmax(170px,0.8fr)_minmax(260px,1fr)]">
