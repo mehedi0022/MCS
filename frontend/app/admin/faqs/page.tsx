@@ -1,26 +1,22 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { type FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
-  Anchor,
   ArrowLeft,
+  CircleHelp,
   Loader2,
   Pencil,
   Plus,
   Save,
   Trash2,
-  Wrench,
 } from "lucide-react"
-import { icons } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { DynamicModal } from "@/components/DynamicModal"
-import { DeliveryApproachManager } from "@/components/admin/DeliveryApproachManager"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -28,102 +24,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
-type ServiceItem = {
+type FaqItem = {
   id: string
-  title: string
-  slug?: string
-  summary: string
-  points?: string[] | null
-  description?: string | null
-  icon?: string | null
-  isFeatured: boolean
-  isPublished: boolean
+  category: string
+  question: string
+  answer: string
+  sortOrder: number
+  isActive: boolean
 }
 
-type ServiceFormState = {
-  title: string
-  summary: string
-  pointsText: string
-  description: string
-  icon: string
-  isFeatured: boolean
-  isPublished: boolean
+type FormState = {
+  category: string
+  question: string
+  answer: string
+  sortOrder: number
+  isActive: boolean
 }
 
-const emptyForm: ServiceFormState = {
-  title: "",
-  summary: "",
-  pointsText: "",
-  description: "",
-  icon: "Anchor",
-  isFeatured: false,
-  isPublished: true,
+const faqCategoryOptions = ["General", "Projects & Services", "Training"]
+
+const emptyForm: FormState = {
+  category: "General",
+  question: "",
+  answer: "",
+  sortOrder: 0,
+  isActive: true,
 }
 
-const iconOptions = [
-  "Anchor",
-  "ShipWheel",
-  "Navigation",
-  "Compass",
-  "Map",
-  "MapPinned",
-  "MapPin",
-  "Waves",
-  "Fish",
-  "Sailboat",
-  "Radar",
-  "Route",
-  "Milestone",
-  "Globe",
-  "Globe2",
-  "Landmark",
-  "Building2",
-  "Factory",
-  "Warehouse",
-  "HardHat",
-  "DraftingCompass",
-  "Ruler",
-  "Gauge",
-  "Cog",
-  "Wrench",
-  "Hammer",
-  "Pickaxe",
-  "Drill",
-  "ShieldCheck",
-  "ShieldAlert",
-  "ClipboardCheck",
-  "FileCheck2",
-  "CheckCircle2",
-  "BadgeCheck",
-  "LifeBuoy",
-  "AlertTriangle",
-  "ScanLine",
-  "Satellite",
-  "Cable",
-  "Network",
-  "BarChart3",
-  "LineChart",
-  "PieChart",
-  "ChartNoAxesCombined",
-  "Database",
-  "Binary",
-  "Workflow",
-  "Layers3",
-  "Search",
-  "SearchCheck",
-  "Microscope",
-  "Ship",
-  "Truck",
-  "Container",
-] as const
-
-export default function AdminServicesPage() {
+export default function AdminFaqsPage() {
   const router = useRouter()
-  const [services, setServices] = useState<ServiceItem[]>([])
+  const [items, setItems] = useState<FaqItem[]>([])
   const [selectedId, setSelectedId] = useState("")
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState<ServiceFormState>(emptyForm)
+  const [form, setForm] = useState<FormState>(emptyForm)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
@@ -134,17 +69,18 @@ export default function AdminServicesPage() {
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
 
   const selected = useMemo(
-    () => services.find((item) => item.id === selectedId),
-    [services, selectedId]
+    () => items.find((item) => item.id === selectedId),
+    [items, selectedId]
   )
 
-  const loadServices = useCallback(async () => {
+  const loadItems = useCallback(async () => {
     try {
       setIsLoading(true)
       setError("")
-      const response = await api.get<ApiResponse<ServiceItem[]>>("/services/admin")
+      const response = await api.get<ApiResponse<FaqItem[]>>("/faqs/admin")
       const rows = response.data.data
-      setServices(rows)
+
+      setItems(rows)
       setSelectedId((current) =>
         rows.some((item) => item.id === current) ? current : (rows[0]?.id ?? "")
       )
@@ -162,16 +98,13 @@ export default function AdminServicesPage() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      void loadServices()
+      void loadItems()
     }, 0)
 
     return () => window.clearTimeout(timer)
-  }, [loadServices])
+  }, [loadItems])
 
-  function updateField<K extends keyof ServiceFormState>(
-    key: K,
-    value: ServiceFormState[K]
-  ) {
+  function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
@@ -182,22 +115,20 @@ export default function AdminServicesPage() {
     setError("")
   }
 
-  function startEdit(item: ServiceItem) {
+  function startEdit(item: FaqItem) {
     setEditingId(item.id)
     setForm({
-      title: item.title,
-      summary: item.summary,
-      pointsText: (item.points ?? []).join("\n"),
-      description: item.description ?? "",
-      icon: item.icon ?? "Anchor",
-      isFeatured: item.isFeatured,
-      isPublished: item.isPublished,
+      category: item.category,
+      question: item.question,
+      answer: item.answer,
+      sortOrder: item.sortOrder,
+      isActive: item.isActive,
     })
     setSuccess("")
     setError("")
   }
 
-  async function submitForm(event: React.FormEvent<HTMLFormElement>) {
+  async function submitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError("")
     setSuccess("")
@@ -206,26 +137,14 @@ export default function AdminServicesPage() {
 
     try {
       if (editingId) {
-        await api.put(`/services/${editingId}`, {
-          ...form,
-          points: form.pointsText
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean),
-        })
-        setSuccess("Service updated successfully.")
+        await api.put(`/faqs/${editingId}`, form)
+        setSuccess("FAQ item updated successfully.")
       } else {
-        await api.post("/services", {
-          ...form,
-          points: form.pointsText
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean),
-        })
-        setSuccess("Service created successfully.")
+        await api.post("/faqs", form)
+        setSuccess("FAQ item created successfully.")
       }
 
-      await loadServices()
+      await loadItems()
       if (!editingId) {
         setForm(emptyForm)
       }
@@ -240,19 +159,19 @@ export default function AdminServicesPage() {
 
   async function deleteSelected() {
     if (!selected) return
+
     try {
       setIsSaving(true)
-      setError("")
-      setSuccess("")
-      await api.delete(`/services/${selected.id}`)
+      setDeleteLoadingOpen(true)
+      await api.delete(`/faqs/${selected.id}`)
       setDeleteLoadingOpen(false)
       setDeleteSuccessOpen(true)
-      setSuccess("Service deleted successfully.")
+      setSuccess("FAQ item deleted successfully.")
       if (editingId === selected.id) {
         setEditingId(null)
         setForm(emptyForm)
       }
-      await loadServices()
+      await loadItems()
     } catch (deleteError) {
       setDeleteLoadingOpen(false)
       setError(getApiErrorMessage(deleteError))
@@ -274,15 +193,15 @@ export default function AdminServicesPage() {
               Back
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Services Admin</h1>
+              <h1 className="text-2xl font-bold">FAQ Admin</h1>
               <p className="text-sm text-muted-foreground">
-                Create, update, publish, and manage service items.
+                Manage FAQ page questions, categories, order, and visibility.
               </p>
             </div>
           </div>
           <Button className="rounded-lg" onClick={startCreate}>
             <Plus className="size-4" />
-            New Service
+            New FAQ
           </Button>
         </div>
 
@@ -304,12 +223,12 @@ export default function AdminServicesPage() {
                 <div className="flex h-64 items-center justify-center">
                   <Loader2 className="size-5 animate-spin text-primary" />
                 </div>
-              ) : services.length === 0 ? (
+              ) : items.length === 0 ? (
                 <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
-                  No services yet.
+                  No FAQ items yet.
                 </div>
               ) : (
-                services.map((item) => (
+                items.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -317,13 +236,18 @@ export default function AdminServicesPage() {
                     className={`w-full rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${selectedId === item.id ? "border-primary bg-primary/5" : "border-border/70 hover:bg-muted/40"}`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <p className="line-clamp-1 font-semibold">{item.title}</p>
-                      {!item.isPublished && (
-                        <span className="rounded-md px-2 py-1 text-[10px] font-bold uppercase text-amber-600">
-                          Draft
+                      <p className="line-clamp-2 font-semibold">
+                        {item.question}
+                      </p>
+                      {!item.isActive && (
+                        <span className="rounded-md bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-600 uppercase">
+                          Hidden
                         </span>
                       )}
                     </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {item.category} • Sort: {item.sortOrder}
+                    </p>
                   </button>
                 ))
               )}
@@ -334,7 +258,6 @@ export default function AdminServicesPage() {
             {selected && (
               <div className="flex flex-wrap gap-2">
                 <Button
-                  type="button"
                   variant="outline"
                   className="rounded-lg"
                   onClick={() => startEdit(selected)}
@@ -343,7 +266,6 @@ export default function AdminServicesPage() {
                   Edit
                 </Button>
                 <Button
-                  type="button"
                   variant="destructive"
                   className="rounded-lg"
                   onClick={() => setDeleteWarningOpen(true)}
@@ -356,74 +278,63 @@ export default function AdminServicesPage() {
             )}
 
             <form onSubmit={submitForm} className="space-y-4">
-              <div className="grid gap-3 md:grid-cols-1">
+              <div className="grid gap-3 md:grid-cols-[1fr_160px]">
+                <Select
+                  value={form.category}
+                  onValueChange={(value) =>
+                    updateField("category", value ?? "General")
+                  }
+                >
+                  <SelectTrigger className="border-input">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {faqCategoryOptions.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Input
-                  required
-                  placeholder="Service title"
-                  value={form.title}
-                  onChange={(e) => updateField("title", e.target.value)}
+                  type="number"
+                  min={0}
+                  placeholder="Sort Order"
+                  value={form.sortOrder}
+                  onChange={(event) =>
+                    updateField("sortOrder", Number(event.target.value) || 0)
+                  }
                   className="border-input px-3"
                 />
               </div>
 
+              <Input
+                required
+                placeholder="Question"
+                value={form.question}
+                onChange={(event) =>
+                  updateField("question", event.target.value)
+                }
+                className="border-input px-3"
+              />
+
               <Textarea
                 required
-                placeholder="Summary"
-                value={form.summary}
-                onChange={(e) => updateField("summary", e.target.value)}
-                className="min-h-20 border-input px-3"
+                placeholder="Answer"
+                value={form.answer}
+                onChange={(event) => updateField("answer", event.target.value)}
+                className="min-h-32 border-input px-3"
               />
 
-              <Textarea
-                placeholder="Bullet list items (one per line)"
-                value={form.pointsText}
-                onChange={(e) => updateField("pointsText", e.target.value)}
-                className="min-h-24 border-input px-3"
-              />
-
-              <Textarea
-                placeholder="Description"
-                value={form.description}
-                onChange={(e) => updateField("description", e.target.value)}
-                className="min-h-24 border-input px-3"
-              />
-
-              <Select
-                value={form.icon}
-                onValueChange={(value) => updateField("icon", value ?? "Anchor")}
-              >
-                <SelectTrigger className="border-input">
-                  <SelectValue placeholder="Select icon" />
-                </SelectTrigger>
-                <SelectContent>
-                  {iconOptions.map((iconName) => (
-                    <SelectItem key={iconName} value={iconName}>
-                      {iconName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <div className="flex items-center gap-5">
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={form.isPublished}
-                    onCheckedChange={(value) =>
-                      updateField("isPublished", value === true)
-                    }
-                  />
-                  Published
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={form.isFeatured}
-                    onCheckedChange={(value) =>
-                      updateField("isFeatured", value === true)
-                    }
-                  />
-                  Featured
-                </label>
-              </div>
+              <label className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={form.isActive}
+                  onCheckedChange={(value) =>
+                    updateField("isActive", value === true)
+                  }
+                />
+                Active on FAQ page
+              </label>
 
               <Button
                 type="submit"
@@ -437,38 +348,29 @@ export default function AdminServicesPage() {
                 ) : (
                   <Plus className="size-4" />
                 )}
-                {editingId ? "Update Service" : "Create Service"}
+                {editingId ? "Update FAQ" : "Create FAQ"}
               </Button>
             </form>
 
-            {selected && (
-              <div className="rounded-lg border border-border/70 p-4">
-                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Preview
-                </p>
-                <div className="mb-2 inline-flex rounded-md bg-muted p-2">
-                  {(() => {
-                    const Icon =
-                      (icons[form.icon as keyof typeof icons] as typeof Anchor) ??
-                      Wrench
-                    return <Icon className="size-5 text-primary" />
-                  })()}
-                </div>
-                <h3 className="font-semibold">{selected.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{selected.summary}</p>
-                {(selected.points ?? []).length > 0 && (
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-                    {selected.points?.map((point, idx) => (
-                      <li key={`${selected.id}-point-${idx}`}>{point}</li>
-                    ))}
-                  </ul>
-                )}
+            <div className="rounded-lg border border-border/70 p-4">
+              <p className="mb-3 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                Preview
+              </p>
+              <div className="mb-3 inline-flex rounded-md bg-muted p-2">
+                <CircleHelp className="size-5 text-primary" />
               </div>
-            )}
+              <p className="text-xs font-bold tracking-widest text-primary uppercase">
+                {form.category || "Category"}
+              </p>
+              <h3 className="mt-2 font-semibold">
+                {form.question || "Question preview"}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {form.answer || "Answer preview"}
+              </p>
+            </div>
           </section>
         </div>
-
-        <DeliveryApproachManager />
       </div>
 
       <DynamicModal
@@ -476,7 +378,7 @@ export default function AdminServicesPage() {
         onClose={() => undefined}
         type="loading"
         title="Saving..."
-        description="Please wait while we save the service."
+        description="Please wait while we save the FAQ item."
         showCloseButton={false}
       />
 
@@ -484,12 +386,11 @@ export default function AdminServicesPage() {
         isOpen={deleteWarningOpen}
         onClose={() => setDeleteWarningOpen(false)}
         type="warning"
-        title="Delete Service?"
-        description="This will permanently remove the selected service."
+        title="Delete FAQ?"
+        description="This will permanently remove the selected FAQ item."
         actionText="Confirm Delete"
         onAction={() => {
           setDeleteWarningOpen(false)
-          setDeleteLoadingOpen(true)
           void deleteSelected()
         }}
       />
@@ -499,7 +400,7 @@ export default function AdminServicesPage() {
         onClose={() => undefined}
         type="loading"
         title="Deleting..."
-        description="Please wait while we remove the service."
+        description="Please wait while we remove the FAQ item."
         showCloseButton={false}
       />
 
@@ -508,14 +409,9 @@ export default function AdminServicesPage() {
         onClose={() => setDeleteSuccessOpen(false)}
         type="success"
         title="Deleted"
-        description="Service removed successfully."
+        description="FAQ item removed successfully."
         actionText="Continue"
       />
     </main>
   )
 }
-
-
-
-
-

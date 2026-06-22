@@ -1,6 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, ImagePlus, Loader2, Plus, Save, Trash2 } from "lucide-react"
@@ -8,13 +14,27 @@ import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useSiteSettings, type SiteSettings, type SocialLink } from "@/context/site-settings-context"
+import {
+  useSiteSettings,
+  type SiteSettings,
+  type SocialLink,
+} from "@/context/site-settings-context"
 import { DynamicModal } from "@/components/DynamicModal"
+import { ImageCropperDialog } from "@/components/shared/ImageCropperDialog"
 import {
   getVisibleSocialLinks,
   SOCIAL_PLATFORMS,
   toFixedSocialLinks,
 } from "@/lib/social-links"
+
+type BrandCropTarget = "logo" | "darkLogo" | "favicon"
+
+const LOGO_IMAGE_WIDTH = 900
+const LOGO_IMAGE_HEIGHT = 360
+const LOGO_IMAGE_ASPECT = LOGO_IMAGE_WIDTH / LOGO_IMAGE_HEIGHT
+const LOGO_IMAGE_SIZE_LABEL = `${LOGO_IMAGE_WIDTH} x ${LOGO_IMAGE_HEIGHT}px`
+const FAVICON_IMAGE_SIZE = 512
+const FAVICON_IMAGE_SIZE_LABEL = `${FAVICON_IMAGE_SIZE} x ${FAVICON_IMAGE_SIZE}px`
 
 export default function AdminSettingsPage() {
   const { refreshSettings } = useSiteSettings()
@@ -34,6 +54,9 @@ export default function AdminSettingsPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [darkLogoFile, setDarkLogoFile] = useState<File | null>(null)
   const [faviconFile, setFaviconFile] = useState<File | null>(null)
+  const [cropFile, setCropFile] = useState<File | null>(null)
+  const [cropTarget, setCropTarget] = useState<BrandCropTarget | null>(null)
+  const [cropOpen, setCropOpen] = useState(false)
   const [officeAddressLine1, setOfficeAddressLine1] = useState("")
   const [officeAddressLine2, setOfficeAddressLine2] = useState("")
   const [mapLocation, setMapLocation] = useState("")
@@ -57,6 +80,28 @@ export default function AdminSettingsPage() {
     () => (faviconFile ? URL.createObjectURL(faviconFile) : faviconUrl),
     [faviconFile, faviconUrl]
   )
+  const cropConfig = useMemo(() => {
+    if (cropTarget === "favicon") {
+      return {
+        title: "Crop Favicon",
+        description: `Output size: ${FAVICON_IMAGE_SIZE_LABEL}. Use a centered square mark for best browser tab display.`,
+        outputWidth: FAVICON_IMAGE_SIZE,
+        outputHeight: FAVICON_IMAGE_SIZE,
+        aspect: 1,
+        fileNamePrefix: "favicon",
+      }
+    }
+
+    return {
+      title:
+        cropTarget === "darkLogo" ? "Crop White Logo" : "Crop Light Mode Logo",
+      description: `Output size: ${LOGO_IMAGE_SIZE_LABEL}. Keep transparent space only if the logo needs it.`,
+      outputWidth: LOGO_IMAGE_WIDTH,
+      outputHeight: LOGO_IMAGE_HEIGHT,
+      aspect: LOGO_IMAGE_ASPECT,
+      fileNamePrefix: cropTarget === "darkLogo" ? "dark-logo" : "logo",
+    }
+  }, [cropTarget])
 
   useEffect(() => {
     return () => {
@@ -127,7 +172,54 @@ export default function AdminSettingsPage() {
     )
   }
 
-  async function submitSettings(event: React.FormEvent<HTMLFormElement>) {
+  function openCropper(file: File, target: BrandCropTarget) {
+    setCropFile(file)
+    setCropTarget(target)
+    setCropOpen(true)
+  }
+
+  function clearCropper() {
+    setCropOpen(false)
+    setCropFile(null)
+    setCropTarget(null)
+  }
+
+  function handleBrandAssetSelect(
+    event: ChangeEvent<HTMLInputElement>,
+    target: BrandCropTarget
+  ) {
+    const file = event.target.files?.[0] ?? null
+    event.target.value = ""
+
+    if (!file) {
+      return
+    }
+
+    openCropper(file, target)
+  }
+
+  function handleCropOpenChange(open: boolean) {
+    setCropOpen(open)
+
+    if (!open) {
+      setCropFile(null)
+      setCropTarget(null)
+    }
+  }
+
+  function handleCroppedBrandAsset(file: File) {
+    if (cropTarget === "darkLogo") {
+      setDarkLogoFile(file)
+    } else if (cropTarget === "favicon") {
+      setFaviconFile(file)
+    } else {
+      setLogoFile(file)
+    }
+
+    clearCropper()
+  }
+
+  async function submitSettings(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError("")
     setSuccess("")
@@ -255,8 +347,8 @@ export default function AdminSettingsPage() {
                           type="file"
                           accept="image/*"
                           className="sr-only"
-                          onChange={(e) =>
-                            setLogoFile(e.target.files?.[0] ?? null)
+                          onChange={(event) =>
+                            handleBrandAssetSelect(event, "logo")
                           }
                         />
                       </label>
@@ -295,8 +387,8 @@ export default function AdminSettingsPage() {
                           type="file"
                           accept="image/*"
                           className="sr-only"
-                          onChange={(e) =>
-                            setDarkLogoFile(e.target.files?.[0] ?? null)
+                          onChange={(event) =>
+                            handleBrandAssetSelect(event, "darkLogo")
                           }
                         />
                       </label>
@@ -335,8 +427,8 @@ export default function AdminSettingsPage() {
                           type="file"
                           accept="image/*"
                           className="sr-only"
-                          onChange={(e) =>
-                            setFaviconFile(e.target.files?.[0] ?? null)
+                          onChange={(event) =>
+                            handleBrandAssetSelect(event, "favicon")
                           }
                         />
                       </label>
@@ -608,6 +700,20 @@ export default function AdminSettingsPage() {
           )}
         </form>
       </div>
+
+      <ImageCropperDialog
+        open={cropOpen}
+        file={cropFile}
+        title={cropConfig.title}
+        description={cropConfig.description}
+        outputWidth={cropConfig.outputWidth}
+        outputHeight={cropConfig.outputHeight}
+        aspect={cropConfig.aspect}
+        outputType="image/png"
+        fileNamePrefix={cropConfig.fileNamePrefix}
+        onOpenChange={handleCropOpenChange}
+        onCroppedFile={handleCroppedBrandAsset}
+      />
 
       <DynamicModal
         isOpen={saveLoadingOpen}

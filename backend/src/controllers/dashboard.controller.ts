@@ -4,14 +4,24 @@ import { sendSuccess } from "../utils/api.js"
 
 export const getDashboardSummary: RequestHandler = async (_req, res, next) => {
   try {
-    const [services, projects, clients, messages, unreadMessages, heroSlides] =
-      await Promise.all([
+    const [
+      services,
+      projects,
+      clients,
+      messages,
+      unreadMessages,
+      heroSlides,
+      faqs,
+      deliveryApproachSteps,
+    ] = await Promise.all([
       prisma.service.count(),
       prisma.project.count(),
       prisma.client.count(),
       prisma.contactMessage.count(),
       prisma.contactMessage.count({ where: { status: "NEW" } }),
       prisma.heroSlide.count(),
+      prisma.faqItem.count(),
+      prisma.deliveryApproachStep.count(),
     ])
 
     return sendSuccess(res, {
@@ -21,6 +31,8 @@ export const getDashboardSummary: RequestHandler = async (_req, res, next) => {
       messages,
       unreadMessages,
       heroSlides,
+      faqs,
+      deliveryApproachSteps,
     })
   } catch (error) {
     return next(error)

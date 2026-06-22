@@ -2,36 +2,71 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { Search, PenTool, Activity, ShieldCheck } from "lucide-react"
+import { Search, icons } from "lucide-react"
 
-const steps = [
+export type DeliveryApproachSection = {
+  eyebrow: string
+  title: string
+  isActive?: boolean
+}
+
+export type DeliveryApproachStep = {
+  id: string
+  title: string
+  description: string
+  iconKey?: string
+}
+
+export const fallbackDeliveryApproachSection: DeliveryApproachSection = {
+  eyebrow: "Our Delivery Approach",
+  title: "Accurate. Actionable. Sustainable.",
+  isActive: true,
+}
+
+export const fallbackDeliveryApproachSteps: DeliveryApproachStep[] = [
   {
-    num: "01",
-    icon: <Search className="h-5 w-5" />,
+    id: "field-data-collection",
+    iconKey: "Search",
     title: "Field Data Collection",
-    desc: "High-quality survey and monitoring data collection from riverine, coastal, and marine environments.",
+    description:
+      "High-quality survey and monitoring data collection from riverine, coastal, and marine environments.",
   },
   {
-    num: "02",
-    icon: <PenTool className="h-5 w-5" />,
+    id: "technical-analysis",
+    iconKey: "PenTool",
     title: "Technical Analysis",
-    desc: "Integrated GIS, modelling, and environmental analysis to produce reliable technical insights.",
+    description:
+      "Integrated GIS, modelling, and environmental analysis to produce reliable technical insights.",
   },
   {
-    num: "03",
-    icon: <Activity className="h-5 w-5" />,
+    id: "practical-solutions",
+    iconKey: "Activity",
     title: "Practical Solutions",
-    desc: "Actionable recommendations aligned with project realities, timelines, and operational needs.",
+    description:
+      "Actionable recommendations aligned with project realities, timelines, and operational needs.",
   },
   {
-    num: "04",
-    icon: <ShieldCheck className="h-5 w-5" />,
+    id: "sustainable-delivery",
+    iconKey: "ShieldCheck",
     title: "Sustainable Delivery",
-    desc: "Implementation support focused on long-term environmental and operational performance.",
+    description:
+      "Implementation support focused on long-term environmental and operational performance.",
   },
 ]
 
-export function OurApproach() {
+type OurApproachProps = {
+  section?: DeliveryApproachSection
+  steps?: DeliveryApproachStep[]
+}
+
+export function OurApproach({
+  section = fallbackDeliveryApproachSection,
+  steps = fallbackDeliveryApproachSteps,
+}: OurApproachProps) {
+  if (section.isActive === false) {
+    return null
+  }
+
   return (
     <section className="relative overflow-hidden border-y border-slate-200 bg-slate-50 py-24 transition-colors duration-500 dark:border-white/5 dark:bg-[#020617]/50">
       <div className="container mx-auto px-6">
@@ -42,7 +77,7 @@ export function OurApproach() {
             whileInView={{ opacity: 1, y: 0 }}
             className="mb-4 text-xs font-bold tracking-[0.5em] text-primary uppercase"
           >
-            Our Delivery Approach
+            {section.eyebrow}
           </motion.h2>
           <motion.h3
             initial={{ opacity: 0, y: 10 }}
@@ -50,7 +85,7 @@ export function OurApproach() {
             transition={{ delay: 0.1 }}
             className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white"
           >
-            Accurate. Actionable. Sustainable.
+            {section.title}
           </motion.h3>
         </div>
 
@@ -60,52 +95,62 @@ export function OurApproach() {
 
           <div className="grid grid-cols-1 gap-16 md:grid-cols-4 md:gap-8">
             {steps.map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="group relative flex flex-col items-center text-center"
-              >
-                {/* Glowing Icon Container */}
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      "0 0 15px rgba(20,184,166,0.1)",
-                      "0 0 30px rgba(20,184,166,0.4)",
-                      "0 0 15px rgba(20,184,166,0.1)",
-                    ],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: i * 0.5, // Staggered glow start
-                  }}
-                  className="relative z-10 mb-10 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-white bg-white text-primary transition-all duration-500 group-hover:bg-primary group-hover:text-white dark:border-slate-800 dark:bg-slate-900"
-                >
-                  {step.icon}
+              <React.Fragment key={step.id}>
+                {(() => {
+                  const Icon =
+                    (icons[step.iconKey as keyof typeof icons] as typeof Search) ??
+                    Search
+                  const stepNumber = String(i + 1).padStart(2, "0")
 
-                  {/* Number Badge */}
-                  <div className="absolute -top-3 -right-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-4 ring-slate-50 dark:ring-[#020617]">
-                    {step.num}
-                  </div>
-                </motion.div>
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.15 }}
+                      className="group relative flex flex-col items-center text-center"
+                    >
+                      {/* Glowing Icon Container */}
+                      <motion.div
+                        animate={{
+                          boxShadow: [
+                            "0 0 15px rgba(20,184,166,0.1)",
+                            "0 0 30px rgba(20,184,166,0.4)",
+                            "0 0 15px rgba(20,184,166,0.1)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.5, // Staggered glow start
+                        }}
+                        className="relative z-10 mb-10 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-white bg-white text-primary transition-all duration-500 group-hover:bg-primary group-hover:text-white dark:border-slate-800 dark:bg-slate-900"
+                      >
+                        <Icon className="h-5 w-5" />
 
-                {/* Content - Centered */}
-                <div className="max-w-[240px] space-y-4">
-                  <h4 className="text-lg font-bold tracking-tight text-slate-900 uppercase dark:text-white">
-                    {step.title}
-                  </h4>
-                  <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                    {step.desc}
-                  </p>
-                </div>
+                        {/* Number Badge */}
+                        <div className="absolute -top-3 -right-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-4 ring-slate-50 dark:ring-[#020617]">
+                          {stepNumber}
+                        </div>
+                      </motion.div>
 
-                {/* Mobile Connector */}
-                <div className="mt-8 h-12 w-[1px] bg-gradient-to-b from-slate-200 to-transparent last:hidden md:hidden dark:from-white/10" />
-              </motion.div>
+                      {/* Content - Centered */}
+                      <div className="max-w-[240px] space-y-4">
+                        <h4 className="text-lg font-bold tracking-tight text-slate-900 uppercase dark:text-white">
+                          {step.title}
+                        </h4>
+                        <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                          {step.description}
+                        </p>
+                      </div>
+
+                      {/* Mobile Connector */}
+                      <div className="mt-8 h-12 w-[1px] bg-gradient-to-b from-slate-200 to-transparent last:hidden md:hidden dark:from-white/10" />
+                    </motion.div>
+                  )
+                })()}
+              </React.Fragment>
             ))}
           </div>
         </div>

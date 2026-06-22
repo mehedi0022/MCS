@@ -1,6 +1,12 @@
 import { ServicesHero } from "@/components/services/services-hero"
 import { ExpertiseGrid } from "@/components/services/expertise-grid"
-import { OurApproach } from "@/components/services/our-approach"
+import {
+  fallbackDeliveryApproachSection,
+  fallbackDeliveryApproachSteps,
+  OurApproach,
+  type DeliveryApproachSection,
+  type DeliveryApproachStep,
+} from "@/components/services/our-approach"
 import { API_URL } from "@/lib/api"
 
 export const metadata = {
@@ -16,6 +22,11 @@ type ServiceItem = {
   points: string[]
   icon?: string
   description?: string
+}
+
+type DeliveryApproachData = {
+  section: DeliveryApproachSection
+  steps: DeliveryApproachStep[]
 }
 
 const fallbackServices: ServiceItem[] = [
@@ -98,8 +109,55 @@ async function getServices(): Promise<ServiceItem[]> {
   }
 }
 
+async function getDeliveryApproach(): Promise<DeliveryApproachData> {
+  const fallback = {
+    section: fallbackDeliveryApproachSection,
+    steps: fallbackDeliveryApproachSteps,
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/delivery-approach`, {
+      cache: "no-store",
+    })
+    if (!response.ok) return fallback
+
+    const payload = await response.json()
+    const section = payload.data?.section as
+      | Partial<DeliveryApproachSection>
+      | undefined
+    const rows = (payload.data?.steps ?? []) as Array<{
+      id: string
+      title: string
+      description: string
+      iconKey?: string | null
+    }>
+
+    return {
+      section: {
+        eyebrow:
+          section?.eyebrow?.trim() || fallbackDeliveryApproachSection.eyebrow,
+        title: section?.title?.trim() || fallbackDeliveryApproachSection.title,
+        isActive: section?.isActive ?? true,
+      },
+      steps: rows
+        .filter((item) => item.id && item.title?.trim())
+        .map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.description ?? "",
+          iconKey: item.iconKey ?? "Search",
+        })),
+    }
+  } catch {
+    return fallback
+  }
+}
+
 export default async function ServicesPage() {
-  const services = await getServices()
+  const [services, deliveryApproach] = await Promise.all([
+    getServices(),
+    getDeliveryApproach(),
+  ])
 
   return (
     <div className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
@@ -109,23 +167,10 @@ export default async function ServicesPage() {
       <ExpertiseGrid services={services} />
 
       {/* Section 2: Our Approach */}
-      <OurApproach />
-
-      {/* Final CTA Section */}
-      <section className="border-t border-slate-200 bg-white py-24 dark:border-white/5 dark:bg-white/5">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="mb-6 font-heading text-3xl font-bold tracking-tight text-slate-900 uppercase dark:text-white">
-            Ready to Discuss Your Project?
-          </h2>
-          <p className="mx-auto mb-10 max-w-xl text-slate-500 dark:text-slate-400">
-            MCS is ready to support your project with reliable data, technical
-            expertise, and end-to-end consultancy services.
-          </p>
-          <button className="h-14 rounded-2xl bg-primary px-10 font-bold tracking-widest text-white uppercase transition-all hover:shadow-lg hover:shadow-primary/30">
-            Contact Us
-          </button>
-        </div>
-      </section>
+      <OurApproach
+        section={deliveryApproach.section}
+        steps={deliveryApproach.steps}
+      />
     </div>
   )
 }

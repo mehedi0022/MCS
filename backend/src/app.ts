@@ -6,6 +6,8 @@ import { env } from "./config/env.js";
 import authRoutes from "./routes/auth.routes.js";
 import clientRoutes from "./routes/clients.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import deliveryApproachRoutes from "./routes/delivery-approach.routes.js";
+import faqRoutes from "./routes/faqs.routes.js";
 import heroSlideRoutes from "./routes/hero-slides.routes.js";
 import messageRoutes from "./routes/messages.routes.js";
 import projectRoutes from "./routes/projects.routes.js";
@@ -47,6 +49,8 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/delivery-approach", deliveryApproachRoutes);
+app.use("/api/faqs", faqRoutes);
 app.use("/api/hero-slides", heroSlideRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/projects", projectRoutes);

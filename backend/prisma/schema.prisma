@@ -108,6 +108,37 @@ model HeroSlide {
   updatedAt           DateTime @updatedAt
 }
 
+model FaqItem {
+  id        String   @id @default(uuid())
+  category  String
+  question  String   @db.Text
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DeliveryApproachSection {
+  id        String   @id @default("main")
+  eyebrow   String   @default("Our Delivery Approach")
+  title     String   @default("Accurate. Actionable. Sustainable.")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DeliveryApproachStep {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  iconKey     String   @default("Search")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model ContactMessage {
   id            String        @id @default(uuid())
   name          String

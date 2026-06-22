@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { Anchor } from "lucide-react"
 import { FaqAccordion } from "@/components/faq/FaqAccordion"
+import { API_URL } from "@/lib/api"
 
 export const metadata = {
   title: "FAQ | MCS",
@@ -8,7 +8,23 @@ export const metadata = {
     "Frequently asked questions about services, projects, training, and engagement with Marine Consultancy Services (MCS).",
 }
 
-const faqGroups = [
+type FaqRow = {
+  id: string
+  category: string
+  question: string
+  answer: string
+  sortOrder?: number
+}
+
+type FaqGroup = {
+  title: string
+  items: Array<{
+    q: string
+    a: string
+  }>
+}
+
+const fallbackFaqGroups: FaqGroup[] = [
   {
     title: "General",
     items: [
@@ -50,7 +66,49 @@ const faqGroups = [
   },
 ]
 
-export default function FaqPage() {
+function groupFaqRows(rows: FaqRow[]): FaqGroup[] {
+  const groups = new Map<string, FaqGroup>()
+
+  rows.forEach((row) => {
+    const title = row.category?.trim() || "General"
+    const question = row.question?.trim()
+    const answer = row.answer?.trim()
+
+    if (!question || !answer) {
+      return
+    }
+
+    if (!groups.has(title)) {
+      groups.set(title, { title, items: [] })
+    }
+
+    groups.get(title)?.items.push({ q: question, a: answer })
+  })
+
+  return Array.from(groups.values()).filter((group) => group.items.length > 0)
+}
+
+async function getFaqGroups(): Promise<FaqGroup[]> {
+  try {
+    const response = await fetch(`${API_URL}/faqs`, { cache: "no-store" })
+
+    if (!response.ok) {
+      return fallbackFaqGroups
+    }
+
+    const payload = await response.json()
+    const rows = (payload.data ?? []) as FaqRow[]
+    const groups = groupFaqRows(rows)
+
+    return groups.length > 0 ? groups : fallbackFaqGroups
+  } catch {
+    return fallbackFaqGroups
+  }
+}
+
+export default async function FaqPage() {
+  const faqGroups = await getFaqGroups()
+
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <section className="relative overflow-hidden pt-32 pb-20">

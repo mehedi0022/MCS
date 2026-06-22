@@ -1,6 +1,13 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -20,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DynamicModal } from "@/components/DynamicModal"
+import { ImageCropperDialog } from "@/components/shared/ImageCropperDialog"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
 
 type GalleryImage = {
@@ -70,6 +78,13 @@ const emptyForm: ProjectFormState = {
   imageUrl: "",
 }
 
+type ProjectCropTarget = "cover" | "gallery"
+
+const PROJECT_IMAGE_WIDTH = 1920
+const PROJECT_IMAGE_HEIGHT = 1080
+const PROJECT_IMAGE_ASPECT = PROJECT_IMAGE_WIDTH / PROJECT_IMAGE_HEIGHT
+const PROJECT_IMAGE_SIZE_LABEL = `${PROJECT_IMAGE_WIDTH} x ${PROJECT_IMAGE_HEIGHT}px`
+
 export default function AdminProjectsPage() {
   const router = useRouter()
   const [projects, setProjects] = useState<ProjectItem[]>([])
@@ -79,6 +94,10 @@ export default function AdminProjectsPage() {
   const [retainedGallery, setRetainedGallery] = useState<GalleryImage[]>([])
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [galleryFiles, setGalleryFiles] = useState<File[]>([])
+  const [cropFile, setCropFile] = useState<File | null>(null)
+  const [cropTarget, setCropTarget] = useState<ProjectCropTarget | null>(null)
+  const [cropOpen, setCropOpen] = useState(false)
+  const [galleryCropQueue, setGalleryCropQueue] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
@@ -167,12 +186,81 @@ export default function AdminProjectsPage() {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
+  function openCropper(file: File, target: ProjectCropTarget) {
+    setCropFile(file)
+    setCropTarget(target)
+    setCropOpen(true)
+  }
+
+  function clearCropper() {
+    setCropOpen(false)
+    setCropFile(null)
+    setCropTarget(null)
+    setGalleryCropQueue([])
+  }
+
+  function handleCoverImageSelect(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null
+    event.target.value = ""
+
+    if (!file) {
+      return
+    }
+
+    openCropper(file, "cover")
+  }
+
+  function handleGalleryImagesSelect(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? [])
+    event.target.value = ""
+
+    if (files.length === 0) {
+      return
+    }
+
+    const [firstFile, ...remainingFiles] = files
+
+    setGalleryCropQueue(remainingFiles)
+    openCropper(firstFile, "gallery")
+  }
+
+  function handleCropOpenChange(open: boolean) {
+    setCropOpen(open)
+
+    if (!open) {
+      setCropFile(null)
+      setCropTarget(null)
+      setGalleryCropQueue([])
+    }
+  }
+
+  function handleCroppedProjectImage(file: File) {
+    if (cropTarget === "cover") {
+      setCoverFile(file)
+      clearCropper()
+      return
+    }
+
+    setGalleryFiles((current) => [...current, file])
+
+    const [nextFile, ...remainingFiles] = galleryCropQueue
+
+    if (nextFile) {
+      setGalleryCropQueue(remainingFiles)
+      openCropper(nextFile, "gallery")
+      return
+    }
+
+    clearCropper()
+  }
+
   function startCreate() {
     setEditingId(null)
     setForm(emptyForm)
     setRetainedGallery([])
     setCoverFile(null)
     setGalleryFiles([])
+    clearCropper()
   }
 
   function startEdit(project: ProjectItem) {
@@ -192,6 +280,7 @@ export default function AdminProjectsPage() {
     setRetainedGallery(project.gallery ?? [])
     setCoverFile(null)
     setGalleryFiles([])
+    clearCropper()
   }
 
   function removeRetainedGallery(publicId: string) {
@@ -225,7 +314,7 @@ export default function AdminProjectsPage() {
     return formData
   }
 
-  async function submitForm(event: React.FormEvent<HTMLFormElement>) {
+  async function submitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsSaving(true)
     setError("")
@@ -427,9 +516,7 @@ export default function AdminProjectsPage() {
                     type="file"
                     accept="image/*"
                     className="sr-only"
-                    onChange={(event) =>
-                      setCoverFile(event.target.files?.[0] ?? null)
-                    }
+                    onChange={handleCoverImageSelect}
                   />
                 </label>
                 <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 border border-border px-4 text-xs font-bold tracking-widest uppercase hover:bg-muted">
@@ -440,9 +527,7 @@ export default function AdminProjectsPage() {
                     accept="image/*"
                     multiple
                     className="sr-only"
-                    onChange={(event) =>
-                      setGalleryFiles(Array.from(event.target.files ?? []))
-                    }
+                    onChange={handleGalleryImagesSelect}
                   />
                 </label>
               </div>
@@ -562,6 +647,26 @@ export default function AdminProjectsPage() {
           </section>
         </div>
       </div>
+
+      <ImageCropperDialog
+        open={cropOpen}
+        file={cropFile}
+        title={
+          cropTarget === "gallery"
+            ? "Crop Project Slider Image"
+            : "Crop Project Cover Image"
+        }
+        description={`Output size: ${PROJECT_IMAGE_SIZE_LABEL}. Use the crop box to choose the visible project image area.`}
+        outputWidth={PROJECT_IMAGE_WIDTH}
+        outputHeight={PROJECT_IMAGE_HEIGHT}
+        aspect={PROJECT_IMAGE_ASPECT}
+        fileNamePrefix={
+          cropTarget === "gallery" ? "project-slider" : "project-cover"
+        }
+        closeOnApply={cropTarget !== "gallery"}
+        onOpenChange={handleCropOpenChange}
+        onCroppedFile={handleCroppedProjectImage}
+      />
 
       <DynamicModal
         isOpen={saveLoadingOpen}

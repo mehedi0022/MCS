@@ -3,18 +3,52 @@
 import { useEffect } from "react"
 import { useSiteSettings } from "@/context/site-settings-context"
 
-function upsertLink(rel: string, href: string) {
-  let link = document.head.querySelector(
-    `link[rel="${rel}"]`
-  ) as HTMLLinkElement | null
+const faviconRels = [
+  "icon",
+  "shortcut icon",
+  "apple-touch-icon",
+  "mask-icon",
+]
 
-  if (!link) {
-    link = document.createElement("link")
-    link.setAttribute("rel", rel)
-    document.head.appendChild(link)
+function versionUrl(url: string) {
+  const separator = url.includes("?") ? "&" : "?"
+
+  return `${url}${separator}v=${Date.now()}`
+}
+
+function removeExistingFavicons() {
+  document.head
+    .querySelectorAll<HTMLLinkElement>(
+      faviconRels.map((rel) => `link[rel="${rel}"]`).join(",")
+    )
+    .forEach((link) => link.remove())
+}
+
+function appendFaviconLink({
+  rel,
+  href,
+  type,
+  sizes,
+}: {
+  rel: string
+  href: string
+  type?: string
+  sizes?: string
+}) {
+  const link = document.createElement("link")
+
+  link.setAttribute("rel", rel)
+  link.setAttribute("href", href)
+
+  if (type) {
+    link.setAttribute("type", type)
   }
 
-  link.setAttribute("href", href)
+  if (sizes) {
+    link.setAttribute("sizes", sizes)
+  }
+
+  document.head.appendChild(link)
 }
 
 export function DynamicFavicon() {
@@ -24,14 +58,29 @@ export function DynamicFavicon() {
     const raw = settings?.faviconUrl?.trim()
     if (!raw) return
 
-    // Bust favicon cache so browsers pick up updates immediately.
-    const versioned = raw.includes("?")
-      ? `${raw}&v=${Date.now()}`
-      : `${raw}?v=${Date.now()}`
+    const versioned = versionUrl(raw)
 
-    upsertLink("icon", versioned)
-    upsertLink("shortcut icon", versioned)
-    upsertLink("apple-touch-icon", versioned)
+    removeExistingFavicons()
+    appendFaviconLink({
+      rel: "icon",
+      href: versioned,
+      type: "image/png",
+      sizes: "any",
+    })
+    appendFaviconLink({
+      rel: "shortcut icon",
+      href: versioned,
+      type: "image/png",
+    })
+    appendFaviconLink({
+      rel: "apple-touch-icon",
+      href: versioned,
+      sizes: "512x512",
+    })
+
+    document
+      .querySelector('meta[name="msapplication-TileImage"]')
+      ?.setAttribute("content", versioned)
   }, [settings?.faviconUrl])
 
   return null

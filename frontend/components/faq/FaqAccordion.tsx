@@ -27,7 +27,7 @@ export function FaqAccordion({ groups }: FaqAccordionProps) {
   )
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
       {groups.map((group) => (
         <section
           key={group.title}

@@ -1,12 +1,19 @@
 "use client"
 
-import { FormEvent, useEffect, useMemo, useState } from "react"
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { Edit3, ImagePlus, Loader2, Plus, Save, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { DynamicModal } from "@/components/DynamicModal"
+import { ImageCropperDialog } from "@/components/shared/ImageCropperDialog"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
@@ -52,6 +59,11 @@ const emptyForm: HeroSlideForm = {
   file: null,
 }
 
+const HERO_IMAGE_WIDTH = 2400
+const HERO_IMAGE_HEIGHT = 900
+const HERO_IMAGE_ASPECT = HERO_IMAGE_WIDTH / HERO_IMAGE_HEIGHT
+const HERO_IMAGE_SIZE_LABEL = `${HERO_IMAGE_WIDTH} x ${HERO_IMAGE_HEIGHT}px`
+
 export function HeroSlidesManager() {
   const [slides, setSlides] = useState<HeroSlide[]>([])
   const [form, setForm] = useState<HeroSlideForm>(emptyForm)
@@ -63,6 +75,8 @@ export function HeroSlidesManager() {
   const [deleteLoadingOpen, setDeleteLoadingOpen] = useState(false)
   const [deleteSuccessOpen, setDeleteSuccessOpen] = useState(false)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [cropFile, setCropFile] = useState<File | null>(null)
+  const [cropOpen, setCropOpen] = useState(false)
 
   const previewImage = useMemo(() => {
     if (form.file) {
@@ -114,6 +128,32 @@ export function HeroSlidesManager() {
     value: HeroSlideForm[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
+  }
+
+  function handleImageSelect(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null
+    event.target.value = ""
+
+    if (!file) {
+      return
+    }
+
+    setCropFile(file)
+    setCropOpen(true)
+  }
+
+  function handleCropOpenChange(open: boolean) {
+    setCropOpen(open)
+
+    if (!open) {
+      setCropFile(null)
+    }
+  }
+
+  function handleCroppedFile(file: File) {
+    updateField("file", file)
+    setCropOpen(false)
+    setCropFile(null)
   }
 
   function startEdit(slide: HeroSlide) {
@@ -222,7 +262,7 @@ export function HeroSlidesManager() {
     <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-xl border border-border bg-card p-5 shadow-maritime-sm"
+        className="shadow-maritime-sm space-y-4 rounded-xl border border-border bg-card p-5"
       >
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -325,26 +365,38 @@ export function HeroSlidesManager() {
             onChange={(event) => updateField("imageUrl", event.target.value)}
             className="border-input px-3"
           />
-          <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 border border-border px-4 text-xs font-bold uppercase tracking-widest hover:bg-muted">
+          <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 border border-border px-4 text-xs font-bold tracking-widest uppercase hover:bg-muted">
             <ImagePlus className="size-4" />
             Upload
             <input
               type="file"
               accept="image/*"
               className="sr-only"
-              onChange={(event) =>
-                updateField("file", event.target.files?.[0] ?? null)
-              }
+              onChange={handleImageSelect}
             />
           </label>
         </div>
 
-        {previewImage && (
-          <div
-            className="h-36 border border-border bg-cover bg-center"
-            style={{ backgroundImage: `url(${previewImage})` }}
-          />
-        )}
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-muted-foreground">
+            <span>Hero image preview</span>
+            <span>{HERO_IMAGE_SIZE_LABEL} recommended</span>
+          </div>
+          {previewImage ? (
+            <div
+              className="aspect-[8/3] border border-border bg-cover bg-center"
+              style={{ backgroundImage: `url(${previewImage})` }}
+            />
+          ) : (
+            <div className="flex aspect-[8/3] items-center justify-center border border-dashed border-border bg-muted/40 text-xs font-semibold text-muted-foreground">
+              Upload or enter a hero image
+            </div>
+          )}
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            Crop uploads to an 8:3 hero image. Keep the main subject centered
+            for smaller screens.
+          </p>
+        </div>
 
         <div className="flex items-center gap-3">
           <Checkbox
@@ -376,7 +428,7 @@ export function HeroSlidesManager() {
         </Button>
       </form>
 
-      <div className="rounded-xl border border-border bg-card p-5 shadow-maritime-sm">
+      <div className="shadow-maritime-sm rounded-xl border border-border bg-card p-5">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold">Current Slides</h2>
@@ -429,7 +481,7 @@ export function HeroSlidesManager() {
                       {slide.isActive ? "Active" : "Hidden"}
                     </span>
                   </div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                  <p className="text-xs font-bold tracking-widest text-primary uppercase">
                     {slide.badgeText}
                   </p>
                   <h3 className="mt-1 line-clamp-2 text-lg font-bold">
@@ -465,6 +517,20 @@ export function HeroSlidesManager() {
           )}
         </div>
       </div>
+
+      <ImageCropperDialog
+        open={cropOpen}
+        file={cropFile}
+        title="Crop Hero Image"
+        description={`Output size: ${HERO_IMAGE_SIZE_LABEL}. The homepage uses this wide crop as a cover background.`}
+        outputWidth={HERO_IMAGE_WIDTH}
+        outputHeight={HERO_IMAGE_HEIGHT}
+        aspect={HERO_IMAGE_ASPECT}
+        initialZoom={1}
+        fileNamePrefix="hero-slide"
+        onOpenChange={handleCropOpenChange}
+        onCroppedFile={handleCroppedFile}
+      />
 
       <DynamicModal
         isOpen={deleteWarningOpen}
@@ -506,5 +572,3 @@ export function HeroSlidesManager() {
     </section>
   )
 }
-
-

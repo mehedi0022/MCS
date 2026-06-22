@@ -7,13 +7,13 @@ import {
   ArrowUpRight,
   Building2,
   BriefcaseBusiness,
+  CircleHelp,
   Image,
   FolderKanban,
   Inbox,
   LayoutDashboard,
   LogOut,
   MessageCircleWarning,
-  Plus,
   Compass,
   Route,
   Settings,
@@ -33,6 +33,7 @@ type Summary = {
   messages: number
   unreadMessages: number
   heroSlides: number
+  faqs: number
 }
 
 type MeResponse = {
@@ -50,6 +51,7 @@ const navItems = [
   { label: "Projects", href: "/admin/projects", icon: FolderKanban },
   { label: "Clients", href: "/admin/clients", icon: Building2 },
   { label: "Messages", href: "/admin/messages", icon: Inbox },
+  { label: "FAQ", href: "/admin/faqs", icon: CircleHelp },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "What We Do", href: "/admin/what-we-do", icon: Compass },
   { label: "Our Story", href: "/admin/our-story", icon: Image },
@@ -64,6 +66,7 @@ const emptySummary: Summary = {
   messages: 0,
   unreadMessages: 0,
   heroSlides: 0,
+  faqs: 0,
 }
 
 export default function AdminDashboardPage() {
@@ -133,12 +136,20 @@ export default function AdminDashboardPage() {
       tone: "text-maritime-brass",
       href: "/admin/messages",
     },
+
     {
       label: "Unread messages",
       value: summary.unreadMessages,
       icon: MessageCircleWarning,
       tone: "text-destructive",
       href: "/admin/messages",
+    },
+    {
+      label: "FAQ entries",
+      value: summary.faqs,
+      icon: CircleHelp,
+      tone: "text-maritime-sea",
+      href: "/admin/faqs",
     },
   ]
 
@@ -204,7 +215,7 @@ export default function AdminDashboardPage() {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {stats.map((stat) => (
               <Link
                 key={stat.label}
