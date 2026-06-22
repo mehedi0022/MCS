@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 
 // 3. Comprehensive SEO Metadata
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mcs2024.com"),
+  metadataBase: new URL("https://mcs.meetmehedi.dev"),
   title: {
     default:
       "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://mcs2024.com",
+    url: "https://mcs.meetmehedi.dev",
     title:
       "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
     description:
