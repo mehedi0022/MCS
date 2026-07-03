@@ -1,10 +1,11 @@
 import type { RequestHandler } from "express"
+import { cloudinary } from "../config/cloudinary.js"
 import { prisma } from "../lib/prisma.js"
 import {
   cleanupCloudinaryUploads,
   uploadToCloudinary,
 } from "../services/cloudinary.service.js"
-import { sendSuccess } from "../utils/api.js"
+import { ApiError, sendSuccess } from "../utils/api.js"
 import { validateBody } from "../utils/validate.js"
 import {
   settingsSchema,
@@ -15,7 +16,10 @@ type UploadedFiles = {
   logo?: Express.Multer.File[]
   darkLogo?: Express.Multer.File[]
   favicon?: Express.Multer.File[]
+  companyProfile?: Express.Multer.File[]
 }
+
+const COMPANY_PROFILE_FILENAME_BASE = "company_profile"
 
 function readUploadedFiles(files: unknown): UploadedFiles {
   if (!files || typeof files !== "object") {
@@ -36,6 +40,15 @@ function parseJsonArray<T = string>(value: unknown): T[] | undefined {
   }
 }
 
+function toTrimmedOptionalString(value: unknown) {
+  if (typeof value !== "string") {
+    return undefined
+  }
+
+  const trimmed = value.trim()
+  return trimmed.length ? trimmed : undefined
+}
+
 export const getSettings: RequestHandler = async (_req, res, next) => {
   try {
     const settings = await prisma.siteSettings.upsert({
@@ -44,6 +57,95 @@ export const getSettings: RequestHandler = async (_req, res, next) => {
       update: {},
     })
     return sendSuccess(res, settings)
+  } catch (error) {
+    return next(error)
+  }
+}
+
+function getCompanyProfileResourceType(url?: string | null) {
+  if (url?.includes("/raw/upload/")) {
+    return "raw"
+  }
+
+  return "image"
+}
+
+function getCompanyProfileFileExtension(
+  url: string,
+  contentType?: string | null
+) {
+  try {
+    const pathname = new URL(url).pathname
+    const extension = pathname.split(".").pop()?.toLowerCase()
+
+    if (extension && /^[a-z0-9]{2,8}$/.test(extension)) {
+      return extension
+    }
+  } catch {
+    // Fall back to content type below.
+  }
+
+  if (contentType?.includes("pdf")) {
+    return "pdf"
+  }
+
+  return "pdf"
+}
+
+function getAttachmentHeader(filename: string) {
+  return `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(
+    filename
+  )}`
+}
+
+export const downloadCompanyProfile: RequestHandler = async (_req, res, next) => {
+  try {
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: "main" },
+    })
+    const companyProfileUrl = settings?.companyProfileUrl?.trim()
+
+    if (!settings || !companyProfileUrl) {
+      return res.status(404).json({
+        success: false,
+        message: "Company profile is not configured",
+      })
+    }
+
+    const downloadUrl = settings.companyProfilePublicId
+      ? cloudinary.utils.private_download_url(
+          settings.companyProfilePublicId,
+          "pdf",
+          {
+            resource_type: getCompanyProfileResourceType(companyProfileUrl),
+            type: "upload",
+            attachment: true,
+            expires_at: Math.floor(Date.now() / 1000) + 60,
+          }
+        )
+      : companyProfileUrl
+
+    const fileResponse = await fetch(downloadUrl)
+
+    if (!fileResponse.ok) {
+      throw new ApiError(502, "Unable to download company profile")
+    }
+
+    const fileBuffer = Buffer.from(await fileResponse.arrayBuffer())
+    const contentType =
+      fileResponse.headers.get("content-type") ?? "application/pdf"
+    const fileExtension = getCompanyProfileFileExtension(
+      companyProfileUrl,
+      contentType
+    )
+    const downloadFilename = `${COMPANY_PROFILE_FILENAME_BASE}.${fileExtension}`
+
+    res.setHeader(
+      "Content-Disposition",
+      getAttachmentHeader(downloadFilename)
+    )
+    res.setHeader("Content-Type", contentType)
+    return res.send(fileBuffer)
   } catch (error) {
     return next(error)
   }
@@ -64,12 +166,22 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
     const logoFile = files.logo?.[0]
     const darkLogoFile = files.darkLogo?.[0]
     const faviconFile = files.favicon?.[0]
+    const companyProfileFile = files.companyProfile?.[0]
+
+    if (
+      companyProfileFile &&
+      companyProfileFile.mimetype !== "application/pdf"
+    ) {
+      throw new ApiError(400, "Company profile must be a PDF")
+    }
 
     const input = await validateBody<SiteSettingsInput>(settingsSchema, {
       officeAddressLine1: body.officeAddressLine1,
       officeAddressLine2: body.officeAddressLine2,
       mapLocation: body.mapLocation,
       mapLocationText: body.mapLocationText,
+      whatsappNumber: body.whatsappNumber,
+      companyProfileUrl: body.companyProfileUrl,
       contactEmails: parseJsonArray<string>(body.contactEmails),
       contactPhones: parseJsonArray<string>(body.contactPhones),
       branches: parseJsonArray<string>(body.branches),
@@ -91,6 +203,10 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
     let darkLogoPublicId = existing.darkLogoPublicId ?? undefined
     let faviconUrl = input.faviconUrl ?? existing.faviconUrl ?? undefined
     let faviconPublicId = existing.faviconPublicId ?? undefined
+    let companyProfileUrl: string | null | undefined =
+      existing.companyProfileUrl ?? undefined
+    let companyProfilePublicId: string | null | undefined =
+      existing.companyProfilePublicId ?? undefined
 
     if (logoFile) {
       const upload = await uploadToCloudinary(logoFile)
@@ -113,6 +229,30 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
       uploadedPublicIds.push(upload.public_id)
     }
 
+    const staleIds: string[] = []
+
+    if (companyProfileFile) {
+      const upload = await uploadToCloudinary(companyProfileFile)
+      companyProfileUrl = upload.secure_url
+      companyProfilePublicId = upload.public_id
+      uploadedPublicIds.push(upload.public_id)
+      if (existing.companyProfilePublicId) {
+        staleIds.push(existing.companyProfilePublicId)
+      }
+    } else if (input.companyProfileUrl !== undefined) {
+      const nextCompanyProfileUrl = toTrimmedOptionalString(
+        input.companyProfileUrl
+      )
+      companyProfileUrl = nextCompanyProfileUrl ?? null
+
+      if (nextCompanyProfileUrl !== existing.companyProfileUrl) {
+        if (existing.companyProfilePublicId) {
+          staleIds.push(existing.companyProfilePublicId)
+        }
+        companyProfilePublicId = null
+      }
+    }
+
     const updated = await prisma.siteSettings.update({
       where: { id: "main" },
       data: {
@@ -126,6 +266,9 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
         footerBrandText: input.footerBrandText,
         faviconUrl,
         faviconPublicId,
+        whatsappNumber: input.whatsappNumber,
+        companyProfileUrl,
+        companyProfilePublicId,
         officeAddressLine1: input.officeAddressLine1,
         officeAddressLine2: input.officeAddressLine2,
         mapLocation: input.mapLocation,
@@ -137,7 +280,6 @@ export const updateSettings: RequestHandler = async (req, res, next) => {
       },
     })
 
-    const staleIds: string[] = []
     if (logoFile && existing.logoPublicId) staleIds.push(existing.logoPublicId)
     if (darkLogoFile && existing.darkLogoPublicId)
       staleIds.push(existing.darkLogoPublicId)

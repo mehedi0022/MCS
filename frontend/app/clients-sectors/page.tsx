@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Anchor, CheckCircle2, Handshake } from "lucide-react"
+import { Anchor, CheckCircle2 } from "lucide-react"
 import { Clients } from "@/components/home/Clients"
+import { API_URL } from "@/lib/api"
 
 export const metadata = {
   title: "Clients & Sectors | MCS",
@@ -8,8 +9,16 @@ export const metadata = {
     "Sectors and client groups supported by Marine Consultancy Services (MCS) across Bangladesh.",
 }
 
-const sectors = [
+type SectorItem = {
+  id: string
+  title: string
+  body: string
+  points?: string[] | null
+}
+
+const fallbackSectors: SectorItem[] = [
   {
+    id: "government-public-sector",
     title: "Government & Public Sector",
     body: "We support government agencies responsible for waterways, ports, coastal management, and infrastructure development.",
     points: [
@@ -20,6 +29,7 @@ const sectors = [
     ],
   },
   {
+    id: "ports-maritime-sector",
     title: "Ports & Maritime Sector",
     body: "Specialized technical support for ports, terminals, shipyards, and marine operators.",
     points: [
@@ -30,6 +40,7 @@ const sectors = [
     ],
   },
   {
+    id: "water-resources-infrastructure",
     title: "Water Resources & Infrastructure",
     body: "Support for projects involving rivers, flood management, and coastal protection.",
     points: [
@@ -40,6 +51,7 @@ const sectors = [
     ],
   },
   {
+    id: "development-partners-donor-projects",
     title: "Development Partners & Donor Projects",
     body: "Collaboration with international agencies and consultancy teams on development initiatives.",
     points: [
@@ -50,6 +62,7 @@ const sectors = [
     ],
   },
   {
+    id: "environmental-research-sector",
     title: "Environmental & Research Sector",
     body: "Support for environmental sustainability and scientific research initiatives.",
     points: [
@@ -61,7 +74,53 @@ const sectors = [
   },
 ]
 
-export default function ClientsSectorsPage() {
+function normalizePoints(value: unknown) {
+  if (!Array.isArray(value)) {
+    return []
+  }
+
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+async function getSectors(): Promise<SectorItem[]> {
+  try {
+    const response = await fetch(`${API_URL}/client-sectors`, {
+      cache: "no-store",
+    })
+
+    if (!response.ok) {
+      return fallbackSectors
+    }
+
+    const payload = await response.json()
+    const rows = (payload.data ?? []) as Array<{
+      id: string
+      title?: string | null
+      body?: string | null
+      points?: unknown
+    }>
+
+    const sectors = rows
+      .filter((item) => item.id && item.title?.trim() && item.body?.trim())
+      .map((item) => ({
+        id: item.id,
+        title: item.title!.trim(),
+        body: item.body!.trim(),
+        points: normalizePoints(item.points),
+      }))
+
+    return sectors.length > 0 ? sectors : fallbackSectors
+  } catch {
+    return fallbackSectors
+  }
+}
+
+export default async function ClientsSectorsPage() {
+  const sectors = await getSectors()
+
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <section className="relative overflow-hidden pt-32 pb-20">
@@ -92,8 +151,8 @@ export default function ClientsSectorsPage() {
         <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {sectors.map((item) => (
             <section
-              key={item.title}
-              className="rounded-2xl border border-slate-200 bg-white p-7 dark:border-white/10 dark:bg-white/5"
+              key={item.id}
+              className="rounded-xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/10 dark:bg-white/5"
             >
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {item.title}
@@ -101,14 +160,16 @@ export default function ClientsSectorsPage() {
               <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                 {item.body}
               </p>
-              <ul className="mt-4 space-y-2 text-sm text-slate-700 dark:text-slate-200">
-                {item.points.map((point) => (
-                  <li key={point} className="flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
+              {item.points && item.points.length > 0 && (
+                <ul className="mt-4 space-y-2 text-sm text-slate-700 dark:text-slate-200">
+                  {item.points.map((point) => (
+                    <li key={point} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           ))}
         </div>

@@ -27,6 +27,9 @@ export type SiteSettings = {
   officeAddressLine2?: string | null
   mapLocation?: string | null
   mapLocationText?: string | null
+  whatsappNumber?: string | null
+  companyProfileUrl?: string | null
+  companyProfilePublicId?: string | null
   contactEmails?: string[] | null
   contactPhones?: string[] | null
   branches?: string[] | null
@@ -67,7 +70,11 @@ export function SiteSettingsProvider({
   }, [])
 
   useEffect(() => {
-    void refreshSettings()
+    const timeoutId = window.setTimeout(() => {
+      void refreshSettings()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
   }, [refreshSettings])
 
   const value = useMemo(

@@ -10,6 +10,8 @@ export type SiteSettingsInput = {
   officeAddressLine2?: string
   mapLocation?: string
   mapLocationText?: string
+  whatsappNumber?: string
+  companyProfileUrl?: string
   contactEmails?: string[]
   contactPhones?: string[]
   branches?: string[]
@@ -28,6 +30,8 @@ export const settingsSchema = yup.object({
   officeAddressLine2: yup.string().optional(),
   mapLocation: yup.string().optional(),
   mapLocationText: yup.string().optional(),
+  whatsappNumber: yup.string().optional(),
+  companyProfileUrl: yup.string().optional(),
   contactEmails: yup.array().of(yup.string().email().required()).optional(),
   contactPhones: yup.array().of(yup.string().required()).optional(),
   branches: yup.array().of(yup.string().required()).optional(),

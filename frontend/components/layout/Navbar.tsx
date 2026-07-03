@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, ChevronRight } from "lucide-react"
+import { Menu, X, ChevronRight, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -29,12 +29,14 @@ export function Navbar() {
   const logoUrl = settings?.logoUrl?.trim()
   const darkLogoUrl = settings?.darkLogoUrl?.trim()
   const navbarBrandText = settings?.navbarBrandText?.trim() || "Marine"
-  const navbarBrandAccent =
-    settings?.navbarBrandAccent?.trim() || "Consultancy"
+  const navbarBrandAccent = settings?.navbarBrandAccent?.trim() || "Consultancy"
   const navbarBrandSubtext =
     settings?.navbarBrandSubtext?.trim() || "Services (MCS)"
   const primaryEmail =
     settings?.contactEmails?.[0]?.trim() || "info@mcs2024.com"
+  const companyProfileDownloadUrl = settings?.companyProfileUrl?.trim()
+    ? "/api/company-profile"
+    : ""
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -104,7 +106,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center gap-6 xl:flex">
+        <div className="hidden items-center gap-4 xl:flex 2xl:gap-6">
           {navLinks.map((link) => {
             const isActive = pathname === link.href
             return (
@@ -133,7 +135,7 @@ export function Navbar() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 xl:gap-3 2xl:gap-4">
           <div
             className={cn(
               "cursor-pointer rounded-full border border-border transition-colors duration-300",
@@ -145,10 +147,26 @@ export function Navbar() {
             <ThemeToggle />
           </div>
 
+          {companyProfileDownloadUrl && (
+            <a
+              href={companyProfileDownloadUrl}
+              download="MCS Company Profile.pdf"
+              className={cn(
+                "shadow-maritime hidden h-10 items-center gap-2 rounded-full border px-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 xl:inline-flex 2xl:px-5",
+                isScrolled
+                  ? "border-primary/25 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
+                  : "border-maritime-navy/20 bg-background/80 text-maritime-navy hover:bg-white dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+              )}
+            >
+              <Download className="size-4" />
+              Company Profile
+            </a>
+          )}
+
           <Link href="/contact">
             <Button
               className={cn(
-                "shadow-maritime hidden rounded-full px-6 font-bold transition-all duration-300 xl:flex",
+                "shadow-maritime hidden rounded-full px-5 font-bold transition-all duration-300 xl:flex 2xl:px-6",
                 isScrolled
                   ? "bg-primary text-primary-foreground"
                   : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
@@ -178,15 +196,40 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 h-screen w-full transition-all duration-500 ease-in-out xl:hidden",
-          "bg-background/98 backdrop-blur-md", // More opaque for readability
+          "fixed inset-0 z-[60] h-screen w-full transition-all duration-500 ease-in-out xl:hidden",
+          "bg-background shadow-2xl dark:bg-[#020617]",
           mobileMenuOpen
             ? "visible translate-x-0 opacity-100"
             : "invisible translate-x-full opacity-0"
         )}
       >
-        <div className="relative z-10 flex h-dvh flex-col overflow-y-auto p-6 pt-24 sm:p-8 sm:pt-24">
-          <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="relative z-10 flex h-dvh flex-col overflow-y-auto px-5 py-5 sm:px-7">
+          <div className="mb-7 flex items-center justify-between gap-4 border-b border-border pb-4">
+            <Link
+              href="/"
+              className="inline-flex min-w-0 items-center gap-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <BrandLogo
+                lightSrc={logoUrl}
+                darkSrc={darkLogoUrl}
+                className="h-9 w-auto"
+              />
+              <span className="truncate text-xs font-bold tracking-wide text-foreground uppercase">
+                {navbarBrandSubtext}
+              </span>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-muted text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+              aria-label="Close menu"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
             {navLinks.map((link, i) => {
               const isActive = pathname === link.href
               return (
@@ -196,10 +239,10 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ transitionDelay: `${i * 50}ms` }}
                   className={cn(
-                    "flex items-center justify-between border-b border-border/50 pb-4 text-xl font-bold tracking-tight transition-all duration-300 sm:pb-5 sm:text-2xl",
+                    "flex min-h-12 items-center justify-between rounded-xl px-4 py-3 text-base font-semibold tracking-normal transition-all duration-300 sm:text-lg",
                     isActive
-                      ? "translate-x-2 text-primary"
-                      : "text-foreground hover:translate-x-2",
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground hover:bg-muted",
                     mobileMenuOpen
                       ? "translate-y-0 opacity-100"
                       : "translate-y-4 opacity-0"
@@ -208,7 +251,7 @@ export function Navbar() {
                   {link.name}
                   <ChevronRight
                     className={cn(
-                      "h-6 w-6 transition-transform",
+                      "h-4 w-4 transition-transform",
                       isActive ? "text-primary" : "text-muted-foreground"
                     )}
                   />
@@ -219,18 +262,29 @@ export function Navbar() {
 
           <div
             className={cn(
-              "mt-8 space-y-4 pb-6 transition-all delay-300 duration-500 sm:mt-auto sm:space-y-6",
+              "mt-7 gap-2.5 space-y-3 border-t border-border pt-5 pb-5 transition-all delay-300 duration-500 sm:mt-auto",
               mobileMenuOpen
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
             )}
           >
             <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="shadow-maritime-lg h-14 w-full rounded-2xl text-lg font-bold">
+              <Button className="shadow-maritime-lg h-12 w-full rounded-xl text-sm font-bold">
                 Contact Us
               </Button>
             </Link>
-            <p className="text-center text-sm text-muted-foreground italic">
+            {companyProfileDownloadUrl && (
+              <a
+                href={companyProfileDownloadUrl}
+                download="MCS Company Profile.pdf"
+                onClick={() => setMobileMenuOpen(false)}
+                className="shadow-maritime-sm mt-2.5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background text-sm font-bold text-foreground hover:bg-muted"
+              >
+                <Download className="size-4" />
+                Company Profile
+              </a>
+            )}
+            <p className="text-center text-xs text-muted-foreground italic">
               {primaryEmail}
             </p>
           </div>

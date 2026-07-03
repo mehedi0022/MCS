@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { DynamicModal } from "@/components/DynamicModal"
+import { ImageCropperDialog } from "@/components/shared/ImageCropperDialog"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -46,6 +47,10 @@ const emptyForm: ClientFormState = {
   isPublished: true,
 }
 
+const CLIENT_LOGO_WIDTH = 640
+const CLIENT_LOGO_HEIGHT = 280
+const CLIENT_LOGO_ASPECT = CLIENT_LOGO_WIDTH / CLIENT_LOGO_HEIGHT
+
 function toSafeWebsite(url: string) {
   const trimmed = url.trim()
   if (!trimmed) return ""
@@ -62,6 +67,8 @@ export default function AdminClientsPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<ClientFormState>(emptyForm)
   const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [cropFile, setCropFile] = useState<File | null>(null)
+  const [cropOpen, setCropOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
@@ -89,11 +96,7 @@ export default function AdminClientsPage() {
     }
   }, [logoPreview])
 
-  useEffect(() => {
-    void loadClients()
-  }, [])
-
-  async function loadClients() {
+  const loadClients = useCallback(async () => {
     try {
       setIsLoading(true)
       setError("")
@@ -113,13 +116,47 @@ export default function AdminClientsPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadClients()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [loadClients])
 
   function updateField<K extends keyof ClientFormState>(
     key: K,
     value: ClientFormState[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
+  }
+
+  function handleLogoSelect(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null
+    event.target.value = ""
+
+    if (!file) {
+      return
+    }
+
+    setCropFile(file)
+    setCropOpen(true)
+  }
+
+  function handleCropOpenChange(open: boolean) {
+    setCropOpen(open)
+
+    if (!open) {
+      setCropFile(null)
+    }
+  }
+
+  function handleCroppedLogo(file: File) {
+    setLogoFile(file)
+    setCropFile(null)
+    setCropOpen(false)
   }
 
   function startCreate() {
@@ -343,7 +380,7 @@ export default function AdminClientsPage() {
                   type="file"
                   accept="image/*"
                   className="sr-only"
-                  onChange={(event) => setLogoFile(event.target.files?.[0] ?? null)}
+                  onChange={handleLogoSelect}
                 />
               </label>
 
@@ -482,6 +519,20 @@ export default function AdminClientsPage() {
         title="Deleted"
         description="Client removed successfully."
         actionText="Continue"
+      />
+
+      <ImageCropperDialog
+        open={cropOpen}
+        file={cropFile}
+        title="Crop Client Logo"
+        description="Output size: 640 x 280px. Use a rectangular crop so logos look consistent in the carousel."
+        outputWidth={CLIENT_LOGO_WIDTH}
+        outputHeight={CLIENT_LOGO_HEIGHT}
+        aspect={CLIENT_LOGO_ASPECT}
+        outputType="image/png"
+        fileNamePrefix="client-logo"
+        onOpenChange={handleCropOpenChange}
+        onCroppedFile={handleCroppedLogo}
       />
     </main>
   )

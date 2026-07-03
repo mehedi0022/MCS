@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
 import { DynamicFavicon } from "@/components/layout/DynamicFavicon"
 import { SiteSettingsProvider } from "@/context/site-settings-context"
+import { FloatingActions } from "@/components/layout/FloatingActions"
 
 // 1. Premium SaaS Font Pairing
 const fontHeading = Outfit({
@@ -119,6 +120,7 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-1">{children}</main>
             <Footer />
+            <FloatingActions />
           </SiteSettingsProvider>
         </ThemeProvider>
       </body>

@@ -9,7 +9,17 @@ import {
 } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, ImagePlus, Loader2, Plus, Save, Trash2 } from "lucide-react"
+import {
+  ArrowLeft,
+  FileText,
+  ImagePlus,
+  Loader2,
+  Plus,
+  Save,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react"
 import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -61,6 +71,11 @@ export default function AdminSettingsPage() {
   const [officeAddressLine2, setOfficeAddressLine2] = useState("")
   const [mapLocation, setMapLocation] = useState("")
   const [mapLocationText, setMapLocationText] = useState("")
+  const [whatsappNumber, setWhatsappNumber] = useState("")
+  const [companyProfileUrl, setCompanyProfileUrl] = useState("")
+  const [companyProfileFile, setCompanyProfileFile] = useState<File | null>(
+    null
+  )
   const [contactEmails, setContactEmails] = useState<string[]>([""])
   const [contactPhones, setContactPhones] = useState<string[]>([""])
   const [branches, setBranches] = useState<string[]>([""])
@@ -134,6 +149,9 @@ export default function AdminSettingsPage() {
       setOfficeAddressLine2(data.officeAddressLine2 ?? "")
       setMapLocation(data.mapLocation ?? "")
       setMapLocationText(data.mapLocationText ?? "")
+      setWhatsappNumber(data.whatsappNumber ?? "")
+      setCompanyProfileUrl(data.companyProfileUrl ?? "")
+      setCompanyProfileFile(null)
       setContactEmails(
         data.contactEmails && data.contactEmails.length > 0
           ? data.contactEmails
@@ -198,6 +216,17 @@ export default function AdminSettingsPage() {
     openCropper(file, target)
   }
 
+  function handleCompanyProfileSelect(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null
+    event.target.value = ""
+
+    if (!file) {
+      return
+    }
+
+    setCompanyProfileFile(file)
+  }
+
   function handleCropOpenChange(open: boolean) {
     setCropOpen(open)
 
@@ -232,6 +261,8 @@ export default function AdminSettingsPage() {
       payload.append("officeAddressLine2", officeAddressLine2)
       payload.append("mapLocation", mapLocation)
       payload.append("mapLocationText", mapLocationText)
+      payload.append("whatsappNumber", whatsappNumber)
+      payload.append("companyProfileUrl", companyProfileUrl)
       payload.append("logoUrl", logoUrl)
       payload.append("darkLogoUrl", darkLogoUrl)
       payload.append("navbarBrandText", navbarBrandText)
@@ -259,6 +290,9 @@ export default function AdminSettingsPage() {
       if (logoFile) payload.append("logo", logoFile)
       if (darkLogoFile) payload.append("darkLogo", darkLogoFile)
       if (faviconFile) payload.append("favicon", faviconFile)
+      if (companyProfileFile) {
+        payload.append("companyProfile", companyProfileFile)
+      }
 
       await api.put("/settings", payload, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -267,6 +301,7 @@ export default function AdminSettingsPage() {
       setLogoFile(null)
       setDarkLogoFile(null)
       setFaviconFile(null)
+      setCompanyProfileFile(null)
       setSuccess("Settings updated successfully.")
       await refreshSettings()
       await loadSettings()
@@ -294,7 +329,8 @@ export default function AdminSettingsPage() {
             <div>
               <h1 className="text-2xl font-bold">Settings</h1>
               <p className="text-sm text-muted-foreground">
-                Update logo, contacts, branches, map, and social links.
+                Update logo, contacts, branches, map, website actions, and
+                social links.
               </p>
             </div>
           </div>
@@ -616,6 +652,105 @@ export default function AdminSettingsPage() {
 
               <section className="space-y-4 rounded-lg border border-border p-4">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                  Website Actions
+                </h2>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        WhatsApp Number
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Use international format, for example +8801712345678.
+                      </p>
+                    </div>
+                    <Input
+                      type="tel"
+                      placeholder="+8801712345678"
+                      value={whatsappNumber}
+                      onChange={(e) => setWhatsappNumber(e.target.value)}
+                      className="border-input px-3"
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        Company Profile PDF
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Upload a PDF to show the Company Profile button.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-xs font-bold uppercase hover:bg-muted">
+                        <Upload className="size-4" />
+                        Upload PDF
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          className="sr-only"
+                          onChange={handleCompanyProfileSelect}
+                        />
+                      </label>
+                      {companyProfileFile && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="rounded-lg"
+                          onClick={() => setCompanyProfileFile(null)}
+                        >
+                          <X className="size-4" />
+                          Clear Selected
+                        </Button>
+                      )}
+                      {companyProfileUrl && (
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="rounded-lg"
+                          onClick={() => {
+                            setCompanyProfileFile(null)
+                            setCompanyProfileUrl("")
+                          }}
+                        >
+                          <Trash2 className="size-4" />
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    {companyProfileFile ? (
+                      <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+                        <FileText className="size-4 text-primary" />
+                        <span className="min-w-0 truncate">
+                          {companyProfileFile.name}
+                        </span>
+                      </div>
+                    ) : companyProfileUrl ? (
+                      <Link
+                        href={companyProfileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex max-w-full items-center gap-2 rounded-lg border border-border bg-muted/40 p-3 text-sm font-semibold text-primary hover:text-maritime-ocean"
+                      >
+                        <FileText className="size-4 shrink-0" />
+                        <span className="min-w-0 truncate">
+                          View current company profile
+                        </span>
+                      </Link>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        No company profile PDF is configured.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              <section className="space-y-4 rounded-lg border border-border p-4">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   Branches
                 </h2>
                 <div className="space-y-3">
@@ -726,6 +861,5 @@ export default function AdminSettingsPage() {
     </main>
   )
 }
-
 
 
