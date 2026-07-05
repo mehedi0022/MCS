@@ -1,14 +1,38 @@
 import { Anchor } from "lucide-react"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Privacy Policy | MCS",
-  description:
-    "Privacy Policy for Marine Consultancy Services (MCS), including data collection, usage, security, and contact information.",
-}
+const pageDescription =
+  "Privacy Policy for Marine Consultancy Services (MCS), including data collection, usage, security, and contact information."
+
+export const metadata = createPageMetadata({
+  title: "Privacy Policy",
+  description: pageDescription,
+  path: "/privacy",
+})
+
+const structuredData = createJsonLdGraph([
+  createWebPageSchema({
+    path: "/privacy",
+    name: "Privacy Policy",
+    description: pageDescription,
+    type: "WebPage",
+  }),
+  createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Privacy Policy", path: "/privacy" },
+  ]),
+])
 
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <section className="relative overflow-hidden pt-32 pb-16">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />

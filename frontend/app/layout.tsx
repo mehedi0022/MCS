@@ -8,6 +8,13 @@ import { Footer } from "@/components/layout/Footer"
 import { DynamicFavicon } from "@/components/layout/DynamicFavicon"
 import { SiteSettingsProvider } from "@/context/site-settings-context"
 import { FloatingActions } from "@/components/layout/FloatingActions"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createJsonLdGraph,
+  createOrganizationSchema,
+  createWebSiteSchema,
+  siteConfig,
+} from "@/lib/seo"
 
 // 1. Premium SaaS Font Pairing
 const fontHeading = Outfit({
@@ -39,51 +46,64 @@ export const viewport: Viewport = {
   maximumScale: 1,
 }
 
+const globalStructuredData = createJsonLdGraph([
+  createOrganizationSchema(),
+  createWebSiteSchema(),
+])
+
 // 3. Comprehensive SEO Metadata
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mcs.meetmehedi.dev"),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default:
-      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
-    template: "%s | Marine Consultancy Services (MCS)",
+    default: siteConfig.defaultTitle,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
-  keywords: [
-    "Maritime Consulting",
-    "Fleet Management",
-    "Oceanic Engineering",
-    "Shipping Logistics",
-    "Maritime Sustainability",
-  ],
-  authors: [{ name: "Maritime Solutions Team" }],
-  creator: "Maritime Solutions",
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  keywords: siteConfig.keywords,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://mcs.meetmehedi.dev",
-    title:
-      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
-    description:
-      "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
-    siteName: "Maritime Solutions",
+    locale: siteConfig.locale,
+    url: siteConfig.url,
+    title: siteConfig.defaultTitle,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
     images: [
       {
-        url: "/og-image.png",
+        url: siteConfig.defaultOgImage,
         width: 1200,
         height: 630,
-        alt: "Maritime Solutions Consulting",
+        alt: `${siteConfig.name} preview image`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Marine Consultancy Services (MCS) Hydrographic Surveys | Dredging Support | GIS Mapping | Environmental Studies",
-    description:
-      "Technical Consultancy for Rivers, Ports, Coastal Infrastructure, and Waterway Development Projects.",
-    images: ["/og-image.png"],
-    creator: "@maritimesolutions",
+    title: siteConfig.defaultTitle,
+    description: siteConfig.description,
+    images: [
+      {
+        url: siteConfig.defaultOgImage,
+        alt: `${siteConfig.name} preview image`,
+      },
+    ],
   },
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
@@ -109,6 +129,7 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-screen flex-col bg-background text-foreground">
+        <JsonLd data={globalStructuredData} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

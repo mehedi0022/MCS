@@ -12,18 +12,39 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
+
+type ForgotPasswordResponse = {
+  message: string
+  resetUrl?: string
+}
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("")
+  const [error, setError] = useState("")
   const [isPending, setIsPending] = useState(false)
   const [isSent, setIsSent] = useState(false)
+  const [statusMessage, setStatusMessage] = useState("")
+  const [devResetUrl, setDevResetUrl] = useState("")
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     setIsPending(true)
-    // Simulate secure transmission
-    await new Promise((r) => setTimeout(r, 1500))
-    setIsPending(false)
-    setIsSent(true)
+
+    try {
+      const response = await api.post<ApiResponse<ForgotPasswordResponse>>(
+        "/auth/forgot-password",
+        { email }
+      )
+      setStatusMessage(response.data.data.message)
+      setDevResetUrl(response.data.data.resetUrl ?? "")
+      setIsSent(true)
+    } catch (error) {
+      setError(getApiErrorMessage(error))
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -53,13 +74,21 @@ export default function ForgotPasswordPage() {
                   <CheckCircle2 className="h-10 w-10 text-emerald-500" />
                 </div>
                 <h2 className="font-heading text-2xl font-bold tracking-tight text-slate-900 uppercase dark:text-white">
-                  Transmission Sent
+                  Reset Link Sent
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                  Recovery instructions have been dispatched to your registered
-                  work address. Please check your inbox.
+                  {statusMessage ||
+                    "Recovery instructions have been dispatched to your registered work address. Please check your inbox."}
                 </p>
-                <Link href="/login" className="mt-8 block">
+                {devResetUrl && (
+                  <a
+                    href={devResetUrl}
+                    className="mt-5 block rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs font-semibold break-all text-emerald-700 transition-colors hover:bg-emerald-500/15 dark:text-emerald-300"
+                  >
+                    Open local reset link
+                  </a>
+                )}
+                <Link href="/login" className="mt-8 block cursor-pointer">
                   <Button
                     variant="outline"
                     className="w-full rounded-2xl border-slate-200 hover:bg-slate-100 dark:border-white/10 dark:text-white dark:hover:bg-white/5"
@@ -92,15 +121,27 @@ export default function ForgotPasswordPage() {
                       <Input
                         required
                         type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                         placeholder="name@company.com"
                         className="h-14 rounded-2xl border-slate-200 bg-slate-100/50 pl-12 text-slate-900 transition-all placeholder:text-slate-400 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 dark:border-white/5 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-600"
                       />
                     </div>
                   </div>
 
+                  {error && (
+                    <p
+                      role="alert"
+                      className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs font-semibold text-rose-600 dark:text-rose-300"
+                    >
+                      {error}
+                    </p>
+                  )}
+
                   <Button
+                    type="submit"
                     disabled={isPending}
-                    className="h-16 w-full rounded-2xl bg-primary font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(20,184,166,0.5)] transition-all hover:-translate-y-1 hover:bg-primary/90 active:scale-95"
+                    className="h-16 w-full cursor-pointer rounded-2xl bg-primary font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(20,184,166,0.5)] transition-all hover:-translate-y-1 hover:bg-primary/90 active:scale-95"
                   >
                     {isPending ? (
                       <Loader2 className="h-5 w-5 animate-spin" />

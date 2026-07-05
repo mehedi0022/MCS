@@ -4,12 +4,23 @@ import { OurStory, type OurStoryCard } from "@/components/about/our-story"
 import { Journey, type JourneyItem } from "@/components/about/journey"
 import { Values } from "@/components/about/values"
 import { API_URL } from "@/lib/api"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Our Heritage & Vision | Maritime Solutions",
-  description:
-    "Discover the story, mission, and core values behind the world's leading maritime consultancy firm.",
-}
+const pageDescription =
+  "Learn about Marine Consultancy Services (MCS), our mission, values, and experience supporting hydrographic, GIS, environmental, and waterway development projects."
+
+export const metadata = createPageMetadata({
+  title: "About Marine Consultancy Services",
+  description: pageDescription,
+  path: "/about-us",
+  keywords: ["about MCS", "marine consultancy Bangladesh", "hydrographic consultancy"],
+})
 
 async function getJourneyItems(): Promise<JourneyItem[]> {
   try {
@@ -53,9 +64,22 @@ export default async function AboutPage() {
     getJourneyItems(),
     getOurStoryCard(),
   ])
+  const structuredData = createJsonLdGraph([
+    createWebPageSchema({
+      path: "/about-us",
+      name: "About Marine Consultancy Services",
+      description: pageDescription,
+      type: "AboutPage",
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "About", path: "/about-us" },
+    ]),
+  ])
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <AboutHero />
       <MissionVision />
       <OurStory card={ourStoryCard ?? undefined} />

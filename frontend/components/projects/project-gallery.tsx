@@ -93,6 +93,7 @@ export function ProjectGallery({
                           }
                           alt={project.title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="line-clamp-1 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-maritime-abyss/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-90" />

@@ -1,14 +1,38 @@
 import { Anchor } from "lucide-react"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Terms of Service | MCS",
-  description:
-    "Terms of Service for Marine Consultancy Services (MCS), including website use, limitations, and legal conditions.",
-}
+const pageDescription =
+  "Terms of Service for Marine Consultancy Services (MCS), including website use, limitations, and legal conditions."
+
+export const metadata = createPageMetadata({
+  title: "Terms of Service",
+  description: pageDescription,
+  path: "/terms",
+})
+
+const structuredData = createJsonLdGraph([
+  createWebPageSchema({
+    path: "/terms",
+    name: "Terms of Service",
+    description: pageDescription,
+    type: "WebPage",
+  }),
+  createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Terms of Service", path: "/terms" },
+  ]),
+])
 
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <section className="relative overflow-hidden pt-32 pb-16">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />

@@ -2,10 +2,41 @@ import { ContactForm } from "@/components/contact/contact-form"
 import { ContactInfo } from "@/components/contact/contact-info"
 import { ContactMap } from "@/components/contact/contact-map"
 import { Anchor } from "lucide-react"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
+
+const pageDescription =
+  "Contact Marine Consultancy Services (MCS) for hydrographic surveys, GIS mapping, environmental studies, dredging support, training, and project consultancy."
+
+export const metadata = createPageMetadata({
+  title: "Contact Marine Consultancy Services",
+  description: pageDescription,
+  path: "/contact",
+  keywords: ["contact MCS", "marine consultancy contact", "hydrographic survey inquiry"],
+})
+
+const structuredData = createJsonLdGraph([
+  createWebPageSchema({
+    path: "/contact",
+    name: "Contact Marine Consultancy Services",
+    description: pageDescription,
+    type: "ContactPage",
+  }),
+  createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Contact", path: "/contact" },
+  ]),
+])
 
 export default function ContactPage() {
   return (
     <main className="relative min-h-screen bg-slate-50 pb-24 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       {/* Background Glow */}
       <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[600px] w-full -translate-x-1/2 rounded-full bg-primary/5 blur-[120px] dark:bg-primary/10" />
       <section className="relative overflow-hidden pt-32 pb-20">

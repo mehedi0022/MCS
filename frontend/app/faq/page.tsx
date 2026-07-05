@@ -1,12 +1,25 @@
 import { Anchor } from "lucide-react"
 import { FaqAccordion } from "@/components/faq/FaqAccordion"
 import { API_URL } from "@/lib/api"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  absoluteUrl,
+  cleanText,
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "FAQ | MCS",
-  description:
-    "Frequently asked questions about services, projects, training, and engagement with Marine Consultancy Services (MCS).",
-}
+const pageDescription =
+  "Frequently asked questions about services, projects, training, and engagement with Marine Consultancy Services (MCS)."
+
+export const metadata = createPageMetadata({
+  title: "Frequently Asked Questions",
+  description: pageDescription,
+  path: "/faq",
+  keywords: ["MCS FAQ", "marine consultancy questions", "hydrographic survey FAQ"],
+})
 
 type FaqRow = {
   id: string
@@ -108,9 +121,35 @@ async function getFaqGroups(): Promise<FaqGroup[]> {
 
 export default async function FaqPage() {
   const faqGroups = await getFaqGroups()
+  const questions = faqGroups.flatMap((group) => group.items)
+  const structuredData = createJsonLdGraph([
+    createWebPageSchema({
+      path: "/faq",
+      name: "Frequently Asked Questions",
+      description: pageDescription,
+      type: "WebPage",
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "FAQ", path: "/faq" },
+    ]),
+    {
+      "@type": "FAQPage",
+      "@id": `${absoluteUrl("/faq")}#faq`,
+      mainEntity: questions.map((item) => ({
+        "@type": "Question",
+        name: cleanText(item.q),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: cleanText(item.a),
+        },
+      })),
+    },
+  ])
 
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <section className="relative overflow-hidden pt-32 pb-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />

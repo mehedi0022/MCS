@@ -87,6 +87,7 @@ export function Projects() {
                   src={project.imageUrl ?? project.cover ?? "/project1.jpg"}
                   alt={project.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="line-clamp-1 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
 

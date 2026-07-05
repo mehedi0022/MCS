@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useMemo, useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Lock,
@@ -12,33 +13,60 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { api, getApiErrorMessage, type ApiResponse } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
+type ResetPasswordResponse = {
+  updated: boolean
+  message: string
+}
+
 export default function ResetPasswordPage() {
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token")?.trim() ?? ""
+  const hasToken = token.length > 0
   const [password, setPassword] = useState("")
   const [confirm, setConfirm] = useState("")
-  const [strength, setStrength] = useState(0)
+  const [error, setError] = useState("")
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
-  useEffect(() => {
+  const strength = useMemo(() => {
     let score = 0
-    if (password.length > 8) score++
+    if (password.length >= 8) score++
     if (/[A-Z]/.test(password)) score++
     if (/[0-9]/.test(password)) score++
     if (/[^A-Za-z0-9]/.test(password)) score++
-    setStrength(score)
+    return score
   }, [password])
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password !== confirm) return
+    setError("")
+
+    if (!hasToken) {
+      setError("Reset link is missing or invalid. Please request a new link.")
+      return
+    }
+
+    if (password !== confirm) {
+      setError("Passwords do not match.")
+      return
+    }
 
     setIsPending(true)
-    // Simulate secure vault update
-    await new Promise((r) => setTimeout(r, 2000))
-    setIsPending(false)
-    setIsSuccess(true)
+
+    try {
+      await api.post<ApiResponse<ResetPasswordResponse>>(
+        "/auth/reset-password",
+        { token, password }
+      )
+      setIsSuccess(true)
+    } catch (error) {
+      setError(getApiErrorMessage(error))
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -70,6 +98,25 @@ export default function ResetPasswordPage() {
                   </p>
                 </div>
 
+                {!hasToken && !error && (
+                  <p
+                    role="alert"
+                    className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs font-semibold text-amber-700 dark:text-amber-300"
+                  >
+                    Reset link is missing or invalid. Please request a new
+                    link.
+                  </p>
+                )}
+
+                {error && (
+                  <p
+                    role="alert"
+                    className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs font-semibold text-rose-600 dark:text-rose-300"
+                  >
+                    {error}
+                  </p>
+                )}
+
                 <form onSubmit={handleUpdate} className="space-y-6">
                   {/* New Password */}
                   <div className="space-y-3">
@@ -80,6 +127,7 @@ export default function ResetPasswordPage() {
                       <Lock className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500" />
                       <Input
                         required
+                        disabled={!hasToken || isPending}
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -113,6 +161,7 @@ export default function ResetPasswordPage() {
                       <Lock className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500" />
                       <Input
                         required
+                        disabled={!hasToken || isPending}
                         type="password"
                         value={confirm}
                         onChange={(e) => setConfirm(e.target.value)}
@@ -133,7 +182,10 @@ export default function ResetPasswordPage() {
                   </div>
 
                   <Button
-                    disabled={isPending || strength < 2 || password !== confirm}
+                    type="submit"
+                    disabled={
+                      isPending || !hasToken || strength < 2 || password !== confirm
+                    }
                     className="h-16 w-full rounded-2xl bg-primary font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(20,184,166,0.5)] transition-all hover:-translate-y-1 hover:bg-primary/90 active:scale-95 disabled:opacity-50 disabled:hover:translate-y-0"
                   >
                     {isPending ? (

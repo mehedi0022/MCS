@@ -44,10 +44,12 @@ function sanitizeRichHtml(input: string) {
 
 export function ProjectContent({
   cover,
+  title,
   description,
   gallery,
 }: {
   cover: string
+  title: string
   description: string
   gallery: string[]
 }) {
@@ -60,8 +62,9 @@ export function ProjectContent({
       <div className="relative aspect-[21/9] overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-100 shadow-2xl dark:border-white/10 dark:bg-white/5">
         <Image
           src={cover}
-          alt="Project cover image"
+          alt={`${title} project cover image`}
           fill
+          sizes="(max-width: 1024px) 100vw, 896px"
           className="object-cover"
           priority
         />
@@ -108,8 +111,9 @@ export function ProjectContent({
                 <div className="group relative aspect-video overflow-hidden rounded-[2rem] border border-slate-200 dark:border-white/10">
                   <Image
                     src={img}
-                    alt={`Project gallery image ${index + 1}`}
+                    alt={`${title} gallery image ${index + 1}`}
                     fill
+                    sizes="(max-width: 768px) 100vw, 448px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>

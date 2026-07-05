@@ -2,6 +2,7 @@ import nodemailer from "nodemailer"
 import { env } from "../config/env.js"
 import { ApiError } from "../utils/api.js"
 import {
+  buildPasswordResetEmailTemplate,
   buildReplyEmailTemplate,
   buildWelcomeEmailTemplate,
 } from "../templates/email-templates.js"
@@ -71,6 +72,32 @@ export async function sendReplyEmail(params: {
     from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_USER}>`,
     to: params.to,
     subject: params.subject,
+    html: template.html,
+    text: template.text,
+  })
+}
+
+export async function sendPasswordResetEmail(params: {
+  to: string
+  recipientName: string
+  resetUrl: string
+  expiresInMinutes: number
+}) {
+  if (!smtpConfigured) {
+    return
+  }
+
+  const template = buildPasswordResetEmailTemplate({
+    recipientName: params.recipientName,
+    fromName: env.SMTP_FROM_NAME,
+    resetUrl: params.resetUrl,
+    expiresInMinutes: params.expiresInMinutes,
+  })
+
+  await transporter.sendMail({
+    from: `"${env.SMTP_FROM_NAME}" <${env.SMTP_USER}>`,
+    to: params.to,
+    subject: template.subject,
     html: template.html,
     text: template.text,
   })

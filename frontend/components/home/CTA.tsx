@@ -11,7 +11,7 @@ export function CTA() {
       {/* 1. Parallax Image Layer */}
       <div
         className={cn(
-          "absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524522173746-f628baad3644?q=80&w=2832&auto=format&fit=crop')]",
+          "absolute inset-0 bg-[url('/work_togther.jpg')]",
           "bg-cover bg-fixed bg-center transition-transform duration-700 ease-out",
           "brightness-[0.4] dark:brightness-[0.25]"
         )}

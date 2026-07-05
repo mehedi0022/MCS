@@ -10,12 +10,23 @@ import {
   Map,
   BarChart3,
 } from "lucide-react"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Training & Capacity Building | MCS",
-  description:
-    "Professional training programs in hydrography, GIS, morphology, and nautical charting by MCS.",
-}
+const pageDescription =
+  "Professional training programs in hydrography, GIS, morphology, and nautical charting by Marine Consultancy Services (MCS)."
+
+export const metadata = createPageMetadata({
+  title: "Training & Capacity Building",
+  description: pageDescription,
+  path: "/training",
+  keywords: ["hydrography training", "GIS training", "ENC training", "capacity building"],
+})
 
 const trainingAreas = [
   "Hydrographic surveying and data processing",
@@ -24,6 +35,28 @@ const trainingAreas = [
   "ENC compilation and chart production",
   "Operation of survey equipment and software",
 ]
+
+const structuredData = createJsonLdGraph([
+  createWebPageSchema({
+    path: "/training",
+    name: "Training & Capacity Building",
+    description: pageDescription,
+    type: "WebPage",
+  }),
+  createBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Training", path: "/training" },
+  ]),
+  {
+    "@type": "ItemList",
+    name: "MCS training areas",
+    itemListElement: trainingAreas.map((area, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: area,
+    })),
+  },
+])
 
 const deliveryModes = [
   {
@@ -53,6 +86,7 @@ const outcomes = [
 export default function TrainingPage() {
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <section className="relative overflow-hidden pt-40 pb-24">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(20,184,166,0.16),transparent_45%),radial-gradient(circle_at_82%_18%,rgba(14,116,144,0.14),transparent_42%)] dark:bg-[radial-gradient(circle_at_18%_24%,rgba(45,212,191,0.2),transparent_45%),radial-gradient(circle_at_82%_18%,rgba(6,182,212,0.15),transparent_42%)]" />

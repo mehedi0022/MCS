@@ -2,12 +2,24 @@ import Link from "next/link"
 import { Anchor, CheckCircle2 } from "lucide-react"
 import { Clients } from "@/components/home/Clients"
 import { API_URL } from "@/lib/api"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  absoluteUrl,
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Clients & Sectors | MCS",
-  description:
-    "Sectors and client groups supported by Marine Consultancy Services (MCS) across Bangladesh.",
-}
+const pageDescription =
+  "Sectors and client groups supported by Marine Consultancy Services (MCS) across Bangladesh."
+
+export const metadata = createPageMetadata({
+  title: "Clients & Sectors",
+  description: pageDescription,
+  path: "/clients-sectors",
+  keywords: ["MCS clients", "ports maritime sector", "waterway stakeholders"],
+})
 
 type SectorItem = {
   id: string
@@ -120,9 +132,33 @@ async function getSectors(): Promise<SectorItem[]> {
 
 export default async function ClientsSectorsPage() {
   const sectors = await getSectors()
+  const structuredData = createJsonLdGraph([
+    createWebPageSchema({
+      path: "/clients-sectors",
+      name: "Clients & Sectors",
+      description: pageDescription,
+      type: "CollectionPage",
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Clients & Sectors", path: "/clients-sectors" },
+    ]),
+    {
+      "@type": "ItemList",
+      "@id": `${absoluteUrl("/clients-sectors")}#sector-list`,
+      name: "Client sectors supported by MCS",
+      itemListElement: sectors.map((sector, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: sector.title,
+        description: sector.body,
+      })),
+    },
+  ])
 
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <section className="relative overflow-hidden pt-32 pb-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />

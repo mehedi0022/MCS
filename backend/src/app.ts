@@ -31,7 +31,7 @@ app.use(
 app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
 app.use(
-  "/api/auth/login",
+  ["/api/auth/login", "/api/auth/forgot-password", "/api/auth/reset-password"],
   rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 10,

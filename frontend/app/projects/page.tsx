@@ -1,80 +1,58 @@
 import { ProjectGallery } from "@/components/projects/project-gallery"
 import { Anchor } from "lucide-react"
-import { API_URL } from "@/lib/api"
-import { projects as fallbackProjects } from "@/data/projects"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  absoluteUrl,
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
+import { getAllProjects } from "@/lib/projects"
 
-export const metadata = {
-  title: "Our Projects & Experience | MCS",
-  description:
-    "Explore hydrographic, environmental, and consultancy assignments across Bangladesh's coastal and inland water sectors.",
-}
+const pageDescription =
+  "Explore hydrographic, environmental, and consultancy assignments across Bangladesh's coastal and inland water sectors."
 
-type ProjectCard = {
-  id: string
-  slug: string
-  title: string
-  category: string
-  imageUrl?: string | null
-  client?: string
-  location?: string
-  year?: number
-  summary?: string
-  description?: string
-}
-
-const fallbackProjectCards: ProjectCard[] = fallbackProjects.map((item) => ({
-  id: String(item.id),
-  slug: item.slug,
-  title: item.title,
-  category: item.category,
-  imageUrl: item.cover,
-  summary: item.summary,
-  client: item.client,
-  location: item.location,
-  year: item.year,
-  description: item.description,
-}))
-
-async function getProjects(): Promise<ProjectCard[]> {
-  try {
-    const response = await fetch(`${API_URL}/projects`, {
-      cache: "no-store",
-    })
-
-    if (!response.ok) {
-      return fallbackProjectCards
-    }
-
-    const payload = await response.json()
-    const rows = (payload.data ?? []) as ProjectCard[]
-    if (!rows.length) return fallbackProjectCards
-
-    const normalized = rows
-      .map((item) => ({
-        id: String(item.id ?? ""),
-        slug: String(item.slug ?? "").trim(),
-        title: String(item.title ?? "").trim(),
-        category: String(item.category ?? "General").trim() || "General",
-        imageUrl: item.imageUrl ?? null,
-        client: String(item.client ?? "").trim(),
-        location: String(item.location ?? "").trim(),
-        year: Number(item.year) || undefined,
-        summary: item.summary ?? "",
-        description: item.description ?? "",
-      }))
-      .filter((item) => item.id && item.slug && item.title)
-
-    return normalized.length > 0 ? normalized : fallbackProjectCards
-  } catch {
-    return fallbackProjectCards
-  }
-}
+export const metadata = createPageMetadata({
+  title: "Our Projects & Experience",
+  description: pageDescription,
+  path: "/projects",
+  keywords: [
+    "MCS projects",
+    "hydrographic case studies",
+    "marine consultancy projects",
+  ],
+})
 
 export default async function ProjectPage() {
-  const projects = await getProjects()
+  const projects = await getAllProjects()
+  const structuredData = createJsonLdGraph([
+    createWebPageSchema({
+      path: "/projects",
+      name: "Our Projects & Experience",
+      description: pageDescription,
+      type: "CollectionPage",
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Projects", path: "/projects" },
+    ]),
+    {
+      "@type": "ItemList",
+      "@id": `${absoluteUrl("/projects")}#project-list`,
+      name: "MCS project case studies",
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/projects/${project.slug}`),
+        name: project.title,
+      })),
+    },
+  ])
 
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       {/* Hero Header - Static Content */}
 
       <section className="relative overflow-hidden pt-32 pb-20">

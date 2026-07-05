@@ -8,12 +8,29 @@ import {
   type DeliveryApproachStep,
 } from "@/components/services/our-approach"
 import { API_URL } from "@/lib/api"
+import { JsonLd } from "@/components/seo/JsonLd"
+import {
+  absoluteUrl,
+  createBreadcrumbSchema,
+  createJsonLdGraph,
+  createPageMetadata,
+  createWebPageSchema,
+} from "@/lib/seo"
 
-export const metadata = {
-  title: "Our Services | Marine Consultancy Services (MCS)",
-  description:
-    "Integrated hydrographic, geospatial, environmental, and marine consultancy services across Bangladesh.",
-}
+const pageDescription =
+  "Integrated hydrographic, geospatial, environmental, and marine consultancy services across Bangladesh."
+
+export const metadata = createPageMetadata({
+  title: "Our Services",
+  description: pageDescription,
+  path: "/services",
+  keywords: [
+    "hydrographic services",
+    "bathymetric surveys",
+    "dredging support",
+    "GIS mapping services",
+  ],
+})
 
 type ServiceItem = {
   id: string
@@ -158,9 +175,43 @@ export default async function ServicesPage() {
     getServices(),
     getDeliveryApproach(),
   ])
+  const structuredData = createJsonLdGraph([
+    createWebPageSchema({
+      path: "/services",
+      name: "Our Services",
+      description: pageDescription,
+      type: "CollectionPage",
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Services", path: "/services" },
+    ]),
+    {
+      "@type": "ItemList",
+      "@id": `${absoluteUrl("/services")}#services-list`,
+      name: "Marine consultancy services",
+      itemListElement: services.map((service, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Service",
+          name: service.title,
+          description: service.summary || service.description,
+          provider: {
+            "@id": absoluteUrl("#organization"),
+          },
+          areaServed: {
+            "@type": "Country",
+            name: "Bangladesh",
+          },
+        },
+      })),
+    },
+  ])
 
   return (
     <div className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
+      <JsonLd data={structuredData} />
       <ServicesHero />
 
       {/* Section 1: Expertise */}

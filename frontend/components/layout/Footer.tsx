@@ -133,17 +133,17 @@ export function Footer() {
             </h4>
             <ul className="space-y-4">
               {[
-                "Hydrographic Surveys",
-                "Dredging Monitoring",
-                "GIS & Mapping",
-                "Environmental Studies",
+                { label: "Hydrographic Surveys", href: "/services" },
+                { label: "Dredging Monitoring", href: "/services" },
+                { label: "GIS & Mapping", href: "/services" },
+                { label: "Environmental Studies", href: "/services" },
               ].map((item) => (
-                <li key={item}>
+                <li key={item.label}>
                   <Link
-                    href="#"
+                    href={item.href}
                     className="text-sm text-muted-foreground transition-colors hover:text-primary dark:hover:text-maritime-foam"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}

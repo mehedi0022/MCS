@@ -23,6 +23,13 @@ type ReplyTemplateParams = {
   originalMessage: string
 }
 
+type PasswordResetTemplateParams = {
+  recipientName: string
+  fromName: string
+  resetUrl: string
+  expiresInMinutes: number
+}
+
 export function buildWelcomeEmailTemplate(params: WelcomeTemplateParams) {
   const subject = "Thanks for contacting MCS"
   const safeName = escapeHtml(params.recipientName)
@@ -128,4 +135,57 @@ Best regards,
 ${params.fromName}`
 
   return { html, text }
+}
+
+export function buildPasswordResetEmailTemplate(
+  params: PasswordResetTemplateParams,
+) {
+  const subject = "Reset your MCS admin password"
+  const safeName = escapeHtml(params.recipientName)
+  const safeFrom = escapeHtml(params.fromName)
+  const safeResetUrl = escapeHtml(params.resetUrl)
+  const html = `
+    <div style="margin:0;padding:28px 16px;background:#f1f5f9;font-family:'Segoe UI',Arial,sans-serif;color:#0f172a;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;margin:0 auto;border-radius:14px;overflow:hidden;background:#ffffff;border:1px solid #e2e8f0;box-shadow:0 12px 34px rgba(2,6,23,0.08);">
+        <tr>
+          <td style="padding:22px 26px;background:linear-gradient(135deg,#0f172a,#0f766e);color:#e2e8f0;">
+            <p style="margin:0 0 6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#99f6e4;">Maritime Consulting Solutions</p>
+            <h1 style="margin:0;font-size:24px;line-height:1.2;color:#ffffff;">Password Reset Request</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 26px;">
+            <p style="margin:0 0 14px;font-size:16px;font-weight:600;">Hello ${safeName},</p>
+            <p style="margin:0 0 14px;font-size:14px;line-height:1.75;color:#334155;">
+              We received a request to reset the password for your MCS admin account.
+            </p>
+            <p style="margin:0 0 18px;font-size:14px;line-height:1.75;color:#334155;">
+              This secure link expires in ${params.expiresInMinutes} minutes. If you did not request a password reset, you can ignore this email.
+            </p>
+            <a href="${safeResetUrl}" style="display:inline-block;margin:0 0 18px;padding:13px 18px;border-radius:10px;background:#0f766e;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">
+              Reset Password
+            </a>
+            <p style="margin:0;font-size:12px;line-height:1.7;color:#64748b;">
+              If the button does not work, copy and paste this link into your browser:<br/>
+              <span style="word-break:break-all;color:#0f766e;">${safeResetUrl}</span>
+            </p>
+            <p style="margin:18px 0 0;font-size:14px;line-height:1.6;color:#334155;">Best regards,<br/><strong>${safeFrom}</strong></p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `
+  const text = `Hello ${params.recipientName},
+
+We received a request to reset the password for your MCS admin account.
+
+Reset your password here:
+${params.resetUrl}
+
+This link expires in ${params.expiresInMinutes} minutes. If you did not request a password reset, you can ignore this email.
+
+Best regards,
+${params.fromName}`
+
+  return { subject, html, text }
 }
