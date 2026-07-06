@@ -12,13 +12,11 @@ import { BrandLogo } from "@/components/layout/BrandLogo"
 
 const navLinks = [
   { name: "Home", href: "/" },
+  { name: "About Us", href: "/about-us" },
   { name: "Services", href: "/services" },
-  { name: "About", href: "/about-us" },
   { name: "Projects", href: "/projects" },
-  { name: "Clients & Sectors", href: "/clients-sectors" },
+  { name: "Sectors", href: "/clients-sectors" },
   { name: "Training", href: "/training" },
-  { name: "FAQ", href: "/faq" },
-  { name: "Contact", href: "/contact" },
 ]
 
 export function Navbar() {
@@ -159,14 +157,14 @@ export function Navbar() {
               )}
             >
               <Download className="size-4" />
-              Company Profile
+              Profile
             </a>
           )}
 
           <Link href="/contact">
             <Button
               className={cn(
-                "shadow-maritime hidden rounded-full px-5 font-bold transition-all duration-300 xl:flex 2xl:px-6",
+                "shadow-maritime hidden cursor-pointer rounded-full px-5 font-bold transition-all duration-300 xl:flex 2xl:px-6",
                 isScrolled
                   ? "bg-primary text-primary-foreground"
                   : "bg-maritime-navy text-white hover:bg-maritime-navy/90 dark:bg-primary dark:text-primary-foreground"
@@ -281,7 +279,7 @@ export function Navbar() {
                 className="shadow-maritime-sm mt-2.5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background text-sm font-bold text-foreground hover:bg-muted"
               >
                 <Download className="size-4" />
-                Company Profile
+                Profile
               </a>
             )}
             <p className="text-center text-xs text-muted-foreground italic">

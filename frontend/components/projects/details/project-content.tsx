@@ -2,10 +2,9 @@
 
 import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation, Pagination } from "swiper/modules"
+import { Pagination } from "swiper/modules"
 
 import "swiper/css"
-import "swiper/css/navigation"
 import "swiper/css/pagination"
 
 function sanitizeRichHtml(input: string) {
@@ -33,7 +32,10 @@ function sanitizeRichHtml(input: string) {
       if (key.startsWith("on")) {
         el.removeAttribute(attr.name)
       }
-      if ((key === "href" || key === "src") && value.startsWith("javascript:")) {
+      if (
+        (key === "href" || key === "src") &&
+        value.startsWith("javascript:")
+      ) {
         el.removeAttribute(attr.name)
       }
     })
@@ -59,7 +61,7 @@ export function ProjectContent({
   return (
     <div className="space-y-10">
       {/* Cover Image */}
-      <div className="relative aspect-[21/9] overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-100 shadow-2xl dark:border-white/10 dark:bg-white/5">
+      <div className="relative aspect-[21/9] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-2xl dark:border-white/10 dark:bg-white/5">
         <Image
           src={cover}
           alt={`${title} project cover image`}
@@ -71,17 +73,17 @@ export function ProjectContent({
       </div>
 
       {/* Description below cover */}
-      <div className="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-white/10 dark:bg-white/5">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 dark:border-white/10 dark:bg-white/5">
         <h3 className="mb-4 text-lg font-bold tracking-tight text-slate-900 dark:text-white">
           Project Description
         </h3>
         {hasHtml ? (
           <div
-            className="space-y-3 leading-relaxed text-slate-600 dark:text-slate-300 [&_a]:text-primary [&_a]:underline [&_h3]:text-lg [&_h3]:font-semibold [&_ul]:my-2 [&_ul]:pl-6 [&_ul]:list-disc [&_ol]:my-2 [&_ol]:pl-6 [&_ol]:list-decimal [&_li]:mb-1 [&_p]:mb-3"
+            className="space-y-3 leading-relaxed text-slate-600 dark:text-slate-300 [&_a]:text-primary [&_a]:underline [&_h3]:text-lg [&_h3]:font-semibold [&_li]:mb-1 [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-3 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-6"
             dangerouslySetInnerHTML={{ __html: safeHtml }}
           />
         ) : (
-          <p className="whitespace-pre-line leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="leading-relaxed whitespace-pre-line text-slate-600 dark:text-slate-300">
             {description}
           </p>
         )}
@@ -94,8 +96,7 @@ export function ProjectContent({
             Gallery
           </h3>
           <Swiper
-            modules={[Navigation, Pagination]}
-            navigation
+            modules={[Pagination]}
             pagination={{ clickable: true }}
             spaceBetween={20}
             slidesPerView={1}
@@ -108,7 +109,7 @@ export function ProjectContent({
           >
             {gallery.map((img, index) => (
               <SwiperSlide key={img + index}>
-                <div className="group relative aspect-video overflow-hidden rounded-[2rem] border border-slate-200 dark:border-white/10">
+                <div className="group relative aspect-video overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
                   <Image
                     src={img}
                     alt={`${title} gallery image ${index + 1}`}

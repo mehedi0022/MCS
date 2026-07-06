@@ -25,7 +25,12 @@ export const metadata = createPageMetadata({
   title: "Training & Capacity Building",
   description: pageDescription,
   path: "/training",
-  keywords: ["hydrography training", "GIS training", "ENC training", "capacity building"],
+  keywords: [
+    "hydrography training",
+    "GIS training",
+    "ENC training",
+    "capacity building",
+  ],
 })
 
 const trainingAreas = [
@@ -87,30 +92,30 @@ export default function TrainingPage() {
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <JsonLd data={structuredData} />
-      <section className="relative overflow-hidden pt-40 pb-24">
+
+      <section className="relative overflow-hidden pt-26 pb-10 md:pt-32 md:pb-15">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(20,184,166,0.16),transparent_45%),radial-gradient(circle_at_82%_18%,rgba(14,116,144,0.14),transparent_42%)] dark:bg-[radial-gradient(circle_at_18%_24%,rgba(45,212,191,0.2),transparent_45%),radial-gradient(circle_at_82%_18%,rgba(6,182,212,0.15),transparent_42%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a08_1px,transparent_1px),linear-gradient(to_bottom,#0f172a08_1px,transparent_1px)] bg-[size:40px_40px] dark:bg-[linear-gradient(to_right,#e2e8f008_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f008_1px,transparent_1px)]" />
         </div>
         <div className="relative z-10 container mx-auto px-6">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-8">
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
+              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:border-primary/30 dark:bg-primary/10">
                 <Anchor className="h-3 w-3" />
                 Training & Capacity Development
               </div>
-              <h1 className="font-heading text-5xl leading-[1.05] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-                Build Teams That Deliver
-                <span className="block text-primary">
-                  Accurate Waterway Data
-                </span>
+              <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-slate-900 md:text-6xl dark:text-white">
+                Build Teams That Deliver{" "}
+                <span className="text-primary">Accurate Waterway Data</span>
               </h1>
-              <p className="mt-8 max-w-3xl text-xl leading-relaxed text-slate-600 dark:text-slate-300">
+              <p className="mt-8 text-base leading-relaxed text-slate-500 md:text-xl dark:text-slate-400">
                 Structured, field-driven training for hydrography, GIS,
                 morphology, and nautical charting, designed for practical
                 project execution across Bangladesh.
               </p>
             </div>
+
             <div className="lg:col-span-4">
               <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
                 <p className="text-xs font-bold tracking-[0.25em] text-primary uppercase">

@@ -17,7 +17,11 @@ export const metadata = createPageMetadata({
   title: "Contact Marine Consultancy Services",
   description: pageDescription,
   path: "/contact",
-  keywords: ["contact MCS", "marine consultancy contact", "hydrographic survey inquiry"],
+  keywords: [
+    "contact MCS",
+    "marine consultancy contact",
+    "hydrographic survey inquiry",
+  ],
 })
 
 const structuredData = createJsonLdGraph([
@@ -39,7 +43,7 @@ export default function ContactPage() {
       <JsonLd data={structuredData} />
       {/* Background Glow */}
       <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[600px] w-full -translate-x-1/2 rounded-full bg-primary/5 blur-[120px] dark:bg-primary/10" />
-      <section className="relative overflow-hidden pt-32 pb-20">
+      <section className="relative overflow-hidden pt-26 pb-10 md:pt-32 md:pb-15">
         {/* Background patterns */}
         <div className="absolute inset-0 z-0">
           {/* Radial Gradient - Better visibility in both modes */}
@@ -51,16 +55,17 @@ export default function ContactPage() {
 
         <div className="relative z-10 container mx-auto px-6">
           <div className="max-w-4xl">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:border-primary/30 dark:bg-primary/10">
               <Anchor className="h-3 w-3" />
               Contact Us
             </div>
 
-            <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
-              Let&apos;s Discuss Your <span className="text-primary">Project.</span>
+            <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-slate-900 md:text-6xl dark:text-white">
+              Let&apos;s Discuss Your{" "}
+              <span className="text-primary">Project.</span>
             </h1>
 
-            <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="mt-8 text-base leading-relaxed text-slate-500 md:text-xl dark:text-slate-400">
               Whether you are planning a project, seeking technical expertise,
               or exploring collaboration opportunities, our team is ready to
               assist.

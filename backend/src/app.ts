@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { env } from "./config/env.js";
@@ -21,6 +22,8 @@ import ourStoryRoutes from "./routes/our-story.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 export const app = express();
+
+app.use(helmet());
 
 app.use(
   cors({

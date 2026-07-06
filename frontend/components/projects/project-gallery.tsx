@@ -51,7 +51,7 @@ export function ProjectGallery({
                   key={cat}
                   onClick={() => setActiveTab(cat)}
                   className={cn(
-                    "rounded-full px-5 py-2 text-xs font-bold tracking-wide whitespace-nowrap transition-all",
+                    "cursor-pointer rounded-full border border-slate-300 px-5 py-2 text-xs font-bold tracking-wide whitespace-nowrap transition-all dark:border-slate-600",
                     activeTab === cat
                       ? "bg-primary text-white shadow-lg shadow-primary/20"
                       : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/5"
@@ -102,26 +102,22 @@ export function ProjectGallery({
                         </div>
                       </div>
 
-                      <div className="flex flex-1 flex-col p-8">
+                      <div className="flex flex-1 flex-col p-4 md:p-8">
                         <div className="mb-4 flex items-center justify-between">
-                          <span className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:text-maritime-teal">
+                          <span className="text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:text-maritime-teal">
                             {project.category}
                           </span>
-                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
-                            <Globe className="h-3 w-3" />
-                            Bangladesh Focus
-                          </div>
                         </div>
 
-                        <h3 className="mb-4 font-heading text-2xl font-bold text-card-foreground transition-colors group-hover:text-primary">
+                        <h3 className="mb-4 line-clamp-2 font-heading text-xl font-bold text-card-foreground transition-colors group-hover:text-primary md:text-2xl">
                           {project.title}
                         </h3>
-                        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                           {project.summary ?? project.description ?? ""}
                         </p>
 
-                        <div className="mt-auto pt-8">
-                          <span className="inline-flex items-center gap-2 text-sm font-bold tracking-tight text-foreground transition-all hover:gap-3 hover:text-primary">
+                        <div className="mt-auto mb-2 pt-4 md:pt-6">
+                          <span className="inline-flex cursor-pointer items-center gap-2 text-sm font-bold tracking-tight text-foreground transition-all hover:gap-3 hover:text-primary">
                             View Case Study
                             <ArrowRight className="h-4 w-4 text-primary" />
                           </span>

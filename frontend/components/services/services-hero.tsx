@@ -2,7 +2,7 @@ import { Anchor } from "lucide-react"
 
 export function ServicesHero() {
   return (
-    <section className="relative overflow-hidden pt-32 pb-20">
+    <section className="relative overflow-hidden pt-26 pb-10 md:pt-32 md:pb-15">
       {/* Background patterns */}
       <div className="absolute inset-0 z-0">
         {/* Radial Gradient - Better visibility in both modes */}
@@ -14,16 +14,16 @@ export function ServicesHero() {
 
       <div className="relative z-10 container mx-auto px-6">
         <div className="max-w-3xl">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:border-primary/30 dark:bg-primary/10">
             <Anchor className="h-3 w-3" />
             Our Services
           </div>
 
-          <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
+          <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-slate-900 md:text-6xl dark:text-white">
             Marine & Geospatial <span className="text-primary">Services</span>
           </h1>
 
-          <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
+          <p className="mt-8 text-base leading-relaxed text-slate-500 md:text-xl dark:text-slate-400">
             Integrated solutions across hydrography, geospatial analysis,
             environmental studies, and marine infrastructure development.
           </p>

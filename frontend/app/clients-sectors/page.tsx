@@ -159,22 +159,22 @@ export default async function ClientsSectorsPage() {
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <JsonLd data={structuredData} />
-      <section className="relative overflow-hidden pt-32 pb-20">
+      <section className="relative overflow-hidden pt-26 pb-10 md:pt-32 md:pb-15">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_70%_30%,rgba(45,212,191,0.12),transparent_60%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a08_1px,transparent_1px),linear-gradient(to_bottom,#0f172a08_1px,transparent_1px)] bg-[size:40px_40px] dark:bg-[linear-gradient(to_right,#e2e8f008_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f008_1px,transparent_1px)]" />
         </div>
         <div className="relative z-10 container mx-auto px-6">
           <div className="max-w-4xl">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-primary uppercase dark:border-primary/30 dark:bg-primary/10">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:border-primary/30 dark:bg-primary/10">
               <Anchor className="h-3 w-3" />
               Clients & Sectors
             </div>
-            <h1 className="font-heading text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
+            <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-slate-900 md:text-6xl dark:text-white">
               Supporting Diverse{" "}
               <span className="text-primary">Waterway Stakeholders</span>
             </h1>
-            <p className="mt-8 text-xl leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="mt-8 text-base leading-relaxed text-slate-500 md:text-xl dark:text-slate-400">
               MCS supports public and private sector organizations with
               practical, technically sound solutions for Bangladesh&apos;s
               waterways.
@@ -212,32 +212,6 @@ export default async function ClientsSectorsPage() {
       </div>
 
       <Clients />
-
-      <div className="container mx-auto px-6">
-        <section className="pb-20 text-center">
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Looking for Sector-Specific Support?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-300">
-            Share your scope and timeline. We will recommend the right mix of
-            survey, analysis, modelling, and consultancy support.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-flex rounded-full bg-primary px-6 py-3 text-sm font-bold text-white"
-            >
-              Contact Us
-            </Link>
-            <Link
-              href="/faq"
-              className="inline-flex rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-slate-700 dark:border-white/20 dark:text-white"
-            >
-              View FAQ
-            </Link>
-          </div>
-        </section>
-      </div>
     </main>
   )
 }

@@ -36,7 +36,7 @@ export function ProjectMeta({
         <div key={i} className="space-y-2">
           <div className="flex items-center gap-2 text-primary">
             {item.icon}
-            <span className="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">
+            <span className="text-[8px] md:text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">
               {item.label}
             </span>
           </div>

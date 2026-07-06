@@ -139,7 +139,10 @@ export function Hero() {
             const primaryButton =
               slide.primaryButton ??
               (slide.primaryButtonText && slide.primaryButtonLink
-                ? { text: slide.primaryButtonText, link: slide.primaryButtonLink }
+                ? {
+                    text: slide.primaryButtonText,
+                    link: slide.primaryButtonLink,
+                  }
                 : null)
             const secondaryButton =
               slide.secondaryButton ??
@@ -180,7 +183,7 @@ export function Hero() {
                       </div>
 
                       {/* Headline */}
-                      <h1 className="max-w-4xl animate-in font-heading text-[1.9rem] leading-[1.08] font-bold tracking-tight text-white drop-shadow-2xl delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-4xl md:text-5xl lg:text-6xl">
+                      <h1 className="max-w-4xl animate-in font-heading leading-[1.08] font-bold tracking-tight text-white drop-shadow-2xl delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-2xl md:text-4xl lg:text-5xl">
                         {slide.title}
                       </h1>
 
