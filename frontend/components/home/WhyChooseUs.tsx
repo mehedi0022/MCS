@@ -38,16 +38,18 @@ export function WhyChooseUs() {
                 Why Choose MCS
               </div>
 
-              <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                 Practical Expertise.{" "}
-                <span className="text-muted-foreground">Reliable Data. Trusted Solutions.</span>
-              </h2>
+                <span className="text-muted-foreground">
+                  Reliable Data. Trusted Solutions.
+                </span>
+              </h1>
 
-              <p className="text-lg leading-relaxed text-muted-foreground">
+              <h2 className="text-lg leading-relaxed text-muted-foreground">
                 We combine field experience and advanced data workflows to
                 deliver practical outcomes for inland waterways, coastal zones,
                 ports, and marine infrastructure projects.
-              </p>
+              </h2>
             </div>
           </div>
 

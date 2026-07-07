@@ -13,13 +13,13 @@ export function TrainingSnapshot() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="font-heading text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
               Training & Capacity Building
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-slate-600 dark:text-slate-300">
+            </h1>
+            <h2 className="mt-5 text-base leading-relaxed text-slate-600 dark:text-slate-300">
               MCS is committed to strengthening local capacity through
               professional training programs.
-            </p>
+            </h2>
             <Link
               href="/training"
               className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-bold text-white"

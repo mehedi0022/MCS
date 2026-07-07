@@ -30,10 +30,10 @@ export function CTA() {
             Let’s Work <span className="text-maritime-teal">Together</span>
           </h2>
 
-          <p className="mx-auto mt-8 max-w-3xl animate-in text-lg leading-relaxed text-white/90 drop-shadow-md delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-xl md:text-2xl">
+          <h2 className="mx-auto mt-8 max-w-3xl animate-in text-lg leading-relaxed text-white/90 drop-shadow-md delay-200 duration-1000 fade-in slide-in-from-bottom-8 sm:text-xl md:text-2xl">
             Whether you are planning a project, assessing feasibility, or
             seeking technical expertise— MCS is ready to support you.
-          </p>
+          </h2>
 
           {/* Action Buttons */}
           <div className="mt-12 flex animate-in flex-col items-center justify-center gap-5 delay-300 duration-1000 slide-in-from-bottom-10 fade-in sm:flex-row">

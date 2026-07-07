@@ -32,14 +32,14 @@ export function IntroSection() {
                   <Anchor className="h-3 w-3" />
                   Specialist Engineering Consultancy
                 </div>
-                <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
                   Navigating the complex waters of{" "}
                   <span className="text-muted-foreground">Bangladesh.</span>
-                </h2>
-                <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                </h1>
+                <h2 className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
                   We provide a comprehensive range of services tailored to the
                   needs of Bangladesh’s marine and inland water sectors
-                </p>
+                </h2>
               </div>
 
               <div className="space-y-5 text-base leading-relaxed text-muted-foreground md:text-lg">

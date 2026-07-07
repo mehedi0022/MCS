@@ -1,4 +1,9 @@
-import { BarChart3, CheckCircle2, ClipboardCheck, SearchCheck } from "lucide-react"
+import {
+  BarChart3,
+  CheckCircle2,
+  ClipboardCheck,
+  SearchCheck,
+} from "lucide-react"
 
 const steps = [
   {
@@ -32,7 +37,7 @@ const steps = [
 
 export function OurApproachHome() {
   return (
-    <section className="relative overflow-hidden border-y border-border/50 bg-background py-20 dark:bg-[#020617] sm:py-24">
+    <section className="relative overflow-hidden border-y border-border/50 bg-background py-20 sm:py-24 dark:bg-[#020617]">
       <div className="container mx-auto px-6">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div className="max-w-2xl space-y-5">
@@ -41,18 +46,18 @@ export function OurApproachHome() {
               Our Approach
             </div>
 
-            <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               From field evidence to{" "}
               <span className="text-muted-foreground">
                 practical maritime decisions.
               </span>
-            </h2>
+            </h1>
 
-            <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
-              We combine field data, advanced analysis, and practical
-              experience to deliver dependable outcomes for waterways, ports,
-              coastal zones, and marine infrastructure.
-            </p>
+            <h2 className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+              We combine field data, advanced analysis, and practical experience
+              to deliver dependable outcomes for waterways, ports, coastal
+              zones, and marine infrastructure.
+            </h2>
 
             <div className="grid gap-3 pt-2 sm:grid-cols-3">
               {["Survey", "Analyze", "Deliver"].map((item) => (
@@ -87,7 +92,7 @@ export function OurApproachHome() {
                   <p className="mb-2 text-xs font-bold tracking-[0.18em] text-primary uppercase dark:text-maritime-teal">
                     {step.label}
                   </p>
-                  <h3 className="text-lg font-bold leading-snug text-foreground">
+                  <h3 className="text-lg leading-snug font-bold text-foreground">
                     {step.title}
                   </h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">

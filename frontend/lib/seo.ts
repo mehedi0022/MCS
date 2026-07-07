@@ -7,16 +7,16 @@ export const siteConfig = {
   ),
   name: "Marine Consultancy Services (MCS)",
   shortName: "MCS",
-  defaultTitle:
-    "Marine Consultancy Services (MCS) | Hydrographic Surveys, Dredging Support & GIS Mapping",
+  defaultTitle: "Marine Consultancy Services | Hydrographic Surveys & GIS",
   description:
-    "Technical consultancy for rivers, ports, coastal infrastructure, hydrographic surveys, GIS mapping, dredging support, and waterway development projects in Bangladesh.",
+    "Technical consultancy for rivers, ports, coastal infrastructure, hydrographic surveys, GIS mapping, dredging support, and waterway development in Bangladesh.",
   locale: "en_US",
   language: "en",
   defaultOgImage: "/og-image.png",
   logo: "/mcs_logo.png",
-  email: "info@mcs2024.com",
-  addressLocality: "Dhaka",
+  email: "macsbd.survey@gmail.com",
+  addressLocality:
+    "Mirpur 11, Metro Station Pillar No: 205, 6th Floor Uttara Bank Building, Dhaka-1216, Bangladesh",
   addressCountry: "BD",
   keywords: [
     "Marine Consultancy Services",
