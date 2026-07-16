@@ -19,6 +19,7 @@ import usersRoutes from "./routes/users.routes.js";
 import whatWeDoRoutes from "./routes/what-we-do.routes.js";
 import journeyRoutes from "./routes/journey.routes.js";
 import ourStoryRoutes from "./routes/our-story.routes.js";
+import trainingRoutes from "./routes/training.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 
 export const app = express();
@@ -66,5 +67,6 @@ app.use("/api/users", usersRoutes);
 app.use("/api/what-we-do", whatWeDoRoutes);
 app.use("/api/journey", journeyRoutes);
 app.use("/api/our-story", ourStoryRoutes);
+app.use("/api/training", trainingRoutes);
 
 app.use(errorHandler);

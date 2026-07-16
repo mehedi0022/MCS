@@ -20,6 +20,7 @@ import {
   Settings,
   ShieldCheck,
   ShipWheel,
+  GraduationCap,
   Users,
 } from "lucide-react"
 import { HeroSlidesManager } from "@/components/admin/HeroSlidesManager"
@@ -58,6 +59,7 @@ const navItems = [
   { label: "What We Do", href: "/admin/what-we-do", icon: Compass },
   { label: "Our Story", href: "/admin/our-story", icon: Image },
   { label: "Journey", href: "/admin/journey", icon: Route },
+  { label: "Training", href: "/admin/training", icon: GraduationCap },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
 

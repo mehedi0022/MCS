@@ -9,7 +9,9 @@ import {
   Waves,
   Map,
   BarChart3,
+  Wrench,
 } from "lucide-react"
+import { icons } from "lucide-react"
 import { JsonLd } from "@/components/seo/JsonLd"
 import {
   createBreadcrumbSchema,
@@ -17,6 +19,7 @@ import {
   createPageMetadata,
   createWebPageSchema,
 } from "@/lib/seo"
+import { API_URL, type ApiResponse } from "@/lib/api"
 
 const pageDescription =
   "Professional training programs in hydrography, GIS, morphology, and nautical charting by Marine Consultancy Services (MCS)."
@@ -33,7 +36,7 @@ export const metadata = createPageMetadata({
   ],
 })
 
-const trainingAreas = [
+const fallbackTrainingAreas = [
   "Hydrographic surveying and data processing",
   "GIS and spatial analysis",
   "River and coastal morphology",
@@ -55,7 +58,7 @@ const structuredData = createJsonLdGraph([
   {
     "@type": "ItemList",
     name: "MCS training areas",
-    itemListElement: trainingAreas.map((area, index) => ({
+    itemListElement: fallbackTrainingAreas.map((area, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: area,
@@ -63,32 +66,149 @@ const structuredData = createJsonLdGraph([
   },
 ])
 
-const deliveryModes = [
+const fallbackDeliveryModes = [
   {
     title: "Professional Workshops",
-    desc: "Structured sessions for technical staff and project teams.",
+    description: "Structured sessions for technical staff and project teams.",
     icon: GraduationCap,
   },
   {
     title: "On-Project Coaching",
-    desc: "Hands-on support during live survey and data workflows.",
+    description: "Hands-on support during live survey and data workflows.",
     icon: Briefcase,
   },
   {
     title: "Institutional Capacity Programs",
-    desc: "Longer-term training plans for agencies and organizations.",
+    description: "Longer-term training plans for agencies and organizations.",
     icon: Users,
   },
 ]
 
-const outcomes = [
+const fallbackOutcomes = [
   "Improved technical confidence in survey and processing workflows",
   "Better project quality through consistent data standards",
   "Stronger institutional capability for long-term program delivery",
   "Faster decision-making through practical, applied training",
 ]
 
-export default function TrainingPage() {
+const fallbackLearningSteps = [
+  "Foundation: concepts, standards, equipment orientation",
+  "Applied Work: field data collection and processing workflows",
+  "Implementation: reporting, QA checks, and decision support",
+]
+
+const fallbackStats = [
+  { label: "Core Tracks", value: "05+" },
+  { label: "Delivery Modes", value: "03" },
+  { label: "Format", value: "Hands-On" },
+  { label: "Coverage", value: "Nationwide" },
+]
+
+type TrainingItem = {
+  id: string
+  section: "AREA" | "MODE" | "STEP" | "OUTCOME" | "STAT"
+  title: string
+  description?: string | null
+  iconKey?: string | null
+  value?: string | null
+  sortOrder: number
+  isActive: boolean
+}
+
+type TrainingPageContent = {
+  heroBadge: string
+  heroTitleLine1: string
+  heroTitleHighlight: string
+  heroDescription: string
+  snapshotEyebrow: string
+  learningPathTitle: string
+  outcomesTitle: string
+  ctaTitle: string
+  ctaDescription: string
+  primaryButtonText: string
+  primaryButtonLink: string
+  secondaryButtonText: string
+  secondaryButtonLink: string
+}
+
+type TrainingResponse = {
+  page: TrainingPageContent
+  items: TrainingItem[]
+}
+
+const fallbackPage: TrainingPageContent = {
+  heroBadge: "Training & Capacity Development",
+  heroTitleLine1: "Build Teams That Deliver",
+  heroTitleHighlight: "Accurate Waterway Data",
+  heroDescription:
+    "Structured, field-driven training for hydrography, GIS, morphology, and nautical charting, designed for practical project execution across Bangladesh.",
+  snapshotEyebrow: "Program Snapshot",
+  learningPathTitle: "Learning Path",
+  outcomesTitle: "Expected Outcomes",
+  ctaTitle: "Need a Custom Training Plan?",
+  ctaDescription:
+    "We design role-based programs for agencies, project teams, and technical units aligned with your timeline, tools, and outcomes.",
+  primaryButtonText: "Request Training Plan",
+  primaryButtonLink: "/contact",
+  secondaryButtonText: "View FAQ",
+  secondaryButtonLink: "/faq",
+}
+
+function resolveIcon(iconKey?: string | null) {
+  return (
+    (iconKey
+      ? (icons[iconKey as keyof typeof icons] as typeof GraduationCap | undefined)
+      : undefined) ?? Wrench
+  )
+}
+
+async function getTrainingContent(): Promise<TrainingResponse> {
+  try {
+    const response = await fetch(`${API_URL}/training`, { cache: "no-store" })
+    if (!response.ok) {
+      throw new Error("Failed to load training content")
+    }
+    const payload = (await response.json()) as ApiResponse<TrainingResponse>
+    return payload.data
+  } catch {
+    return { page: fallbackPage, items: [] }
+  }
+}
+
+export default async function TrainingPage() {
+  const content = await getTrainingContent()
+  const page = content.page ?? fallbackPage
+  const items = content.items ?? []
+
+  const trainingAreas =
+    items.filter((item) => item.section === "AREA").map((item) => item.title) ||
+    []
+  const deliveryModes = items
+    .filter((item) => item.section === "MODE")
+    .map((item) => ({
+      title: item.title,
+      description: item.description ?? "",
+      icon: resolveIcon(item.iconKey),
+    }))
+  const learningSteps = items
+    .filter((item) => item.section === "STEP")
+    .map((item) => item.title)
+  const outcomes = items
+    .filter((item) => item.section === "OUTCOME")
+    .map((item) => item.title)
+  const stats = items
+    .filter((item) => item.section === "STAT")
+    .map((item) => ({
+      label: item.title,
+      value: item.value ?? item.description ?? "",
+    }))
+
+  const displayAreas = trainingAreas.length > 0 ? trainingAreas : fallbackTrainingAreas
+  const displayModes = deliveryModes.length > 0 ? deliveryModes : fallbackDeliveryModes
+  const displaySteps = learningSteps.length > 0 ? learningSteps : fallbackLearningSteps
+  const displayOutcomes = outcomes.length > 0 ? outcomes : fallbackOutcomes
+  const displayStats = stats.length > 0 ? stats : fallbackStats
+
   return (
     <main className="min-h-screen bg-slate-50 transition-colors duration-500 dark:bg-[#020617]">
       <JsonLd data={structuredData} />
@@ -103,31 +223,24 @@ export default function TrainingPage() {
             <div className="lg:col-span-8">
               <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-bold tracking-[0.2em] text-primary uppercase md:text-[10px] dark:border-primary/30 dark:bg-primary/10">
                 <Anchor className="h-3 w-3" />
-                Training & Capacity Development
+                {page.heroBadge}
               </div>
               <h1 className="font-heading text-3xl leading-[1.1] font-bold tracking-tight text-slate-900 md:text-6xl dark:text-white">
-                Build Teams That Deliver{" "}
-                <span className="text-primary">Accurate Waterway Data</span>
+                {page.heroTitleLine1}{" "}
+                <span className="text-primary">{page.heroTitleHighlight}</span>
               </h1>
               <p className="mt-8 text-base leading-relaxed text-slate-500 md:text-xl dark:text-slate-400">
-                Structured, field-driven training for hydrography, GIS,
-                morphology, and nautical charting, designed for practical
-                project execution across Bangladesh.
+                {page.heroDescription}
               </p>
             </div>
 
             <div className="lg:col-span-4">
               <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
                 <p className="text-xs font-bold tracking-[0.25em] text-primary uppercase">
-                  Program Snapshot
+                  {page.snapshotEyebrow}
                 </p>
                 <div className="mt-5 grid grid-cols-2 gap-4">
-                  {[
-                    { label: "Core Tracks", value: "05+" },
-                    { label: "Delivery Modes", value: "03" },
-                    { label: "Format", value: "Hands-On" },
-                    { label: "Coverage", value: "Nationwide" },
-                  ].map((item) => (
+                  {displayStats.map((item) => (
                     <div
                       key={item.label}
                       className="rounded-xl border border-slate-200 bg-white p-3 dark:border-white/10 dark:bg-[#020617]/70"
@@ -156,7 +269,7 @@ export default function TrainingPage() {
             </h2>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
-            {trainingAreas.map((item) => (
+            {displayAreas.map((item) => (
               <div
                 key={item}
                 className="group rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 transition-all hover:border-primary/30 dark:border-white/10 dark:bg-[#020617]/60"
@@ -170,7 +283,7 @@ export default function TrainingPage() {
         </section>
 
         <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {deliveryModes.map((mode) => (
+          {displayModes.map((mode) => (
             <div
               key={mode.title}
               className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/30 dark:border-white/10 dark:bg-white/5"
@@ -183,7 +296,7 @@ export default function TrainingPage() {
                 {mode.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                {mode.desc}
+                {mode.description}
               </p>
             </div>
           ))}
@@ -194,15 +307,11 @@ export default function TrainingPage() {
             <div className="flex items-center gap-2">
               <Map className="h-5 w-5 text-primary" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Learning Path
+                {page.learningPathTitle}
               </h2>
             </div>
             <div className="mt-6 space-y-3">
-              {[
-                "Foundation: concepts, standards, equipment orientation",
-                "Applied Work: field data collection and processing workflows",
-                "Implementation: reporting, QA checks, and decision support",
-              ].map((step, index) => (
+              {displaySteps.map((step, index) => (
                 <div
                   key={step}
                   className="flex items-start gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-[#020617]/60"
@@ -222,11 +331,11 @@ export default function TrainingPage() {
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-primary" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Expected Outcomes
+                {page.outcomesTitle}
               </h2>
             </div>
             <div className="mt-6 space-y-3">
-              {outcomes.map((point) => (
+              {displayOutcomes.map((point) => (
                 <div
                   key={point}
                   className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200"
@@ -243,25 +352,24 @@ export default function TrainingPage() {
           <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-10 text-center dark:border-white/10 dark:bg-white/5">
             <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
             <h2 className="relative font-heading text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Need a Custom Training Plan?
+              {page.ctaTitle}
             </h2>
             <p className="relative mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-300">
-              We design role-based programs for agencies, project teams, and
-              technical units aligned with your timeline, tools, and outcomes.
+              {page.ctaDescription}
             </p>
             <div className="relative mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/contact"
+                href={page.primaryButtonLink}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white"
               >
-                Request Training Plan
+                {page.primaryButtonText}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/faq"
+                href={page.secondaryButtonLink}
                 className="inline-flex rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-slate-700 dark:border-white/20 dark:text-white"
               >
-                View FAQ
+                {page.secondaryButtonText}
               </Link>
             </div>
           </div>

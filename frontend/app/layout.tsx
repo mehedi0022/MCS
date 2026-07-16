@@ -39,11 +39,10 @@ const fontMono = Geist_Mono({
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0E14" }, // Maps to your dark background
+    { media: "(prefers-color-scheme: dark)", color: "#0B0E14" },
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 }
 
 const globalStructuredData = createJsonLdGraph([

@@ -245,3 +245,38 @@ model OurStoryCard {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model TrainingPage {
+  id                  String   @id @default("main")
+  heroBadge           String   @default("Training & Capacity Development")
+  heroTitleLine1      String   @db.Text
+  heroTitleHighlight  String   @db.Text
+  heroDescription     String   @db.Text
+  snapshotEyebrow     String   @default("Program Snapshot")
+  learningPathTitle   String   @default("Learning Path")
+  outcomesTitle       String   @default("Expected Outcomes")
+  ctaTitle            String   @db.Text
+  ctaDescription      String   @db.Text
+  primaryButtonText   String   @default("Request Training Plan")
+  primaryButtonLink   String   @default("/contact")
+  secondaryButtonText String   @default("View FAQ")
+  secondaryButtonLink String   @default("/faq")
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model TrainingItem {
+  id          String   @id @default(uuid())
+  section     String
+  title       String
+  description String?  @db.Text
+  iconKey     String?
+  value       String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([section, sortOrder])
+}
