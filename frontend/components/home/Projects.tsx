@@ -53,15 +53,15 @@ export function Projects() {
               <Anchor className="h-3 w-3" />
               Selected Experience
             </div>
-            <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               Delivering Data-Driven{" "}
               <span className="text-muted-foreground">Solutions.</span>
-            </h2>
-            <p className="text-lg leading-relaxed text-muted-foreground">
+            </h1>
+            <h2 className="text-lg leading-relaxed text-muted-foreground">
               Our team has contributed to hydrographic, environmental, and
               consultancy assignments across Bangladesh&apos;s coastal and
               inland water sectors.
-            </p>
+            </h2>
           </div>
           <Link
             href="/projects"

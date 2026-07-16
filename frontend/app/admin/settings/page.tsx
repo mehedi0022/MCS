@@ -317,11 +317,11 @@ export default function AdminSettingsPage() {
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="container mx-auto space-y-6 px-6">
-        <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-maritime-sm">
+        <div className="shadow-maritime-sm flex items-center justify-between rounded-xl border border-border bg-card p-4">
           <div className="flex items-center gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -349,7 +349,7 @@ export default function AdminSettingsPage() {
 
         <form
           onSubmit={submitSettings}
-          className="space-y-6 rounded-xl border border-border bg-card p-5 shadow-maritime-sm"
+          className="shadow-maritime-sm space-y-6 rounded-xl border border-border bg-card p-5"
         >
           {isLoading ? (
             <div className="flex h-48 items-center justify-center">
@@ -358,12 +358,12 @@ export default function AdminSettingsPage() {
           ) : (
             <>
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Brand Assets
                 </h2>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                       Light Mode Logo
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -403,7 +403,7 @@ export default function AdminSettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                       White Logo
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -443,7 +443,7 @@ export default function AdminSettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                       Favicon
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -484,7 +484,7 @@ export default function AdminSettingsPage() {
 
                   <div className="space-y-3 md:col-span-2 lg:col-span-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Navbar Text
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -515,7 +515,7 @@ export default function AdminSettingsPage() {
 
                   <div className="space-y-3 md:col-span-2 lg:col-span-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Footer Brand Text
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -533,7 +533,7 @@ export default function AdminSettingsPage() {
               </section>
 
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Office & Map
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -572,21 +572,28 @@ export default function AdminSettingsPage() {
               </section>
 
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Contact Info
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                       Contact Emails
                     </p>
                     {contactEmails.map((email, index) => (
-                      <div key={`email-${index}`} className="grid gap-2 grid-cols-[1fr_auto]">
+                      <div
+                        key={`email-${index}`}
+                        className="grid grid-cols-[1fr_auto] gap-2"
+                      >
                         <Input
                           placeholder="email@example.com"
                           value={email}
                           onChange={(e) =>
-                            updateArrayItem(setContactEmails, index, e.target.value)
+                            updateArrayItem(
+                              setContactEmails,
+                              index,
+                              e.target.value
+                            )
                           }
                           className="border-input px-3"
                         />
@@ -594,7 +601,9 @@ export default function AdminSettingsPage() {
                           type="button"
                           variant="destructive"
                           size="icon-sm"
-                          onClick={() => removeArrayItem(setContactEmails, index)}
+                          onClick={() =>
+                            removeArrayItem(setContactEmails, index)
+                          }
                         >
                           <Trash2 className="size-4" />
                         </Button>
@@ -605,7 +614,9 @@ export default function AdminSettingsPage() {
                       variant="outline"
                       size="sm"
                       className="rounded-lg"
-                      onClick={() => setContactEmails((current) => [...current, ""])}
+                      onClick={() =>
+                        setContactEmails((current) => [...current, ""])
+                      }
                     >
                       <Plus className="size-4" />
                       Add Email
@@ -613,16 +624,23 @@ export default function AdminSettingsPage() {
                   </div>
 
                   <div className="space-y-3">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                       Contact Phones
                     </p>
                     {contactPhones.map((phone, index) => (
-                      <div key={`phone-${index}`} className="grid gap-2 grid-cols-[1fr_auto]">
+                      <div
+                        key={`phone-${index}`}
+                        className="grid grid-cols-[1fr_auto] gap-2"
+                      >
                         <Input
                           placeholder="+8801..."
                           value={phone}
                           onChange={(e) =>
-                            updateArrayItem(setContactPhones, index, e.target.value)
+                            updateArrayItem(
+                              setContactPhones,
+                              index,
+                              e.target.value
+                            )
                           }
                           className="border-input px-3"
                         />
@@ -630,7 +648,9 @@ export default function AdminSettingsPage() {
                           type="button"
                           variant="destructive"
                           size="icon-sm"
-                          onClick={() => removeArrayItem(setContactPhones, index)}
+                          onClick={() =>
+                            removeArrayItem(setContactPhones, index)
+                          }
                         >
                           <Trash2 className="size-4" />
                         </Button>
@@ -641,7 +661,9 @@ export default function AdminSettingsPage() {
                       variant="outline"
                       size="sm"
                       className="rounded-lg"
-                      onClick={() => setContactPhones((current) => [...current, ""])}
+                      onClick={() =>
+                        setContactPhones((current) => [...current, ""])
+                      }
                     >
                       <Plus className="size-4" />
                       Add Phone
@@ -651,13 +673,13 @@ export default function AdminSettingsPage() {
               </section>
 
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Website Actions
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         WhatsApp Number
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -675,11 +697,12 @@ export default function AdminSettingsPage() {
 
                   <div className="space-y-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                        Company Profile PDF
+                      <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                        Company Profile PDF (Max 15 MB)
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Upload a PDF to show the Company Profile button.
+                        Upload a PDF to show the Company Profile button. (Max 15
+                        MB)
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -750,12 +773,15 @@ export default function AdminSettingsPage() {
               </section>
 
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Branches
                 </h2>
                 <div className="space-y-3">
                   {branches.map((branch, index) => (
-                    <div key={`branch-${index}`} className="grid gap-2 grid-cols-[1fr_auto] md:w-1/2">
+                    <div
+                      key={`branch-${index}`}
+                      className="grid grid-cols-[1fr_auto] gap-2 md:w-1/2"
+                    >
                       <Input
                         placeholder="Branch office"
                         value={branch}
@@ -788,7 +814,7 @@ export default function AdminSettingsPage() {
               </section>
 
               <section className="space-y-4 rounded-lg border border-border p-4">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+                <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">
                   Social Links
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -800,7 +826,7 @@ export default function AdminSettingsPage() {
 
                     return (
                       <div key={social.platform} className="space-y-2">
-                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                           {social.platform}
                         </p>
                         <Input
@@ -823,11 +849,15 @@ export default function AdminSettingsPage() {
                 </div>
               </section>
 
-              <Button type="submit" className="h-11 w-full rounded-lg mt-6" disabled={isSaving}>
+              <Button
+                type="submit"
+                className="mt-6 h-11 w-full rounded-lg"
+                disabled={isSaving}
+              >
                 {isSaving ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Save className="size-4 mr-2" />
+                  <Save className="mr-2 size-4" />
                 )}
                 Save Settings
               </Button>
@@ -861,5 +891,3 @@ export default function AdminSettingsPage() {
     </main>
   )
 }
-
-

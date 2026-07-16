@@ -188,9 +188,9 @@ export function Hero() {
                       </h1>
 
                       {/* Subtitle */}
-                      <p className="mt-3 max-w-3xl animate-in text-sm leading-relaxed text-white/90 drop-shadow-lg delay-500 duration-1000 slide-in-from-bottom-10 fade-in sm:mt-4 sm:text-base md:mt-5 md:text-lg">
+                      <h2 className="mt-3 max-w-3xl animate-in text-sm leading-relaxed text-white/90 drop-shadow-lg delay-500 duration-1000 slide-in-from-bottom-10 fade-in sm:mt-4 sm:text-base md:mt-5 md:text-lg">
                         {slide.subtitle}
-                      </p>
+                      </h2>
 
                       {/* CTA Buttons */}
                       <div className="mt-5 flex w-full animate-in flex-col items-stretch justify-center gap-3 delay-700 duration-1000 fade-in slide-in-from-bottom-12 sm:mt-7 sm:w-auto sm:flex-row sm:items-center sm:justify-start sm:gap-4 md:mt-8">

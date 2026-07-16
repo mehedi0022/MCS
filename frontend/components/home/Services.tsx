@@ -75,13 +75,14 @@ export async function Services() {
             <Anchor className="h-3 w-3" />
             Core Competencies
           </div>
-          <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             What We <span className="text-muted-foreground">Do.</span>
+          </h1>
+          <h2 className="text-lg leading-relaxed text-muted-foreground">
+            We partner with government agencies, consultants, and private
+            organizations to deliver reliable hydrographic, marine engineering,
+            GIS, and dredging support services throughout Bangladesh.
           </h2>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            We provide a comprehensive range of services tailored to the needs
-            of Bangladesh’s marine and inland water sectors
-          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -95,12 +96,13 @@ export async function Services() {
 
               {(() => {
                 const Icon =
-                  (icons[service.iconKey as keyof typeof icons] as typeof Anchor) ??
-                  Anchor
+                  (icons[
+                    service.iconKey as keyof typeof icons
+                  ] as typeof Anchor) ?? Anchor
                 return (
-              <div className="mb-6 inline-flex rounded-lg bg-background/50 p-3 shadow-sm ring-1 ring-border/50 dark:bg-white/5">
+                  <div className="mb-6 inline-flex rounded-lg bg-background/50 p-3 shadow-sm ring-1 ring-border/50 dark:bg-white/5">
                     <Icon className="h-6 w-6 text-maritime-ocean dark:text-maritime-foam" />
-              </div>
+                  </div>
                 )
               })()}
               <h4 className="mb-3 text-xl font-semibold text-foreground">
